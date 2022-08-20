@@ -1,19 +1,23 @@
 package knight.arkham.screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import knight.arkham.Mario;
+import knight.arkham.helpers.TileMapHelper;
 import knight.arkham.scenes.Hud;
 
 import static knight.arkham.helpers.Constants.VIRTUAL_HEIGHT;
 import static knight.arkham.helpers.Constants.VIRTUAL_WIDTH;
 
-public class PlayScreen extends ScreenAdapter {
+public class GameScreen extends ScreenAdapter {
 
 	private final Mario game;
 	private final SpriteBatch batch;
@@ -26,8 +30,11 @@ public class PlayScreen extends ScreenAdapter {
 	
 	private final Hud hud;
 
+	private final OrthogonalTiledMapRenderer mapRenderer;
 
-	public PlayScreen() {
+
+
+	public GameScreen() {
 
 		game = Mario.INSTANCE;
 
@@ -43,7 +50,15 @@ public class PlayScreen extends ScreenAdapter {
 //		es parecido a screen, lo unico que a este le enviamos la altura y tamaño de la ventana y si la
 //		pantalla es mas pequeña de ahi, entonces se agregaran barras negras
 		viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+
+//		a la hora de setear la posicion de la camara debemos de hacerlo con world width en height
+		camera.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);
+
 		hud = new Hud(batch);
+
+		TileMapHelper tileMapHelper = new TileMapHelper(this);
+
+		mapRenderer = tileMapHelper.setupMap();
 	}
 
 	@Override
@@ -51,8 +66,33 @@ public class PlayScreen extends ScreenAdapter {
 
 	}
 
+
+	private void handleUserInput(float deltaTime) {
+
+		if (Gdx.input.isTouched())
+			camera.position.x += 100 * deltaTime;
+
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+
+			Gdx.app.exit();
+			dispose();
+		}
+	}
+
+
+	private void update(float deltaTime){
+
+		handleUserInput(deltaTime);
+
+		camera.update();
+
+		mapRenderer.setView(camera);
+	}
+
 	@Override
 	public void render(float delta) {
+
+		update(delta);
 
 		ScreenUtils.clear(0, 0, 0, 0);
 
@@ -60,8 +100,12 @@ public class PlayScreen extends ScreenAdapter {
 //		renderice lo que nuestra camara puede ver
 //		batch.setProjectionMatrix(camera.combined);
 
+		mapRenderer.render();
+
+
 //		De esta forma seteamos el batch con nuestro hud
 		batch.setProjectionMatrix(hud.stage.getCamera().combined);
+
 
 //		De esta forma dibujamos en pantalla nuestro hud
 		hud.stage.draw();

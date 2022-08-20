@@ -2,7 +2,7 @@ package knight.arkham;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import knight.arkham.screens.PlayScreen;
+import knight.arkham.screens.GameScreen;
 
 public class Mario extends Game {
 
@@ -22,7 +22,7 @@ public class Mario extends Game {
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
 
-		setScreen(new PlayScreen());
+		setScreen(new GameScreen());
 	}
 
 
