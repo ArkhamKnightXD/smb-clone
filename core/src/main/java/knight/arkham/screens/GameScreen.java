@@ -4,11 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -22,7 +22,6 @@ public class GameScreen extends ScreenAdapter {
 
 //    private final Mario game;
     private final SpriteBatch batch;
-    private final BitmapFont font;
 
     private final OrthographicCamera camera;
 
@@ -49,8 +48,13 @@ public class GameScreen extends ScreenAdapter {
 //		de mis objetos que esten quietos, osea de mis objetos estaticos como paredes y piso
         world = new World(new Vector2(0, -10), true);
 
+        mario = new Mario(world);
+
+        debugRenderer = new Box2DDebugRenderer();
+
         batch = new SpriteBatch();
-        font = new BitmapFont();
+
+        hud = new Hud(batch);
 
         camera = new OrthographicCamera();
 
@@ -66,15 +70,9 @@ public class GameScreen extends ScreenAdapter {
 //		a la hora de setear la posicion de la camara debemos de hacerlo con world width en height
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
-        hud = new Hud(batch);
-
         TileMapHelper tileMapHelper = new TileMapHelper(this);
 
         mapRenderer = tileMapHelper.setupMap();
-
-        debugRenderer = new Box2DDebugRenderer();
-
-        mario = new Mario(world);
     }
 
 
@@ -84,7 +82,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
 
-    private void handleUserInput(float deltaTime) {
+    private void handleUserInput() {
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
             mario.getBody().applyLinearImpulse(new Vector2(0, 4f), mario.getBody().getWorldCenter(), true);
@@ -103,9 +101,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
 
-    private void update(float deltaTime) {
+    private void update() {
 
-        handleUserInput(deltaTime);
+        handleUserInput();
 
         camera.position.x = mario.getBody().getPosition().x;
 
@@ -119,7 +117,7 @@ public class GameScreen extends ScreenAdapter {
 
         world.step(1/60f, 6, 2);
 
-        update(delta);
+        update();
 
         ScreenUtils.clear(0, 0, 0, 0);
 
@@ -157,8 +155,10 @@ public class GameScreen extends ScreenAdapter {
     public void dispose() {
 
         batch.dispose();
-        font.dispose();
         world.dispose();
+        debugRenderer.dispose();
+        mapRenderer.dispose();
+        hud.dispose();
     }
 
     public World getWorld() {

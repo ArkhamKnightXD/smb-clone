@@ -4,7 +4,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public class BodyHelper {
@@ -19,7 +18,7 @@ public class BodyHelper {
 
         Body body = box2DBody.world.createBody(bodyDefinition);
 
-        body.createFixture(box2DBody.shape, 100);
+        body.createFixture(box2DBody.shape, box2DBody.density);
 
         return body;
     }
