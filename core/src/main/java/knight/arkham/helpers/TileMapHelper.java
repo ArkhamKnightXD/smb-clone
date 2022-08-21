@@ -8,6 +8,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import knight.arkham.screens.GameScreen;
 
+import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
+
 public class TileMapHelper {
 
     private final GameScreen gameScreen;
@@ -33,7 +35,8 @@ public class TileMapHelper {
         parseMapObjectsToStaticBodies(coinObjects);
         parseMapObjectsToStaticBodies(brickObjects);
 
-        return new OrthogonalTiledMapRenderer(tiledMap);
+//        En el segundo parametro indicaremos la escala que tendra el mapa
+        return new OrthogonalTiledMapRenderer(tiledMap, 1/ PIXELS_PER_METER);
     }
 
     private void parseMapObjectsToStaticBodies(MapObjects mapObjects) {
@@ -42,12 +45,11 @@ public class TileMapHelper {
 
             Rectangle rectangle = mapObject.getRectangle();
 
-            BodyHelper.createBody(
+            BodyHelper.createStaticBody(
 
                     new Box2DBody(
-                            rectangle.getX(), rectangle.getY(),
-                            rectangle.getWidth(), rectangle.getHeight(),
-                            true, 1000, gameScreen.getWorld()
+                            rectangle.x + rectangle.width / 2 , rectangle.y + rectangle.height / 2,
+                            rectangle.getWidth(), rectangle.getHeight(), 100, gameScreen.getWorld()
                     )
             );
         }

@@ -4,14 +4,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import knight.arkham.screens.GameScreen;
 
-public class Mario extends Game {
+public class MarioBros extends Game {
 
-	public static Mario INSTANCE;
+	public static MarioBros INSTANCE;
 
 	private int screenWidth;
 	private int screenHeight;
 
-	public Mario() {
+	public MarioBros() {
 
 		INSTANCE = this;
 	}

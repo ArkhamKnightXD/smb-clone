@@ -13,9 +13,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import knight.arkham.helpers.TileMapHelper;
+import knight.arkham.objects.Mario;
 import knight.arkham.scenes.Hud;
-import static knight.arkham.helpers.Constants.VIRTUAL_HEIGHT;
-import static knight.arkham.helpers.Constants.VIRTUAL_WIDTH;
+
+import static knight.arkham.helpers.Constants.*;
 
 public class GameScreen extends ScreenAdapter {
 
@@ -36,6 +37,8 @@ public class GameScreen extends ScreenAdapter {
 
     private final Box2DDebugRenderer debugRenderer;
 
+    private final Mario mario;
+
 
     public GameScreen() {
 
@@ -44,7 +47,7 @@ public class GameScreen extends ScreenAdapter {
 //       Inicializar world al principio para evitar errores a la hora de crear body2
 //      con doSleep en true mejoro el rendimiento debido a que en mi world no se calcularan las fisicas
 //		de mis objetos que esten quietos, osea de mis objetos estaticos como paredes y piso
-        world = new World(new Vector2(0, 0), true);
+        world = new World(new Vector2(0, -10), true);
 
         batch = new SpriteBatch();
         font = new BitmapFont();
@@ -57,7 +60,8 @@ public class GameScreen extends ScreenAdapter {
 //		estreche o achique la pantalla mis imagenes tendran el mismo tamaño y finalmente con fitviewport
 //		es parecido a screen, lo unico que a este le enviamos la altura y tamaño de la ventana y si la
 //		pantalla es mas pequeña de ahi, entonces se agregaran barras negras
-        viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, camera);
+        viewport = new FitViewport(VIRTUAL_WIDTH / PIXELS_PER_METER,
+                VIRTUAL_HEIGHT / PIXELS_PER_METER, camera);
 
 //		a la hora de setear la posicion de la camara debemos de hacerlo con world width en height
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
@@ -70,6 +74,7 @@ public class GameScreen extends ScreenAdapter {
 
         debugRenderer = new Box2DDebugRenderer();
 
+        mario = new Mario(world);
     }
 
 
@@ -81,8 +86,14 @@ public class GameScreen extends ScreenAdapter {
 
     private void handleUserInput(float deltaTime) {
 
-        if (Gdx.input.isTouched())
-            camera.position.x += 100 * deltaTime;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
+            mario.getBody().applyLinearImpulse(new Vector2(0, 4f), mario.getBody().getWorldCenter(), true);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && mario.getBody().getLinearVelocity().x <= 2)
+            mario.getBody().applyLinearImpulse(new Vector2(1f, 0), mario.getBody().getWorldCenter(), true);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && mario.getBody().getLinearVelocity().x >= -2)
+            mario.getBody().applyLinearImpulse(new Vector2(-1f, 0), mario.getBody().getWorldCenter(), true);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 
@@ -96,6 +107,8 @@ public class GameScreen extends ScreenAdapter {
 
         handleUserInput(deltaTime);
 
+        camera.position.x = mario.getBody().getPosition().x;
+
         camera.update();
 
         mapRenderer.setView(camera);
@@ -103,6 +116,8 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+
+        world.step(1/60f, 6, 2);
 
         update(delta);
 
