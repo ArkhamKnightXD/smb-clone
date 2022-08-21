@@ -19,7 +19,7 @@ public class Mario extends Sprite {
 
         circleShape.setRadius(5 / PIXELS_PER_METER);
 
-        body = BodyHelper.createDynamicBody(new Box2DBody(32,32,50, world, circleShape));
+        body = BodyHelper.createDynamicBody(new Box2DBody(32,32,100, world, circleShape));
     }
 
     public Body getBody() {return body;}
