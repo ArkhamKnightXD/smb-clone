@@ -18,34 +18,29 @@ public class BodyHelper {
         body.createFixture(box2DBody.polygonShape, 1000);
     }
 
-    public static Body createBody(Box2DBody box2DBody){
+    public static void createBody(Box2DBody box2DBody){
 
         BodyDef bodyDefinition = new BodyDef();
 
         bodyDefinition.type = box2DBody.isStatic ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody;
 
-        bodyDefinition.position.set(box2DBody.xPosition / Constants.PIXELS_PER_METER,
-                box2DBody.yPosition /Constants.PIXELS_PER_METER);
-
-        bodyDefinition.fixedRotation = true;
+        bodyDefinition.position.set(box2DBody.xPosition + box2DBody.width
+                / 2, box2DBody.yPosition + box2DBody.height / 2);
 
         Body body = box2DBody.world.createBody(bodyDefinition);
 
         PolygonShape shape = new PolygonShape();
 
-        shape.setAsBox(box2DBody.width / 2 / Constants.PIXELS_PER_METER,
-                box2DBody.height /2 /Constants.PIXELS_PER_METER);
+        shape.setAsBox(box2DBody.width / 2 ,
+                box2DBody.height /2);
 
         FixtureDef fixtureDef = new FixtureDef();
 
         fixtureDef.shape = shape;
         fixtureDef.density = box2DBody.density;
-        fixtureDef.friction = 0;
 
         body.createFixture(fixtureDef);
 
         shape.dispose();
-
-        return body;
     }
 }
