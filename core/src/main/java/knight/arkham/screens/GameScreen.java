@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -38,6 +39,8 @@ public class GameScreen extends ScreenAdapter {
 
     private final Mario mario;
 
+    private final TextureAtlas textureAtlas;
+
 
     public GameScreen() {
 
@@ -48,7 +51,12 @@ public class GameScreen extends ScreenAdapter {
 //		de mis objetos que esten quietos, osea de mis objetos estaticos como paredes y piso
         world = new World(new Vector2(0, -10), true);
 
-        mario = new Mario(world);
+
+//        Asi cargamos un texturealtlas, un texture atlas es un conjunto de imagenes vuelta una sola
+//        Y en el pack se guardan los nombres de las imagenes con sus posiciones x y y tamaño
+        textureAtlas = new TextureAtlas("images/Mario_and_Enemies.pack");
+
+        mario = new Mario(this);
 
         debugRenderer = new Box2DDebugRenderer();
 
@@ -101,15 +109,19 @@ public class GameScreen extends ScreenAdapter {
     }
 
 
-    private void update() {
+    private void update(float deltaTime) {
 
         handleUserInput();
 
         camera.position.x = mario.getBody().getPosition().x;
 
+        mario.update(deltaTime);
+
+
         camera.update();
 
         mapRenderer.setView(camera);
+
     }
 
     @Override
@@ -117,16 +129,23 @@ public class GameScreen extends ScreenAdapter {
 
         world.step(1/60f, 6, 2);
 
-        update();
+        update(delta);
 
         ScreenUtils.clear(0, 0, 0, 0);
 
-//		Con esto le indicamos a nuestro gamebatch donde esta nuestra camara y que solo
-//		renderice lo que nuestra camara puede ver
-//		batch.setProjectionMatrix(camera.combined);
 
         mapRenderer.render();
 
+        //Con esto le indicamos a nuestro gamebatch donde esta nuestra camara y que solo
+//		renderice lo que nuestra camara puede ver
+        batch.setProjectionMatrix(camera.combined);
+
+        batch.begin();
+
+//        El metodo draw es heredado de la clase sprite
+        mario.draw(batch);
+
+        batch.end();
 
 //		De esta forma seteamos el batch con nuestro hud
         batch.setProjectionMatrix(hud.stage.getCamera().combined);
@@ -163,5 +182,9 @@ public class GameScreen extends ScreenAdapter {
 
     public World getWorld() {
         return world;
+    }
+
+    public TextureAtlas getTextureAtlas() {
+        return textureAtlas;
     }
 }

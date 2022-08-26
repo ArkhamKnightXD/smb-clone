@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import knight.arkham.objects.Brick;
 import knight.arkham.objects.Coin;
 import knight.arkham.screens.GameScreen;
+
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public class TileMapHelper {
@@ -30,7 +31,7 @@ public class TileMapHelper {
         parseMapObjectsToStaticBodies(tiledMap, "Bricks");
 
 //        En el segundo parametro indicaremos la escala que tendra el mapa
-        return new OrthogonalTiledMapRenderer(tiledMap, 1/ PIXELS_PER_METER);
+        return new OrthogonalTiledMapRenderer(tiledMap, 1 / PIXELS_PER_METER);
     }
 
     private void parseMapObjectsToStaticBodies(TiledMap tiledMap, String objectsName) {
@@ -41,12 +42,11 @@ public class TileMapHelper {
 
             Rectangle rectangle = mapObject.getRectangle();
 
-//            Mis objectos brick y coins deseo tenerlo en clases, para asi poder manejar su comportamiento
-//            cuando haya colision
-            if(objectsName.equals("Bricks"))
+// Mis objectos brick y coins deseo tenerlo en clases, para asi poder manejar su comportamiento cuando haya colision
+            if (objectsName.equals("Bricks"))
                 new Brick(gameScreen.getWorld(), tiledMap, rectangle);
 
-            else if(objectsName.equals("Coins"))
+            else if (objectsName.equals("Coins"))
                 new Coin(gameScreen.getWorld(), tiledMap, rectangle);
 
             else {
@@ -54,7 +54,7 @@ public class TileMapHelper {
                 BodyHelper.createStaticBody(
 
                         new Box2DBody(
-                                rectangle.x + rectangle.width / 2 , rectangle.y + rectangle.height / 2,
+                                rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2,
                                 rectangle.getWidth(), rectangle.getHeight(), 100, gameScreen.getWorld()
                         )
                 );
