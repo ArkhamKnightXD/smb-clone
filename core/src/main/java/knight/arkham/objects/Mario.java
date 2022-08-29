@@ -20,19 +20,19 @@ public class Mario extends Sprite {
 //        al que le mandaremos un texture region
         super(gameScreen.getTextureAtlas().findRegion("little_mario"));
 
-
         CircleShape circleShape = new CircleShape();
 
         circleShape.setRadius(6 / PIXELS_PER_METER);
 
         body = BodyHelper.createDynamicBody(new Box2DBody(32,32,
-                100, gameScreen.getWorld(), circleShape));
+                gameScreen.getWorld(), circleShape));
 
 //        utilizamos getTexture para obtener el texture region que indicamos en el contructor super
-//        y luego indicamos las cordenadas donde esta la imagen inicial que deseamos, como es la primera imagen
-//        Le indicamos 0 0
+//        y luego indicamos las coordenadas donde esta la imagen inicial que deseamos, como es la primera imagen
+//        Le indicamos 0 0, aunque aqui tuve que hacer par de ajustes
         //    Un texture region es un conjunto de imagenes juntas
         TextureRegion marioStand = new TextureRegion(getTexture(), 0, 10, 16, 16);
+//        Metodos heredados de la Sprite
         setBounds(0,0, 16/ PIXELS_PER_METER, 16/ PIXELS_PER_METER);
         setRegion(marioStand);
     }

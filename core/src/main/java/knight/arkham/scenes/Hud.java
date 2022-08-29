@@ -18,9 +18,6 @@ import static knight.arkham.helpers.Constants.VIRTUAL_WIDTH;
 public class Hud implements Disposable {
 
     public Stage stage;
-//    Cuando nuestro mundo se mueve, queremos que nuestro hud se quede igual por eso
-//    debemos agregar una nueva camara y un nuevo viewport
-    private Viewport viewport;
 
     private Integer worldTimer;
     private float timeCount;
@@ -41,7 +38,9 @@ public class Hud implements Disposable {
         timeCount = 0;
         score = 0;
 
-        viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, new OrthographicCamera());
+        //    Cuando nuestro mundo se mueve, queremos que nuestro hud se quede igual por eso
+        //    debemos agregar una nueva camara y un nuevo viewport, solo para nuestro hud
+        Viewport viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, new OrthographicCamera());
 
         stage = new Stage(viewport, batch);
 

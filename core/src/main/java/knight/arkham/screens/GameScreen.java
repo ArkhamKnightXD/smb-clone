@@ -113,10 +113,10 @@ public class GameScreen extends ScreenAdapter {
 
         handleUserInput();
 
+//        Nuestra camara seguira la posicion x de nuestro personaje
         camera.position.x = mario.getBody().getPosition().x;
 
         mario.update(deltaTime);
-
 
         camera.update();
 
@@ -127,12 +127,20 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
 
+//There are two phases in the constraint solver: a velocity phase and a position phase. In the velocity phase the solver
+// computes the impulses necessary for the bodies to move correctly. In the position phase the solver adjusts the
+// positions of the bodies to reduce overlap and joint detachment. Each phase has its own iteration count. In addition,
+// the position phase may exit iterations early if the errors are small.
+
+// The suggested iteration count for Box2D is 8 for velocity and 3 for position. You can tune this number to your
+// liking, just keep in mind that this has a trade-off between performance and accuracy. Using fewer iterations
+// increases performance but accuracy suffers. Likewise, using more iterations decreases performance but improves the
+// quality of your simulation.
         world.step(1/60f, 6, 2);
 
         update(delta);
 
         ScreenUtils.clear(0, 0, 0, 0);
-
 
         mapRenderer.render();
 
@@ -142,7 +150,7 @@ public class GameScreen extends ScreenAdapter {
 
         batch.begin();
 
-//        El metodo draw es heredado de la clase sprite
+//        El metodo draw es heredado de la clase sprite, implementada en el objeto mario
         mario.draw(batch);
 
         batch.end();
@@ -151,7 +159,7 @@ public class GameScreen extends ScreenAdapter {
         batch.setProjectionMatrix(hud.stage.getCamera().combined);
 
 
-//		De esta forma dibujamos en pantalla nuestro hud
+//		De esta forma dibujamos en pantalla nuestro hud, mediante nuestro campo hud que tiene un metodo draw
         hud.stage.draw();
 
         debugRenderer.render(world, camera.combined);

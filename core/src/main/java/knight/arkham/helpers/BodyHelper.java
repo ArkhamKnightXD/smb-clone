@@ -2,7 +2,6 @@ package knight.arkham.helpers;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
@@ -18,7 +17,8 @@ public class BodyHelper {
 
         Body body = box2DBody.world.createBody(bodyDefinition);
 
-        body.createFixture(box2DBody.shape, box2DBody.density);
+//A dynamic body should have at least one fixture with a non-zero density. Otherwise, you will get strange behavior.
+        body.createFixture(box2DBody.shape, 100);
 
         return body;
     }
@@ -34,14 +34,10 @@ public class BodyHelper {
 
         shape.setAsBox(box2DBody.width / 2 /PIXELS_PER_METER , box2DBody.height / 2 / PIXELS_PER_METER);
 
-        FixtureDef fixtureDef = new FixtureDef();
-
-        fixtureDef.shape = shape;
-        fixtureDef.density = box2DBody.density;
-
         Body body = box2DBody.world.createBody(bodyDefinition);
 
-        body.createFixture(fixtureDef);
+// A static body has zero mass by definition, so the density is not used in this case.  The default density is zero.
+        body.createFixture(shape,0);
 
         shape.dispose();
     }

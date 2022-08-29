@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Rectangle;
 import knight.arkham.objects.Brick;
 import knight.arkham.objects.Coin;
 import knight.arkham.screens.GameScreen;
-
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public class TileMapHelper {
@@ -55,7 +54,7 @@ public class TileMapHelper {
 
                         new Box2DBody(
                                 rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2,
-                                rectangle.getWidth(), rectangle.getHeight(), 100, gameScreen.getWorld()
+                                rectangle.getWidth(), rectangle.getHeight(), gameScreen.getWorld()
                         )
                 );
             }

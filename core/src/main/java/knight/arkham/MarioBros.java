@@ -7,7 +7,6 @@ import knight.arkham.screens.GameScreen;
 public class MarioBros extends Game {
 
 	public static MarioBros INSTANCE;
-
 	private int screenWidth;
 	private int screenHeight;
 
