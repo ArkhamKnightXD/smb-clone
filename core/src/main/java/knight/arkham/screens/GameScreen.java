@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import knight.arkham.helpers.GameContactListener;
 import knight.arkham.helpers.TileMapHelper;
 import knight.arkham.objects.Mario;
 import knight.arkham.scenes.Hud;
@@ -81,6 +82,8 @@ public class GameScreen extends ScreenAdapter {
         TileMapHelper tileMapHelper = new TileMapHelper(this);
 
         mapRenderer = tileMapHelper.setupMap();
+
+        world.setContactListener(new GameContactListener(this));
     }
 
 
