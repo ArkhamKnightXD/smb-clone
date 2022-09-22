@@ -2,6 +2,7 @@ package knight.arkham.helpers;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import knight.arkham.MarioBros;
 
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
@@ -18,6 +19,18 @@ public class BodyHelper {
         Body body = box2DBody.world.createBody(bodyDefinition);
 
         FixtureDef fixtureDefinition = new FixtureDef();
+
+        //        Cada fixture en box2d tiene un filtro, el filtro tiene una categoria y una mask, la categoria
+//        es para indicar que este fixture, es mario, brick o un coin y el mask representa con que
+//        este fixture puede colisionar, los filtros se indican con bits, en este caso utilizaremos variables short
+//        Y sus valores seran potencia de 2 para diferenciar los filtros
+//        Finalmente indico mi categoria y le indico a este fixture que sera mario
+        fixtureDefinition.filter.categoryBits = MarioBros.MARIO_BIT;
+
+//        Aqui defino con que mi fixture de mario podra colisionar, lo hare con o logicos simples
+//        Indicamos que mario pueda colisionar con todos los bits exceptuando el Destroyed_bit, pues cuando
+//        Un fixture tenga este bit no queremos que mario colision, pues tecnicamente este objeto estara destruido
+        fixtureDefinition.filter.maskBits = MarioBros.DEFAULT_BIT | MarioBros.COIN_BIT | MarioBros.BRICK_BIT;
 
         fixtureDefinition.shape = box2DBody.shape;
         fixtureDefinition.density = 100;
