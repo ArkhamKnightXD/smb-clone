@@ -29,7 +29,7 @@ public class TileMapHelper {
         parseMapObjectsToStaticBodies(tiledMap, "Coins");
         parseMapObjectsToStaticBodies(tiledMap, "Bricks");
 
-//        En el segundo parametro indicaremos la escala que tendra el mapa
+//        En el segundo elemento de la función indico la escala que va a tener el mapa
         return new OrthogonalTiledMapRenderer(tiledMap, 1 / PIXELS_PER_METER);
     }
 
@@ -41,20 +41,21 @@ public class TileMapHelper {
 
             Rectangle rectangle = mapObject.getRectangle();
 
-// Mis objectos brick y coins deseo tenerlo en clases, para asi poder manejar su comportamiento cuando haya colision
+// Mis objetos brick y coins deseo tenerlo en clases, para asi poder manejar su comportamiento cuando haya colisión.
             if (objectsName.equals("Bricks"))
-                new Brick(gameScreen.getWorld(), tiledMap, rectangle);
+                new Brick(gameScreen.getWorld(), tiledMap, rectangle, gameScreen.getAssetManager());
 
             else if (objectsName.equals("Coins"))
-                new Coin(gameScreen.getWorld(), tiledMap, rectangle);
+                new Coin(gameScreen.getWorld(), tiledMap, rectangle, gameScreen.getAssetManager());
 
+//            Los demás objetos los crearé libremente.
             else {
 
                 BodyHelper.createStaticBody(
 
                         new Box2DBody(
                                 rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2,
-                                rectangle.getWidth(), rectangle.getHeight(), gameScreen.getWorld()
+                                rectangle.width, rectangle.height, gameScreen.getWorld()
                         )
                 );
             }

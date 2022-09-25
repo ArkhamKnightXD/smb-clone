@@ -14,17 +14,17 @@ import static knight.arkham.helpers.Constants.VIRTUAL_HEIGHT;
 import static knight.arkham.helpers.Constants.VIRTUAL_WIDTH;
 
 //Clase encargada del manejo del hud de mi juego
-//Si deseamos que nuestra clase tenga un metodo dispose hacemos esto
+// Si deseamos que nuestra clase tenga una función dispose implementamos Disposable
 public class Hud implements Disposable {
 
     public Stage stage;
-
     private Integer worldTimer;
     private float timeCount;
     private static Integer score;
 
 //    Scene2d elements
     Label countDownLabel;
+//    Como voy a utilizar esta variable en una función static, debo de definirla static
     static Label scoreLabel;
     Label timeLabel;
     Label levelLabel;
@@ -44,19 +44,23 @@ public class Hud implements Disposable {
 
         stage = new Stage(viewport, batch);
 
-//        Crearemos una tabla en nuestro stage, para asi poder ordenar nuestros widget como deseemos
+        setUpHudTable();
+    }
+
+    private void setUpHudTable() {
+
+        //        Crearemos una tabla en nuestro stage, para asi poder ordenar nuestros widget como deseemos
         Table table = new Table();
 
-//        Cuando indicamos esto , quiere decir que pondra los elementos en la parte de arriba de nuestro stage
+//        Cuando indicamos esto, quiere decir que pondrá los elementos en la parte de arriba de nuestro stage
         table.top();
 
 //        Esto quiere decir que nuestra tabla ahora es del tamaño de nuestro stage
         table.setFillParent(true);
 
-//        Set all scene2d widgets
-//        debo de hacer un string format para llevar de integer a string El 03 indica la cantidad de unidades
-//        que tendra nuestro numero y la d para indicar que es un integer, y finalmente indicamos el estilo
-//        de mi label, el color sera blanco
+//        Set all scene2D widgets: Debo de hacer un string format para llevar de integer a string El 03 índica
+//        la cantidad de unidades que tendrá nuestro número y la d para indicar que es un integer, y finalmente
+//        indicamos el estilo de mi label, el color será blanco.
         countDownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -64,16 +68,17 @@ public class Hud implements Disposable {
         worldLabel = new Label("World", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         marioLabel = new Label("MARIO", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
-//        Add elements to the table
-//        Agregaremos el label de mario de primero y haremos que se expanda en x, con esto,
-//        si hay 3 elementos en pantalla, cada uno tendra un tercio de pantalla y finalmente agrego un paddingtop de 10px
+//        Adding elements to the table: Agregaremos el label de mario de primero y haremos que se expanda en x,
+//        con esto, si hay 3 elementos en pantalla, cada uno tendrá un tercio de pantalla y finalmente agrego
+//        un paddingTop de 10px, para indicar un padding arriba de 10px.
         table.add(marioLabel).expandX().padTop(10);
         table.add(worldLabel).expandX().padTop(10);
         table.add(timeLabel).expandX().padTop(10);
 
 //        Creamos una nueva fila en mi tabla
         table.row();
-//        Ahora todos los elementos que agregue de aqui para adelante estaran en una nueva tabla
+
+//        Ahora todos los elementos que agregue de aqui para adelante estarán en una nueva fila.
         table.add(scoreLabel).expandX();
         table.add(levelLabel).expandX();
         table.add(countDownLabel).expandX();
@@ -96,8 +101,8 @@ public class Hud implements Disposable {
         countDownLabel.setText(String.format("%03d", worldTimer));
     }
 
-//    No necesariamente es la mejor practica hacer este elemento static , pero con motivo de ganar tiempo se hara asi
-//    Nota es necesario poner todas las variables utilizadas aqui en static
+//    No necesariamente es la mejor práctica hacer este elemento static, pero con motivo de ganar tiempo se hará de
+//    esta forma.
     public static void addScore(int value){
 
         score += value;

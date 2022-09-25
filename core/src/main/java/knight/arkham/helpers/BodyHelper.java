@@ -2,9 +2,7 @@ package knight.arkham.helpers;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import knight.arkham.MarioBros;
-
-import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
+import static knight.arkham.helpers.Constants.*;
 
 public class BodyHelper {
 
@@ -20,17 +18,17 @@ public class BodyHelper {
 
         FixtureDef fixtureDefinition = new FixtureDef();
 
-        //        Cada fixture en box2d tiene un filtro, el filtro tiene una categoria y una mask, la categoria
-//        es para indicar que este fixture, es mario, brick o un coin y el mask representa con que
-//        este fixture puede colisionar, los filtros se indican con bits, en este caso utilizaremos variables short
-//        Y sus valores seran potencia de 2 para diferenciar los filtros
-//        Finalmente indico mi categoria y le indico a este fixture que sera mario
-        fixtureDefinition.filter.categoryBits = MarioBros.MARIO_BIT;
+        //  Cada fixture en box2D tiene un filtro, el filtro tiene una categoría y una mask, la categoría es para
+        //  indicar que este fixture, es mario, brick o un coin y el mask representa con cuáles fixture este fixture
+        //  puede colisionar, los filtros se indican con bits, en este caso utilizaremos variables, short Y sus valores
+        //  serán potencias de 2 para diferenciar los filtros. Finalmente, indico mi categoría y le indico a este fixture
+        //  que será mario.
+        fixtureDefinition.filter.categoryBits = MARIO_BIT;
 
-//        Aqui defino con que mi fixture de mario podra colisionar, lo hare con o logicos simples
-//        Indicamos que mario pueda colisionar con todos los bits exceptuando el Destroyed_bit, pues cuando
-//        Un fixture tenga este bit no queremos que mario colision, pues tecnicamente este objeto estara destruido
-        fixtureDefinition.filter.maskBits = MarioBros.DEFAULT_BIT | MarioBros.COIN_BIT | MarioBros.BRICK_BIT;
+//        Aqui defino con que mi fixture de mario podrá colisionar, lo hare con o lógicos simples Indicamos que mario
+//        pueda colisionar con todos los bits exceptuando el Destroyed_bit, pues cuando un fixture tenga este bit
+//        no queremos que mario colisione, pues técnicamente este objeto está destruido.
+        fixtureDefinition.filter.maskBits = DEFAULT_BIT | COIN_BIT | BRICK_BIT;
 
         fixtureDefinition.shape = box2DBody.shape;
         fixtureDefinition.density = 100;
@@ -38,7 +36,7 @@ public class BodyHelper {
 //A dynamic body should have at least one fixture with a non-zero density. Otherwise, you will get strange behavior.
         body.createFixture(fixtureDefinition);
 
-        //        Necesito crear un sensor para detectar collision en la cabeza de mario, el edgeShape es básicamente una línea
+        //Necesito crear un sensor para detectar collision en la cabeza de mario, el edgeShape es básicamente una línea
 //        entre 2 puntos
         EdgeShape headCollider = new EdgeShape();
 
@@ -46,11 +44,12 @@ public class BodyHelper {
         headCollider.set(new Vector2(-2 / PIXELS_PER_METER, 7 / PIXELS_PER_METER),
                 new Vector2(2 / PIXELS_PER_METER, 7 / PIXELS_PER_METER));
 
-//        Puedo agregar varias shape fixture, solo debo de asegurarme de hacer un createFixture al final para salvar
+//  Puedo agregar varias shape a un fixture, solo debo de asegurarme de hacer un createFixture luego de agregar cada
+//  nuevo shape, para cada shape debo de realizar un createFixture diferente
         fixtureDefinition.shape = headCollider;
 
-//        Cuando le indicamos a mi fixture que isSensor es true, no collisiona con nada en nuestro mundo,
-//        nos funciona como un sensor para programar sus colisiones
+//        Cuando le indicamos a mi fixture que isSensor es true, no colisionara con nada en nuestro mundo,
+//        nos funciona como un sensor para programar sus colisiones.
         fixtureDefinition.isSensor = true;
 
         body.createFixture(fixtureDefinition).setUserData("head");

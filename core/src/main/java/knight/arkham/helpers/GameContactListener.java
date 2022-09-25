@@ -2,15 +2,8 @@ package knight.arkham.helpers;
 
 import com.badlogic.gdx.physics.box2d.*;
 import knight.arkham.objects.InteractiveTileObject;
-import knight.arkham.screens.GameScreen;
 
 public class GameContactListener implements ContactListener {
-
-    private final GameScreen gameScreen;
-
-    public GameContactListener(GameScreen gameScreen) {
-        this.gameScreen = gameScreen;
-    }
 
     @Override
     public void beginContact(Contact contact) {
@@ -21,14 +14,14 @@ public class GameContactListener implements ContactListener {
 
         if (fixtureA.getUserData() == "head" || fixtureB.getUserData() == "head"){
 
-//            Aqui evaluo de nuevo cual objeto sera cual
+//            Aqui realizo evaluación sobre cuál objeto será la cabeza de mario y otro el objeto.
             Fixture head = fixtureA.getUserData() == "head" ? fixtureA : fixtureB;
             Fixture object = head == fixtureA ? fixtureB : fixtureA;
 
-// La segunda condicion nos retornara true si el objeto extiendo de interactiveTileObject
+            // La segunda condición nos retornará true si el objeto extiende de interactiveTileObject
             if (object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())){
 
-//                De esta forma ejecuto el elemento onheadHit,
+//                De esta forma ejecuto la función onHeadHit.
                 ((InteractiveTileObject) object.getUserData()).onHeadHit();
             }
         }

@@ -9,7 +9,7 @@ public class Box2DBody {
     public float width;
     public float height;
     public World world;
-//    Seteo el campo con la interfaz para poder enviar cualquier tipo de forma por el constructor
+//    Defino el campo con la interfaz para poder enviar cualquier tipo de forma por el constructor
     public Shape shape;
 
     public Box2DBody(float xPosition, float yPosition, float width, float height, World world) {

@@ -1,7 +1,5 @@
 package knight.arkham.helpers;
 
-import knight.arkham.MarioBros;
-
 public class Constants {
 
 //    Estas son las dimensiones que le dare a mi viewport
@@ -9,9 +7,13 @@ public class Constants {
     public static final float VIRTUAL_HEIGHT = 208;
 
 //    Con esta constante sera que manejare mi conversion de pixeles en el world de box2d
+//    Todo debo repasar la matemática detrás del ppm pues no lo entiendo completamente.
     public static final float PIXELS_PER_METER = 100;
-    public static final int FULL_SCREEN_HEIGHT = MarioBros.INSTANCE.getScreenHeight();
-    public static final int FULL_SCREEN_WIDTH = MarioBros.INSTANCE.getScreenWidth();
-    public static final int MID_SCREEN_HEIGHT = MarioBros.INSTANCE.getScreenHeight() / 2;
-    public static final int MID_SCREEN_WIDTH = MarioBros.INSTANCE.getScreenWidth() / 2;
+
+    //	Aqui definiremos las categorías de los fixture
+    public static final short DEFAULT_BIT = 1;
+    public static final short MARIO_BIT = 2;
+    public static final short BRICK_BIT = 4;
+    public static final short COIN_BIT = 8;
+    public static final short DESTROYED_BIT = 16;
 }
