@@ -21,11 +21,11 @@ public class Hud implements Disposable {
 
     private Integer worldTimer;
     private float timeCount;
-    private Integer score;
+    private static Integer score;
 
 //    Scene2d elements
     Label countDownLabel;
-    Label scoreLabel;
+    static Label scoreLabel;
     Label timeLabel;
     Label levelLabel;
     Label worldLabel;
@@ -81,6 +81,28 @@ public class Hud implements Disposable {
 //        add table to my stage, tanto table como label son actors, asi que puedo agregar todos esos elementos
 //        a mi stage utilizando addActor
         stage.addActor(table);
+    }
+
+
+    public void update(float deltaTime){
+
+//        Forma correcta de hacer un contador utilizando deltaTime
+        timeCount += deltaTime;
+
+        while (timeCount >= 1){
+            worldTimer--;
+            timeCount -= 1;
+        }
+        countDownLabel.setText(String.format("%03d", worldTimer));
+    }
+
+//    No necesariamente es la mejor practica hacer este elemento static , pero con motivo de ganar tiempo se hara asi
+//    Nota es necesario poner todas las variables utilizadas aqui en static
+    public static void addScore(int value){
+
+        score += value;
+
+        scoreLabel.setText(String.format("%06d", score));
     }
 
     @Override

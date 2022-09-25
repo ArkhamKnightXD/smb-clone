@@ -5,12 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 //import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Filter;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.World;
-import knight.arkham.helpers.BodyHelper;
-import knight.arkham.helpers.Box2DBody;
+import com.badlogic.gdx.physics.box2d.*;
 
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
@@ -29,18 +24,36 @@ public abstract class InteractiveTileObject {
         this.tiledMap = tiledMap;
         this.bounds = bounds;
 
-
-//        Todo tengo que reescribir mi crear static body para este constructor, pues necesito setear mi body
 //        Todas las clases que heredan crean su cuerpo de la misma manera, guardare, el fixture, para poder
 //        acceder a este, en las demas clases, que heredan de esta
-        fixture = BodyHelper.createStaticBody(
 
-                new Box2DBody(
-                        bounds.x + bounds.width / 2 , bounds.y + bounds.height / 2,
-                        bounds.getWidth(), bounds.getHeight(), world
-                )
-        );
+
+        BodyDef bodyDefinition = new BodyDef();
+
+        bodyDefinition.type = BodyDef.BodyType.StaticBody;
+
+        bodyDefinition.position.set((bounds.x + bounds.width / 2) / PIXELS_PER_METER,
+                (bounds.y + bounds.height / 2 )/ PIXELS_PER_METER);
+
+        PolygonShape shape = new PolygonShape();
+
+        shape.setAsBox(bounds.width / 2 /PIXELS_PER_METER , bounds.height / 2 / PIXELS_PER_METER);
+
+        body = world.createBody(bodyDefinition);
+
+// A static body has zero mass by definition, so the density is not used in this case.  The default density is zero.
+        fixture = body.createFixture(shape,0);
+
+
+//        fixture = BodyHelper.createStaticBody(
+//
+//                new Box2DBody(
+//                        bounds.x + bounds.width / 2 , bounds.y + bounds.height / 2,
+//                        bounds.getWidth(), bounds.getHeight(), world
+//                )
+//        );
     }
+
 
     public abstract void onHeadHit();
 

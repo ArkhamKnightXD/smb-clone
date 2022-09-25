@@ -3,6 +3,7 @@ package knight.arkham.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import knight.arkham.MarioBros;
 import knight.arkham.helpers.GameContactListener;
 import knight.arkham.helpers.TileMapHelper;
 import knight.arkham.objects.Mario;
@@ -41,6 +43,7 @@ public class GameScreen extends ScreenAdapter {
     private final Mario mario;
 
     private final TextureAtlas textureAtlas;
+    private final Music music;
 
 
     public GameScreen() {
@@ -84,6 +87,11 @@ public class GameScreen extends ScreenAdapter {
         mapRenderer = tileMapHelper.setupMap();
 
         world.setContactListener(new GameContactListener(this));
+
+        music = MarioBros.assetManager.get("audio/music/mario_music.ogg", Music.class);
+        music.setLooping(true);
+        music.setVolume(0.1f);
+        music.play();
     }
 
 
@@ -116,12 +124,20 @@ public class GameScreen extends ScreenAdapter {
 
         handleUserInput();
 
+        // The suggested iteration count for Box2D is 8 for velocity and 3 for position. You can tune this number to your
+// liking, just keep in mind that this has a trade-off between performance and accuracy. Using fewer iterations
+// increases performance but accuracy suffers. Likewise, using more iterations decreases performance but improves the
+// quality of your simulation.
+        world.step(1/60f, 6, 2);
+
 //        Nuestra camara seguira la posicion x de nuestro personaje
         camera.position.x = mario.getBody().getPosition().x;
 
         mario.update(deltaTime);
+        hud.update(deltaTime);
 
         camera.update();
+
 
         mapRenderer.setView(camera);
 
@@ -134,12 +150,6 @@ public class GameScreen extends ScreenAdapter {
 // computes the impulses necessary for the bodies to move correctly. In the position phase the solver adjusts the
 // positions of the bodies to reduce overlap and joint detachment. Each phase has its own iteration count. In addition,
 // the position phase may exit iterations early if the errors are small.
-
-// The suggested iteration count for Box2D is 8 for velocity and 3 for position. You can tune this number to your
-// liking, just keep in mind that this has a trade-off between performance and accuracy. Using fewer iterations
-// increases performance but accuracy suffers. Likewise, using more iterations decreases performance but improves the
-// quality of your simulation.
-        world.step(1/60f, 6, 2);
 
         update(delta);
 
