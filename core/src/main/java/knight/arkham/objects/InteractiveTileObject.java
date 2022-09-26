@@ -51,8 +51,8 @@ public abstract class InteractiveTileObject {
 
     public TiledMapTileLayer.Cell getCell(){
 
-//        Obtengo el graphic layer que esta en el index 1 de tiledMap
-        TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get(1);
+// Obtengo el graphic layer
+        TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("Graphic Layer");
 
 //        Debido a que la textura en un inicio tengo que dividirlas entre ppm ahora tengo que multiplicarla
 //        para que tenga su posición original.

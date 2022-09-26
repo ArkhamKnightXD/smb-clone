@@ -12,7 +12,11 @@ public class BodyHelper {
 
         bodyDefinition.type = BodyDef.BodyType.DynamicBody;
 
-        bodyDefinition.position.set(box2DBody.xPosition / PIXELS_PER_METER, box2DBody.yPosition / PIXELS_PER_METER);
+//Mi body rotaba por defecto lo cual hacía que mi headCollider no se quedara en un solo lugar, y esto hacía que
+// la colisión con los bloques fallara. Esta opción es util para personajes.
+        bodyDefinition.fixedRotation = true;
+
+        bodyDefinition.position.set(box2DBody.position.x / PIXELS_PER_METER, box2DBody.position.y / PIXELS_PER_METER);
 
         Body body = box2DBody.world.createBody(bodyDefinition);
 
@@ -21,8 +25,8 @@ public class BodyHelper {
         //  Cada fixture en box2D tiene un filtro, el filtro tiene una categoría y una mask, la categoría es para
         //  indicar que este fixture, es mario, brick o un coin y el mask representa con cuáles fixture este fixture
         //  puede colisionar, los filtros se indican con bits, en este caso utilizaremos variables, short Y sus valores
-        //  serán potencias de 2 para diferenciar los filtros. Finalmente, indico mi categoría y le indico a este fixture
-        //  que será mario.
+        //  serán potencias de 2 para diferenciar los filtros. Finalmente, indico mi categoría y le indico
+        //  a este fixture que será mario.
         fixtureDefinition.filter.categoryBits = MARIO_BIT;
 
 //        Aqui defino con que mi fixture de mario podrá colisionar, lo hare con o lógicos simples Indicamos que mario
@@ -31,7 +35,11 @@ public class BodyHelper {
         fixtureDefinition.filter.maskBits = DEFAULT_BIT | COIN_BIT | BRICK_BIT;
 
         fixtureDefinition.shape = box2DBody.shape;
+
+//        100 es una densidad recomendable, si la densidad es muy alta nuestro personaje no va a poder saltar
         fixtureDefinition.density = 100;
+        fixtureDefinition.friction = 0.1f;
+
 
 //A dynamic body should have at least one fixture with a non-zero density. Otherwise, you will get strange behavior.
         body.createFixture(fixtureDefinition);
@@ -62,7 +70,7 @@ public class BodyHelper {
         BodyDef bodyDefinition = new BodyDef();
 
         bodyDefinition.type = BodyDef.BodyType.StaticBody;
-        bodyDefinition.position.set(box2DBody.xPosition / PIXELS_PER_METER, box2DBody.yPosition / PIXELS_PER_METER);
+        bodyDefinition.position.set(box2DBody.position.x / PIXELS_PER_METER, box2DBody.position.y / PIXELS_PER_METER);
 
         PolygonShape shape = new PolygonShape();
 

@@ -3,6 +3,7 @@ package knight.arkham.objects;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.utils.Array;
@@ -76,7 +77,7 @@ public class Mario extends Sprite {
 
         circleShape.setRadius(6 / PIXELS_PER_METER);
 
-        body = BodyHelper.createDynamicBody(new Box2DBody(32, 32, gameScreen.getWorld(), circleShape));
+        body = BodyHelper.createDynamicBody(new Box2DBody(new Vector2(32, 32), gameScreen.getWorld(),circleShape));
 
 //Utilizamos getTexture para obtener el texture region que indicamos en el constructor super y luego indicamos
 // las coordenadas donde está la imagen inicial que deseamos, como es la primera imagen Le indicamos 0 0, aunque aqui
@@ -137,7 +138,7 @@ public class Mario extends Sprite {
             isPlayerRunningRight = true;
         }
 
-//Todo preparando stateTimer, checar lógica luego, que no comprendí part 11 min 14
+//Si el estado actual no es igual al anterior, entonces debemos pasar a otro estado, si no debemos reiniciar el timer.
         stateTimer = currentState == previousState ? stateTimer + deltaTime : 0;
         previousState = currentState;
 

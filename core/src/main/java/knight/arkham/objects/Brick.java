@@ -25,7 +25,6 @@ public class Brick extends InteractiveTileObject{
         localAssetManager = assetManager;
     }
 
-//  Todo La colisión no funciona tan bien que digamos.
     @Override
     public void onHeadHit() {
 

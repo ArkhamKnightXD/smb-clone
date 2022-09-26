@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import knight.arkham.objects.Brick;
 import knight.arkham.objects.Coin;
 import knight.arkham.screens.GameScreen;
@@ -53,8 +54,8 @@ public class TileMapHelper {
 
                 BodyHelper.createStaticBody(
 
-                        new Box2DBody(
-                                rectangle.x + rectangle.width / 2, rectangle.y + rectangle.height / 2,
+                        new Box2DBody(new Vector2(rectangle.x + rectangle.width / 2,
+                                rectangle.y + rectangle.height / 2),
                                 rectangle.width, rectangle.height, gameScreen.getWorld()
                         )
                 );

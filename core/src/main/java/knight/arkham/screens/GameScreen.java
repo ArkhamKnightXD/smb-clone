@@ -94,22 +94,18 @@ public class GameScreen extends ScreenAdapter {
     }
 
 
-    @Override
-    public void show() {
-
-    }
-
-
     private void handleUserInput() {
 
+// Todo salta varias veces
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
             mario.getBody().applyLinearImpulse(new Vector2(0, 4f), mario.getBody().getWorldCenter(), true);
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && mario.getBody().getLinearVelocity().x <= 2)
-            mario.getBody().applyLinearImpulse(new Vector2(1f, 0), mario.getBody().getWorldCenter(), true);
+//        Si quiero reducir o aumentar la maxima velocidad de mario debo jugar con los valores al final del if
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && mario.getBody().getLinearVelocity().x <= 1.5)
+            mario.getBody().applyLinearImpulse(new Vector2(1, 0), mario.getBody().getWorldCenter(), true);
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && mario.getBody().getLinearVelocity().x >= -2)
-            mario.getBody().applyLinearImpulse(new Vector2(-1f, 0), mario.getBody().getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && mario.getBody().getLinearVelocity().x >= -1.5)
+            mario.getBody().applyLinearImpulse(new Vector2(-1, 0), mario.getBody().getWorldCenter(), true);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 

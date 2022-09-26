@@ -22,9 +22,9 @@ public class Hud implements Disposable {
     private float timeCount;
     private static Integer score;
 
-//    Scene2d elements
+    //    Scene2d elements
     Label countDownLabel;
-//    Como voy a utilizar esta variable en una función static, debo de definirla static
+    //    Como voy a utilizar esta variable en una función static, debo de definirla static
     static Label scoreLabel;
     Label timeLabel;
     Label levelLabel;
@@ -49,19 +49,19 @@ public class Hud implements Disposable {
 
     private void setUpHudTable() {
 
-        //        Crearemos una tabla en nuestro stage, para asi poder ordenar nuestros widget como deseemos
+        //Crearemos una tabla en nuestro stage, para asi poder ordenar nuestros widget como deseemos
         Table table = new Table();
 
-//        Cuando indicamos esto, quiere decir que pondrá los elementos en la parte de arriba de nuestro stage
+//Cuando indicamos esto, quiere decir que pondrá los elementos en la parte de arriba de nuestro stage
         table.top();
 
-//        Esto quiere decir que nuestra tabla ahora es del tamaño de nuestro stage
+// Esto quiere decir que nuestra tabla ahora es del tamaño de nuestro stage
         table.setFillParent(true);
 
-//        Set all scene2D widgets: Debo de hacer un string format para llevar de integer a string El 03 índica
-//        la cantidad de unidades que tendrá nuestro número y la d para indicar que es un integer, y finalmente
-//        indicamos el estilo de mi label, el color será blanco.
-        countDownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+// Set all scene2D widgets: Debo de hacer un string format para llevar de integer a string El 03 índica la cantidad de
+// unidades que tendrá nuestro número y la d para indicar que es un integer, y finalmente indicamos el estilo
+// de mi label, el color será blanco.
+        countDownLabel =new Label(String.format("%03d", worldTimer),new Label.LabelStyle(new BitmapFont(),Color.WHITE));
         scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         levelLabel = new Label("1-1", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -89,21 +89,26 @@ public class Hud implements Disposable {
     }
 
 
-    public void update(float deltaTime){
+    public void update(float deltaTime) {
 
-//        Forma correcta de hacer un contador utilizando deltaTime
+        countDownTimer(deltaTime);
+    }
+
+    private void countDownTimer(float deltaTime) {
+
+        //        Forma correcta de hacer un contador utilizando deltaTime
         timeCount += deltaTime;
 
-        while (timeCount >= 1){
+        while (timeCount >= 1) {
             worldTimer--;
             timeCount -= 1;
         }
         countDownLabel.setText(String.format("%03d", worldTimer));
     }
 
-//    No necesariamente es la mejor práctica hacer este elemento static, pero con motivo de ganar tiempo se hará de
+    //No necesariamente es la mejor práctica hacer este elemento static, pero con motivo de ganar tiempo se hará de
 //    esta forma.
-    public static void addScore(int value){
+    public static void addScore(int value) {
 
         score += value;
 
