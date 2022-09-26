@@ -16,7 +16,7 @@ public class BodyHelper {
 // la colisión con los bloques fallara. Esta opción es util para personajes.
         bodyDefinition.fixedRotation = true;
 
-        bodyDefinition.position.set(box2DBody.position.x / PIXELS_PER_METER, box2DBody.position.y / PIXELS_PER_METER);
+        bodyDefinition.position.set(box2DBody.position.x, box2DBody.position.y);
 
         Body body = box2DBody.world.createBody(bodyDefinition);
 
@@ -70,7 +70,7 @@ public class BodyHelper {
         BodyDef bodyDefinition = new BodyDef();
 
         bodyDefinition.type = BodyDef.BodyType.StaticBody;
-        bodyDefinition.position.set(box2DBody.position.x / PIXELS_PER_METER, box2DBody.position.y / PIXELS_PER_METER);
+        bodyDefinition.position.set(box2DBody.position.x, box2DBody.position.y);
 
         PolygonShape shape = new PolygonShape();
 
