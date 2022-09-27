@@ -20,6 +20,11 @@ public abstract class InteractiveTileObject {
         this.tiledMap = tiledMap;
         this.bounds = bounds;
 
+        createTileObjectStaticBody(world, bounds);
+    }
+
+    private void createTileObjectStaticBody(World world, Rectangle bounds) {
+
         BodyDef bodyDefinition = new BodyDef();
 
         bodyDefinition.type = BodyDef.BodyType.StaticBody;
@@ -37,11 +42,8 @@ public abstract class InteractiveTileObject {
         fixture = body.createFixture(shape,0);
     }
 
-
-    public abstract void onHeadHit();
-
 //    Función encargada de preparar el filtro de categoría a mis distintos objetos.
-    public void setCategoryFilter(short filterBit){
+    protected void setCategoryFilter(short filterBit){
 
         Filter filter = new Filter();
         filter.categoryBits = filterBit;
@@ -49,7 +51,7 @@ public abstract class InteractiveTileObject {
         fixture.setFilterData(filter);
     }
 
-    public TiledMapTileLayer.Cell getCell(){
+    protected TiledMapTileLayer.Cell getCell(){
 
 // Obtengo el graphic layer
         TiledMapTileLayer layer = (TiledMapTileLayer) tiledMap.getLayers().get("Graphic Layer");
@@ -59,4 +61,6 @@ public abstract class InteractiveTileObject {
         return layer.getCell((int)(body.getPosition().x * PIXELS_PER_METER / 16),
                 (int)(body.getPosition().y * PIXELS_PER_METER / 16));
     }
+
+    public abstract void onHeadHit();
 }

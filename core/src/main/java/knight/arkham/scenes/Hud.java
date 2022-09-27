@@ -94,15 +94,17 @@ public class Hud implements Disposable {
         countDownTimer(deltaTime);
     }
 
+    // Forma correcta de hacer un contador utilizando deltaTime
     private void countDownTimer(float deltaTime) {
 
-        //        Forma correcta de hacer un contador utilizando deltaTime
         timeCount += deltaTime;
 
         while (timeCount >= 1) {
+
             worldTimer--;
             timeCount -= 1;
         }
+
         countDownLabel.setText(String.format("%03d", worldTimer));
     }
 

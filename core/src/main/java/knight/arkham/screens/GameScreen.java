@@ -54,7 +54,6 @@ public class GameScreen extends ScreenAdapter {
 //       como paredes y pisos.
         world = new World(new Vector2(0, -10), true);
 
-
 //        Asi cargamos un textureAtlas, un texture atlas es un conjunto de imágenes convertidas en una sola
 //        Y en el pack se guardan los nombres de las imágenes con sus posiciones X y Y, también su tamaño se guarda.
         textureAtlas = new TextureAtlas("images/Mario_and_Enemies.pack");
@@ -174,12 +173,6 @@ public class GameScreen extends ScreenAdapter {
 
 //		Si nuestra pantalla cambia de tamaño deseamos que el viewport ajuste nuestro juego.
         viewport.update(width, height);
-    }
-
-
-    @Override
-    public void hide() {
-
     }
 
     @Override
