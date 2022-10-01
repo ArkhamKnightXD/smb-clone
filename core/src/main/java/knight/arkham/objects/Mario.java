@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.utils.Array;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
@@ -72,12 +71,7 @@ public class Mario extends Sprite {
 
         animationFrames.clear();
 
-
-        CircleShape circleShape = new CircleShape();
-
-        circleShape.setRadius(6 / PIXELS_PER_METER);
-
-        body = BodyHelper.createDynamicBody(new Box2DBody(new Vector2(32, 32), gameScreen.getWorld(),circleShape));
+        body = BodyHelper.createDynamicBody(new Box2DBody(new Vector2(32, 32), gameScreen.getWorld()));
 
 //Utilizamos getTexture para obtener el texture region que indicamos en el constructor super y luego indicamos
 // las coordenadas donde está la imagen inicial que deseamos, como es la primera imagen Le indicamos 0 0, aunque aqui
@@ -125,9 +119,20 @@ public class Mario extends Sprite {
                 region = playerStand;
         }
 
-//Evaluación para determinar si las animaciones iran para la izquierda o la derecha isFlipX retorna true, si la region
-// ha sido volteada, en nuestro caso volteado a la izquierda La función flip requiere dos booleans uno para X y otro
-// para Y, en nuestro caso solo queremos voltear el eje X.
+        flipPlayerOnXAxis(region);
+
+//Si el estado actual no es igual al anterior, entonces debemos pasar a otro estado, si no debemos reiniciar el timer.
+        stateTimer = currentState == previousState ? stateTimer + deltaTime : 0;
+        previousState = currentState;
+
+        return region;
+    }
+
+    private void flipPlayerOnXAxis(TextureRegion region) {
+
+        //Evaluación para determinar si las animaciones iran para la izquierda o la derecha isFlipX retorna true,
+        // si la region ha sido volteada, en nuestro caso volteado a la izquierda La función flip requiere dos booleans
+        // uno para X y otro para Y, en nuestro caso solo queremos voltear el eje X.
         if ((body.getLinearVelocity().x < 0 || !isPlayerRunningRight) && !region.isFlipX()) {
 
             region.flip(true, false);
@@ -137,12 +142,6 @@ public class Mario extends Sprite {
             region.flip(true, false);
             isPlayerRunningRight = true;
         }
-
-//Si el estado actual no es igual al anterior, entonces debemos pasar a otro estado, si no debemos reiniciar el timer.
-        stateTimer = currentState == previousState ? stateTimer + deltaTime : 0;
-        previousState = currentState;
-
-        return region;
     }
 
     private playerState getPlayerCurrentState() {

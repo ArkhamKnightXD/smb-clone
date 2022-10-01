@@ -54,13 +54,15 @@ public class GameScreen extends ScreenAdapter {
 //       como paredes y pisos.
         world = new World(new Vector2(0, -10), true);
 
+        world.setContactListener(new GameContactListener());
+
+        debugRenderer = new Box2DDebugRenderer();
+
 //        Asi cargamos un textureAtlas, un texture atlas es un conjunto de imágenes convertidas en una sola
 //        Y en el pack se guardan los nombres de las imágenes con sus posiciones X y Y, también su tamaño se guarda.
         textureAtlas = new TextureAtlas("images/Mario_and_Enemies.pack");
 
         mario = new Mario(this);
-
-        debugRenderer = new Box2DDebugRenderer();
 
         batch = new SpriteBatch();
 
@@ -82,8 +84,6 @@ public class GameScreen extends ScreenAdapter {
         TileMapHelper tileMapHelper = new TileMapHelper(this);
 
         mapRenderer = tileMapHelper.setupMap();
-
-        world.setContactListener(new GameContactListener());
 
         Music music = assetManager.get("audio/music/mario_music.ogg", Music.class);
 

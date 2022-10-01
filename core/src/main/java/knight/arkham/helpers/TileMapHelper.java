@@ -55,8 +55,8 @@ public class TileMapHelper {
                 BodyHelper.createStaticBody(
 
                         new Box2DBody(new Vector2(rectangle.x + rectangle.width / 2,
-                                rectangle.y + rectangle.height / 2),
-                                rectangle.width, rectangle.height, gameScreen.getWorld()
+                                rectangle.y + rectangle.height / 2), rectangle.width,
+                                rectangle.height, gameScreen.getWorld()
                         )
                 );
             }
