@@ -1,11 +1,11 @@
 package knight.arkham.helpers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import knight.arkham.objects.Enemy;
 import knight.arkham.objects.InteractiveTileObject;
 
-import static knight.arkham.helpers.Constants.ENEMY_HEAD_BIT;
-import static knight.arkham.helpers.Constants.MARIO_BIT;
+import static knight.arkham.helpers.Constants.*;
 
 public class GameContactListener implements ContactListener {
 
@@ -20,27 +20,47 @@ public class GameContactListener implements ContactListener {
 //        Y como los categoryBits están definidos como short, será una suma binaria.
         int collisionDefinition = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
 
-        if (fixtureA.getUserData() == "head" || fixtureB.getUserData() == "head"){
+        if (fixtureA.getUserData() == "head" || fixtureB.getUserData() == "head") {
 
 //            Aqui realizo evaluación sobre cuál objeto será la cabeza de mario y otro el objeto.
             Fixture head = fixtureA.getUserData() == "head" ? fixtureA : fixtureB;
             Fixture object = head == fixtureA ? fixtureB : fixtureA;
 
             // La segunda condición nos retornará true si el objeto extiende de interactiveTileObject
-            if (object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())){
+            if (object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())) {
 
 //                De esta forma ejecuto la función onHeadHit.
                 ((InteractiveTileObject) object.getUserData()).onHeadHit();
             }
         }
 
-        switch (collisionDefinition){
+        switch (collisionDefinition) {
+
             case ENEMY_HEAD_BIT | MARIO_BIT:
                 if (fixtureA.getFilterData().categoryBits == ENEMY_HEAD_BIT)
-                    ((Enemy)fixtureA.getUserData()).hitOnHead();
+                    ((Enemy) fixtureA.getUserData()).hitOnHead();
 
-                else if (fixtureB.getFilterData().categoryBits == ENEMY_HEAD_BIT)
-                    ((Enemy)fixtureB.getUserData()).hitOnHead();
+                else
+                    ((Enemy) fixtureB.getUserData()).hitOnHead();
+
+                break;
+
+            // Las colisiones se len de esta forma. Si el enemy colisiona con un objeto.
+
+            case ENEMY_BIT | OBJECT_BIT:
+                if (fixtureA.getFilterData().categoryBits == ENEMY_BIT)
+                    ((Enemy) fixtureA.getUserData()).reverseVelocity(true, false);
+
+                else
+                    ((Enemy) fixtureB.getUserData()).reverseVelocity(true, false);
+
+                break;
+
+            case MARIO_BIT | ENEMY_BIT:
+                Gdx.app.log("Mario", "Died");
+                break;
+
+
         }
     }
 

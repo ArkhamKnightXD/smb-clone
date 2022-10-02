@@ -94,7 +94,7 @@ public class GameScreen extends ScreenAdapter {
         music.setVolume(0.1f);
         music.play();
 //        Forma mas rápida de decide 32/PixelsPerMeter
-        goomba = new Goomba(this, new Vector2(64, 32));
+        goomba = new Goomba(this, new Vector2(512, 32));
     }
 
 

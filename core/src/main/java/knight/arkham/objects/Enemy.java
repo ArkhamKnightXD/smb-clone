@@ -13,6 +13,8 @@ public abstract class Enemy extends Sprite {
 
     protected Body body;
 
+    protected Vector2 velocity;
+
     public Enemy(GameScreen gameScreen, Vector2 position) {
 
         this.gameScreen = gameScreen;
@@ -22,6 +24,16 @@ public abstract class Enemy extends Sprite {
         setPosition(position.x, position.y);
 
         defineEnemyBody();
+
+        velocity = new Vector2(1,0);
+    }
+
+    public void reverseVelocity(boolean x, boolean y){
+        if (x)
+            velocity.x = -velocity.x;
+
+        if (y)
+            velocity.y = -velocity.y;
     }
 
     protected abstract void defineEnemyBody();

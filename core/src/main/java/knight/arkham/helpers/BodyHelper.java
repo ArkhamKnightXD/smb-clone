@@ -110,7 +110,7 @@ public class BodyHelper {
 //        el Enemy_Bit y el Mario_Bit.
         fixtureDefinition.filter.maskBits = GROUND_BIT | COIN_BIT | BRICK_BIT | OBJECT_BIT | ENEMY_BIT | MARIO_BIT;
 
-        body.createFixture(fixtureDefinition);
+        body.createFixture(fixtureDefinition).setUserData(goomba);
 
         circleShape.dispose();
 
