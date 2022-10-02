@@ -18,10 +18,12 @@ public abstract class Enemy extends Sprite {
         this.gameScreen = gameScreen;
         world = gameScreen.getWorld();
 
+//        Como indico la posición mediante esta función, puedo utilizar las funciones getX and GetY en otros lugares.
         setPosition(position.x, position.y);
 
-        defineEnemy();
+        defineEnemyBody();
     }
 
-    protected abstract void defineEnemy();
+    protected abstract void defineEnemyBody();
+    public abstract void hitOnHead();
 }

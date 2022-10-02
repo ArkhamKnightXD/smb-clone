@@ -3,7 +3,6 @@ package knight.arkham.objects;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
@@ -16,6 +15,9 @@ public class Goomba extends Enemy{
     private float stateTimer;
 
     private final Animation<TextureRegion> walkAnimation;
+
+    private boolean setToDestroy;
+    private boolean destroyed;
 
 
     public Goomba(GameScreen gameScreen, Vector2 position) {
@@ -37,20 +39,53 @@ public class Goomba extends Enemy{
         stateTimer = 0;
 
         setBounds(getX(), getY(), 16/PIXELS_PER_METER, 16/PIXELS_PER_METER);
+
+        setToDestroy = false;
+        destroyed = false;
     }
 
     public void update(float deltaTime){
 
         stateTimer += deltaTime;
 
-        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
+        if (setToDestroy && !destroyed){
 
-        setRegion(walkAnimation.getKeyFrame(stateTimer, true));
+            destroyEnemy();
+        }
+//        Si mi goomba no ha sido destruido, que continue con su movimiento y sprite iguales.
+        else if(!destroyed){
+
+            setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
+            setRegion(walkAnimation.getKeyFrame(stateTimer, true));
+        }
+    }
+
+    // Esta es la forma correcta para destruir un body de nuestro world, pues no podemos simplemente destruirlo
+    //  de una vez, pues causaría error por con las colisiones.
+    private void destroyEnemy(){
+
+        // Destruyo el body
+        world.destroyBody(body);
+        destroyed = true;
+
+//            Cambio el sprite de mi goomba por el sprite de goomba aplastado.
+        setRegion(new TextureRegion(gameScreen.getTextureAtlas()
+                .findRegion("goomba"), 32, 0, 16, 16));
     }
 
     @Override
-    protected void defineEnemy() {
+    protected void defineEnemyBody() {
 
-        body = BodyHelper.createEnemyDynamicBody(new Box2DBody(new Vector2(32, 32), gameScreen.getWorld()));
+        body = BodyHelper.createEnemyBody(
+
+                        new Box2DBody(new Vector2(getX(), getY()), gameScreen.getWorld()), this
+                );
+    }
+
+    @Override
+    public void hitOnHead() {
+
+//        Si golpeamos este objeto indicaremos que este objeto debe de ser destruido.
+        setToDestroy = true;
     }
 }

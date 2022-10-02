@@ -5,7 +5,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.World;
 import knight.arkham.scenes.Hud;
 import knight.arkham.screens.GameScreen;
 
@@ -20,6 +19,8 @@ public class Brick extends InteractiveTileObject{
     public Brick(GameScreen gameScreen, TiledMap tiledMap, Rectangle bounds) {
         super(gameScreen.getWorld(), tiledMap, bounds);
 
+//        De esta forma guardo los datos de esta clase, para poder acceder a ella al momento de las colisiones
+//        en la clase GameContactListener.
         fixture.setUserData(this);
 
         setCategoryFilter(BRICK_BIT);

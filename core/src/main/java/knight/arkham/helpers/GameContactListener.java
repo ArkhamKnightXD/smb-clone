@@ -1,7 +1,11 @@
 package knight.arkham.helpers;
 
 import com.badlogic.gdx.physics.box2d.*;
+import knight.arkham.objects.Enemy;
 import knight.arkham.objects.InteractiveTileObject;
+
+import static knight.arkham.helpers.Constants.ENEMY_HEAD_BIT;
+import static knight.arkham.helpers.Constants.MARIO_BIT;
 
 public class GameContactListener implements ContactListener {
 
@@ -11,6 +15,10 @@ public class GameContactListener implements ContactListener {
 
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
+
+//        Aqui estoy juntando los 2 categoryBits de los objetos que colisionen. Esto básicamente, sumará los valores
+//        Y como los categoryBits están definidos como short, será una suma binaria.
+        int collisionDefinition = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
 
         if (fixtureA.getUserData() == "head" || fixtureB.getUserData() == "head"){
 
@@ -24,6 +32,15 @@ public class GameContactListener implements ContactListener {
 //                De esta forma ejecuto la función onHeadHit.
                 ((InteractiveTileObject) object.getUserData()).onHeadHit();
             }
+        }
+
+        switch (collisionDefinition){
+            case ENEMY_HEAD_BIT | MARIO_BIT:
+                if (fixtureA.getFilterData().categoryBits == ENEMY_HEAD_BIT)
+                    ((Enemy)fixtureA.getUserData()).hitOnHead();
+
+                else if (fixtureB.getFilterData().categoryBits == ENEMY_HEAD_BIT)
+                    ((Enemy)fixtureB.getUserData()).hitOnHead();
         }
     }
 
