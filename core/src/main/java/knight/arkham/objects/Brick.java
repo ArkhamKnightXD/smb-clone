@@ -7,6 +7,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
 import knight.arkham.scenes.Hud;
+import knight.arkham.screens.GameScreen;
+
 import static knight.arkham.helpers.Constants.BRICK_BIT;
 import static knight.arkham.helpers.Constants.DESTROYED_BIT;
 
@@ -15,14 +17,14 @@ public class Brick extends InteractiveTileObject{
     private final AssetManager localAssetManager;
 
 
-    public Brick(World world, TiledMap tiledMap, Rectangle bounds, AssetManager assetManager) {
-        super(world, tiledMap, bounds);
+    public Brick(GameScreen gameScreen, TiledMap tiledMap, Rectangle bounds) {
+        super(gameScreen.getWorld(), tiledMap, bounds);
 
         fixture.setUserData(this);
 
         setCategoryFilter(BRICK_BIT);
 
-        localAssetManager = assetManager;
+        localAssetManager = gameScreen.getAssetManager();
     }
 
     @Override

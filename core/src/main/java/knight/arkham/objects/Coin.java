@@ -6,8 +6,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.World;
 import knight.arkham.scenes.Hud;
+import knight.arkham.screens.GameScreen;
 
 import static knight.arkham.helpers.Constants.COIN_BIT;
 
@@ -17,8 +17,8 @@ public class Coin extends InteractiveTileObject{
 
     private final AssetManager localAssetManager;
 
-    public Coin(World world, TiledMap tiledMap, Rectangle bounds, AssetManager assetManager) {
-        super(world, tiledMap, bounds);
+    public Coin(GameScreen gameScreen, TiledMap tiledMap, Rectangle bounds) {
+        super(gameScreen.getWorld(), tiledMap, bounds);
 
 //        Buscamos nuestro tileSet completo
         tileSet = tiledMap.getTileSets().getTileSet("tileset_gutter");
@@ -27,7 +27,7 @@ public class Coin extends InteractiveTileObject{
 
         setCategoryFilter(COIN_BIT);
 
-        localAssetManager = assetManager;
+        localAssetManager = gameScreen.getAssetManager();
     }
 
     @Override

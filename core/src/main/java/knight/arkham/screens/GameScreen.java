@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import knight.arkham.helpers.GameContactListener;
 import knight.arkham.helpers.TileMapHelper;
+import knight.arkham.objects.Goomba;
 import knight.arkham.objects.Mario;
 import knight.arkham.scenes.Hud;
 import static knight.arkham.helpers.Constants.*;
@@ -43,6 +44,8 @@ public class GameScreen extends ScreenAdapter {
     private final TextureAtlas textureAtlas;
 
     private final AssetManager assetManager;
+
+    private final Goomba goomba;
 
 
     public GameScreen(AssetManager globalAssetManager) {
@@ -90,6 +93,8 @@ public class GameScreen extends ScreenAdapter {
         music.setLooping(true);
         music.setVolume(0.1f);
         music.play();
+//        Forma mas rápida de decide 32/PixelsPerMeter
+        goomba = new Goomba(this, new Vector2(.200f, .32f));
     }
 
 
@@ -132,6 +137,7 @@ public class GameScreen extends ScreenAdapter {
         camera.position.x = mario.getBody().getPosition().x;
 
         mario.update(deltaTime);
+        goomba.update(deltaTime);
         hud.update(deltaTime);
 
         camera.update();
@@ -156,6 +162,8 @@ public class GameScreen extends ScreenAdapter {
 
 //        La función draw es heredado de la clase sprite, implementada mi clase Mario.
         mario.draw(batch);
+
+        goomba.draw(batch);
 
         batch.end();
 

@@ -44,10 +44,10 @@ public class TileMapHelper {
 
 // Mis objetos brick y coins deseo tenerlo en clases, para asi poder manejar su comportamiento cuando haya colisión.
             if (objectsName.equals("Bricks"))
-                new Brick(gameScreen.getWorld(), tiledMap, rectangle, gameScreen.getAssetManager());
+                new Brick(gameScreen, tiledMap, rectangle);
 
             else if (objectsName.equals("Coins"))
-                new Coin(gameScreen.getWorld(), tiledMap, rectangle, gameScreen.getAssetManager());
+                new Coin(gameScreen, tiledMap, rectangle);
 
 //            Los demás objetos los crearé libremente.
             else {

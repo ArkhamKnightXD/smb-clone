@@ -35,6 +35,7 @@ public class Mario extends Sprite {
 
 //        Debido a que heredamos de la clase sprite podemos implementar el constructor, al que le mandaremos un texture
 //        region, y este texture region lo podremos referenciar más abajo mediante la función getTexture.
+//        Esto nos dara la region que le pertenece a los sprite llamados little_mario
         super(gameScreen.getTextureAtlas().findRegion("little_mario"));
 
 //        Standing debe de ser el estado inicial, tanto para el current como el previous state

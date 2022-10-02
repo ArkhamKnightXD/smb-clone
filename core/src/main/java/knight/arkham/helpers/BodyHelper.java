@@ -54,10 +54,51 @@ public class BodyHelper {
         return body;
     }
 
-//    En esta función preparo los valores iniciales que va a tener mi fixture.
+    public static Body createEnemyDynamicBody(Box2DBody box2DBody){
+
+        BodyDef bodyDefinition = new BodyDef();
+
+        bodyDefinition.type = BodyDef.BodyType.DynamicBody;
+
+        bodyDefinition.fixedRotation = true;
+        bodyDefinition.position.set(box2DBody.position.x / PIXELS_PER_METER, box2DBody.position.y / PIXELS_PER_METER);
+
+        Body body = box2DBody.world.createBody(bodyDefinition);
+
+        CircleShape circleShape = new CircleShape();
+
+        circleShape.setRadius(6 / PIXELS_PER_METER);
+
+        FixtureDef fixtureDefinition = new FixtureDef();
+
+        fixtureDefinition.shape = circleShape;
+        fixtureDefinition.density = 100;
+        fixtureDefinition.friction = 0.1f;
+
+        fixtureDefinition.filter.categoryBits = ENEMY_BIT;
+
+//        Nuestros enemigos podrán colisionar entre ellos mismos y también con mario, por eso agrego
+//        el Enemy_Bit y el Mario_Bit.
+        fixtureDefinition.filter.maskBits = GROUND_BIT | COIN_BIT | BRICK_BIT | OBJECT_BIT | ENEMY_BIT | MARIO_BIT;
+
+        body.createFixture(fixtureDefinition);
+
+        circleShape.dispose();
+
+        return body;
+    }
+
+
+    //    En esta función preparo los valores iniciales que va a tener mi fixture.
     private static FixtureDef getPreparedFixtureDefinition(CircleShape shape) {
 
         FixtureDef fixtureDefinition = new FixtureDef();
+
+        fixtureDefinition.shape = shape;
+
+//  100 es una densidad recomendable, si la densidad es muy alta nuestro personaje no va a poder saltar
+        fixtureDefinition.density = 100;
+        fixtureDefinition.friction = 0.1f;
 
         //  Cada fixture en box2D tiene un filtro, el filtro tiene una categoría y una mask, la categoría es para
         //  indicar que este fixture, es mario, brick o un coin y el mask representa con cuáles fixture este fixture
@@ -69,13 +110,7 @@ public class BodyHelper {
 //        Aqui defino con que mi fixture de mario podrá colisionar, lo hare con O lógicos simples Indicamos que mario
 //        pueda colisionar con todos los bits exceptuando el Destroyed_bit, pues cuando un fixture tenga este bit
 //        no queremos que mario colisione, pues técnicamente este objeto está destruido.
-        fixtureDefinition.filter.maskBits = DEFAULT_BIT | COIN_BIT | BRICK_BIT;
-
-        fixtureDefinition.shape = shape;
-
-//  100 es una densidad recomendable, si la densidad es muy alta nuestro personaje no va a poder saltar
-        fixtureDefinition.density = 100;
-        fixtureDefinition.friction = 0.1f;
+        fixtureDefinition.filter.maskBits = GROUND_BIT | COIN_BIT | BRICK_BIT | OBJECT_BIT | ENEMY_BIT;
 
         return fixtureDefinition;
     }
@@ -91,10 +126,18 @@ public class BodyHelper {
 
         shape.setAsBox(box2DBody.width / 2 /PIXELS_PER_METER , box2DBody.height / 2 / PIXELS_PER_METER);
 
+        FixtureDef fixtureDef = new FixtureDef();
+
+        fixtureDef.shape = shape;
+
+//        Todo tengo que separar esto, pues no todos los elementos creados por esta función, pueden tener object_bit
+//        Por ejemplo los coin y el ground no deberían de tener un object_bit, evaluare esto para mas adelante.
+        fixtureDef.filter.categoryBits = OBJECT_BIT;
+
         Body body = box2DBody.world.createBody(bodyDefinition);
 
     //A static body has zero mass by definition, so the density is not used in this case. The default density is zero.
-        Fixture fixture = body.createFixture(shape,0);
+        Fixture fixture = body.createFixture(fixtureDef);
 
         shape.dispose();
 
