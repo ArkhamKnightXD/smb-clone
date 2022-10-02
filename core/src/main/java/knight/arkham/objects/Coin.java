@@ -38,17 +38,18 @@ public class Coin extends InteractiveTileObject{
         // se empieza a contar desde 0, pero el tileSet empieza desde 1 por esta razón este elemento es 28 en vez de 27.
         int BLANK_COIN = 28;
 
-        getCell().setTile(tileSet.getTile(BLANK_COIN));
-
-        Hud.addScore(100);
-
 //        Hay 2 sonidos que podemos tocar, uno cuando hay un coin disponible y otro cuando el bloque esta vació.
+//        Comparo él, id actual del tile si es igual a un Blank_coin significa que el tile esta vació.
         if(getCell().getTile().getId() == BLANK_COIN)
             localAssetManager.get("audio/sound/bump.wav", Sound.class).play();
 
         else
             localAssetManager.get("audio/sound/coin.wav", Sound.class).play();
 
+//        Al final actualizo el tile por el tile con él, id de blank coin.
+        getCell().setTile(tileSet.getTile(BLANK_COIN));
+
+        Hud.addScore(100);
 
         Gdx.app.log("Coin", "Collision");
     }

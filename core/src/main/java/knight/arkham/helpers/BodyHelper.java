@@ -80,7 +80,7 @@ public class BodyHelper {
         return fixtureDefinition;
     }
 
-    public static void createStaticBody(Box2DBody box2DBody){
+    public static Fixture createStaticBody(Box2DBody box2DBody){
 
         BodyDef bodyDefinition = new BodyDef();
 
@@ -94,8 +94,11 @@ public class BodyHelper {
         Body body = box2DBody.world.createBody(bodyDefinition);
 
     //A static body has zero mass by definition, so the density is not used in this case. The default density is zero.
-        body.createFixture(shape,0);
+        Fixture fixture = body.createFixture(shape,0);
 
         shape.dispose();
+
+//  Como desde mi fixture puedo obtener también el body, solo debo de retornar el fixture
+        return fixture;
     }
 }
