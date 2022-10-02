@@ -1,4 +1,4 @@
-package knight.arkham.objects;
+package knight.arkham.sprites.enemies;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -8,10 +8,9 @@ import com.badlogic.gdx.utils.Array;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
-
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
-public class Goomba extends Enemy{
+public class Goomba extends Enemy {
 
     private float stateTimer;
 

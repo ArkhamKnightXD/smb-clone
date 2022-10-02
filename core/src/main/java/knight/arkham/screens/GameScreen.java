@@ -17,8 +17,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import knight.arkham.helpers.GameContactListener;
 import knight.arkham.helpers.TileMapHelper;
-import knight.arkham.objects.Goomba;
-import knight.arkham.objects.Mario;
+import knight.arkham.sprites.enemies.Enemy;
+import knight.arkham.sprites.Mario;
 import knight.arkham.scenes.Hud;
 import static knight.arkham.helpers.Constants.*;
 
@@ -45,7 +45,7 @@ public class GameScreen extends ScreenAdapter {
 
     private final AssetManager assetManager;
 
-    private final Goomba goomba;
+    private final TileMapHelper tileMapHelper;
 
 
     public GameScreen(AssetManager globalAssetManager) {
@@ -84,7 +84,7 @@ public class GameScreen extends ScreenAdapter {
 //		A la hora de preparar la posición inicial de la camara debemos de hacerlo con el world width y el height.
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
-        TileMapHelper tileMapHelper = new TileMapHelper(this);
+        tileMapHelper = new TileMapHelper(this);
 
         mapRenderer = tileMapHelper.setupMap();
 
@@ -93,8 +93,6 @@ public class GameScreen extends ScreenAdapter {
         music.setLooping(true);
         music.setVolume(0.1f);
         music.play();
-//        Forma mas rápida de decide 32/PixelsPerMeter
-        goomba = new Goomba(this, new Vector2(512, 32));
     }
 
 
@@ -137,7 +135,19 @@ public class GameScreen extends ScreenAdapter {
         camera.position.x = mario.getBody().getPosition().x;
 
         mario.update(deltaTime);
-        goomba.update(deltaTime);
+
+//        Si tengo varios objetos que tengo que actualizar esta es la única forma.
+//        Nota podría cambiar el forEach por un for, por cuestiones de performance.
+        for (Enemy enemy : tileMapHelper.getGoombas()){
+
+            enemy.update(deltaTime);
+
+//            Aqui activo el body de mi enemigo cuando este a cierta distancia de mario.
+            if (enemy.getX() < mario.getX() + 2.5f)
+                enemy.body.setActive(true);
+        }
+
+
         hud.update(deltaTime);
 
         camera.update();
@@ -163,7 +173,8 @@ public class GameScreen extends ScreenAdapter {
 //        La función draw es heredado de la clase sprite, implementada mi clase Mario.
         mario.draw(batch);
 
-        goomba.draw(batch);
+        for (Enemy enemy : tileMapHelper.getGoombas())
+            enemy.draw(batch);
 
         batch.end();
 

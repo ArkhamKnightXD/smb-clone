@@ -1,4 +1,4 @@
-package knight.arkham.objects;
+package knight.arkham.sprites.tileObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;

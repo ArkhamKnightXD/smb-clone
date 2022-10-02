@@ -1,4 +1,4 @@
-package knight.arkham.objects;
+package knight.arkham.sprites;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;

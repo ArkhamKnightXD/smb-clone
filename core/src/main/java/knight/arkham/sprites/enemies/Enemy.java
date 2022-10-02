@@ -1,4 +1,4 @@
-package knight.arkham.objects;
+package knight.arkham.sprites.enemies;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -11,7 +11,7 @@ public abstract class Enemy extends Sprite {
     protected GameScreen gameScreen;
     protected World world;
 
-    protected Body body;
+    public Body body;
 
     protected Vector2 velocity;
 
@@ -26,6 +26,10 @@ public abstract class Enemy extends Sprite {
         defineEnemyBody();
 
         velocity = new Vector2(1,0);
+
+//        Esto pone el body de este objeto a dormir, en otras palabras vuelve este objeto static,
+//        por lo tanto, este body no será calculado por mi world
+        body.setActive(false);
     }
 
     public void reverseVelocity(boolean x, boolean y){
@@ -38,4 +42,5 @@ public abstract class Enemy extends Sprite {
 
     protected abstract void defineEnemyBody();
     public abstract void hitOnHead();
+    public abstract void update(float deltaTime);
 }
