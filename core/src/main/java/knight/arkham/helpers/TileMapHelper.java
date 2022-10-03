@@ -12,7 +12,6 @@ import knight.arkham.sprites.tileObjects.Brick;
 import knight.arkham.sprites.tileObjects.Coin;
 import knight.arkham.sprites.enemies.Goomba;
 import knight.arkham.screens.GameScreen;
-
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public class TileMapHelper {

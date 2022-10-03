@@ -72,7 +72,7 @@ public class Mario extends Sprite {
 
         animationFrames.clear();
 
-        body = BodyHelper.createDynamicBody(new Box2DBody(new Vector2(32, 32), gameScreen.getWorld()));
+        body = BodyHelper.createPlayerBody(new Box2DBody(new Vector2(32, 32), gameScreen.getWorld()));
 
 //Utilizamos getTexture para obtener el texture region que indicamos en el constructor super y luego indicamos
 // las coordenadas donde está la imagen inicial que deseamos, como es la primera imagen Le indicamos 0 0, aunque aqui

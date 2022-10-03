@@ -7,7 +7,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import knight.arkham.scenes.Hud;
 import knight.arkham.screens.GameScreen;
-
 import static knight.arkham.helpers.Constants.BRICK_BIT;
 import static knight.arkham.helpers.Constants.DESTROYED_BIT;
 

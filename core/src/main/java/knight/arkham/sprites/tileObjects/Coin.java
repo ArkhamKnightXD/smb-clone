@@ -8,7 +8,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Rectangle;
 import knight.arkham.scenes.Hud;
 import knight.arkham.screens.GameScreen;
-
 import static knight.arkham.helpers.Constants.COIN_BIT;
 
 public class Coin extends InteractiveTileObject{

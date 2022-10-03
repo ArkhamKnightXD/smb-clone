@@ -4,14 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import knight.arkham.sprites.enemies.Enemy;
 import knight.arkham.sprites.tileObjects.InteractiveTileObject;
-
 import static knight.arkham.helpers.Constants.*;
 
 public class GameContactListener implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
-
 
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
@@ -42,7 +40,6 @@ public class GameContactListener implements ContactListener {
 
                 else
                     ((Enemy) fixtureB.getUserData()).hitOnHead();
-
                 break;
 
             // Las colisiones se len de esta forma. Si el enemy colisiona con un objeto.
@@ -53,21 +50,17 @@ public class GameContactListener implements ContactListener {
 
                 else
                     ((Enemy) fixtureB.getUserData()).reverseVelocity(true, false);
-
                 break;
 
 //                Si hay 2 enemigos que colisionan, ambos deben de revertir la velocidad.
             case ENEMY_BIT:
                 ((Enemy) fixtureA.getUserData()).reverseVelocity(true, false);
                 ((Enemy) fixtureB.getUserData()).reverseVelocity(true, false);
-
                 break;
 
             case MARIO_BIT | ENEMY_BIT:
                 Gdx.app.log("Mario", "Died");
                 break;
-
-
         }
     }
 

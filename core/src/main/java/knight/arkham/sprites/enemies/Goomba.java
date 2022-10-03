@@ -23,9 +23,23 @@ public class Goomba extends Enemy {
     public Goomba(GameScreen gameScreen, Vector2 position) {
         super(gameScreen, position);
 
+        walkAnimation = getTextureRegionAnimation(gameScreen);
+
+        stateTimer = 0;
+
+        setBounds(getX(), getY(), 16 / PIXELS_PER_METER, 16 / PIXELS_PER_METER);
+
+        setToDestroy = false;
+        destroyed = false;
+    }
+
+    private Animation<TextureRegion> getTextureRegionAnimation(GameScreen gameScreen) {
+
+        final Animation<TextureRegion> walkAnimation;
+
         Array<TextureRegion> animationFrames = new Array<>();
 
-        for (int i = 0; i < 2; i++){
+        for (int i = 0; i < 2; i++) {
 
             animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas()
                     .findRegion("goomba"), i * 16, 0, 16, 16));
@@ -36,17 +50,12 @@ public class Goomba extends Enemy {
 
         animationFrames.clear();
 
-        stateTimer = 0;
-
-        setBounds(getX(), getY(), 16/PIXELS_PER_METER, 16/PIXELS_PER_METER);
-
-        setToDestroy = false;
-        destroyed = false;
+        return walkAnimation;
     }
 
     // Esta es la forma correcta para destruir un body de nuestro world, pues no podemos simplemente destruirlo
     //  de una vez, pues causaría error por con las colisiones.
-    private void destroyEnemy(){
+    private void destroyEnemy() {
 
         // Destruyo el body
         world.destroyBody(body);
@@ -59,16 +68,16 @@ public class Goomba extends Enemy {
         stateTimer = 0;
     }
 
-    public void update(float deltaTime){
+    public void update(float deltaTime) {
 
         stateTimer += deltaTime;
 
-        if (setToDestroy && !destroyed){
+        if (setToDestroy && !destroyed) {
 
             destroyEnemy();
         }
 //        Si mi goomba no ha sido destruido, que continue con su movimiento y sprite iguales.
-        else if(!destroyed){
+        else if (!destroyed) {
 
             body.setLinearVelocity(velocity);
 
@@ -77,7 +86,7 @@ public class Goomba extends Enemy {
         }
     }
 
-    public void draw (Batch batch){
+    public void draw(Batch batch) {
 
 //        Con esto le indico a mi función draw que solo podrá dibujar el sprite del goomba siempre
 //        y cuando el goomba no haya sido destruido o el stateTimer sea 0.
@@ -90,8 +99,8 @@ public class Goomba extends Enemy {
 
         body = BodyHelper.createEnemyBody(
 
-                        new Box2DBody(new Vector2(getX(), getY()), gameScreen.getWorld()), this
-                );
+                new Box2DBody(new Vector2(getX(), getY()), gameScreen.getWorld()), this
+        );
     }
 
     @Override
