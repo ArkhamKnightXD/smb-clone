@@ -7,10 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
+import knight.arkham.screens.GameScreen;
+
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public abstract class InteractiveTileObject {
 
+    protected GameScreen gameScreen;
     protected final World world;
     protected final TiledMap tiledMap;
     protected final Rectangle bounds;
@@ -18,8 +21,9 @@ public abstract class InteractiveTileObject {
     protected Fixture fixture;
 
     //    Todas las clases que hereden de esta implementaran este constructor
-    public InteractiveTileObject(World world, TiledMap tiledMap, Rectangle bounds) {
-        this.world = world;
+    public InteractiveTileObject(GameScreen gameScreen, TiledMap tiledMap, Rectangle bounds) {
+        this.gameScreen = gameScreen;
+        this.world = gameScreen.getWorld();
         this.tiledMap = tiledMap;
         this.bounds = bounds;
 

@@ -3,6 +3,8 @@ package knight.arkham.helpers;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import knight.arkham.sprites.enemies.Goomba;
+import knight.arkham.sprites.items.Mushroom;
+
 import static knight.arkham.helpers.Constants.*;
 
 public class BodyHelper {
@@ -105,6 +107,28 @@ public class BodyHelper {
 
 //        Deseamos poder acceder a los datos de mi clase goomba, a la hora de la colisión.
         body.createFixture(fixtureDefinition).setUserData(goomba);
+
+        return body;
+    }
+
+
+    public static Body createItemBody(Box2DBody box2DBody, Mushroom mushroom){
+
+        Body body = getPreparedBody(box2DBody);
+
+        FixtureDef fixtureDefinition = new FixtureDef();
+
+        CircleShape circleShape = new CircleShape();
+
+        circleShape.setRadius(6 / PIXELS_PER_METER);
+
+        fixtureDefinition.shape = circleShape;
+
+//        fixtureDefinition.filter.categoryBits = ENEMY_HEAD_BIT;
+
+        body.createFixture(fixtureDefinition).setUserData(mushroom);
+
+        circleShape.dispose();
 
         return body;
     }

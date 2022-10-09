@@ -42,7 +42,7 @@ public class GameContactListener implements ContactListener {
                     ((Enemy) fixtureB.getUserData()).hitOnHead();
                 break;
 
-            // Las colisiones se len de esta forma. Si el enemy colisiona con un objeto.
+            // Las colisiones se leen de esta forma. Si el enemy colisiona con un objeto.
 
             case ENEMY_BIT | OBJECT_BIT:
                 if (fixtureA.getFilterData().categoryBits == ENEMY_BIT)

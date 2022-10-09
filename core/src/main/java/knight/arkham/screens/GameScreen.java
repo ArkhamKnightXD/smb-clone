@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -20,6 +21,12 @@ import knight.arkham.helpers.TileMapHelper;
 import knight.arkham.sprites.enemies.Enemy;
 import knight.arkham.sprites.Mario;
 import knight.arkham.scenes.Hud;
+import knight.arkham.sprites.items.Item;
+import knight.arkham.sprites.items.ItemDefinition;
+import knight.arkham.sprites.items.Mushroom;
+
+import java.util.PriorityQueue;
+
 import static knight.arkham.helpers.Constants.*;
 
 public class GameScreen extends ScreenAdapter {
@@ -46,6 +53,12 @@ public class GameScreen extends ScreenAdapter {
     private final AssetManager assetManager;
 
     private final TileMapHelper tileMapHelper;
+
+    private final Array<Item> items;
+
+
+    //    Investigar más sobre priority y sobre porque no puedo utilizar un array normal en vez de esta opción.
+    private final PriorityQueue<ItemDefinition> itemsToSpawn;
 
 
     public GameScreen(AssetManager globalAssetManager) {
@@ -92,7 +105,29 @@ public class GameScreen extends ScreenAdapter {
 
         music.setLooping(true);
         music.setVolume(0.1f);
-        music.play();
+//        music.play();
+
+        items = new Array<>();
+
+        itemsToSpawn = new PriorityQueue<>();
+    }
+
+    public void spawnItems(ItemDefinition itemDefinition) {
+
+        itemsToSpawn.add(itemDefinition);
+    }
+
+
+    public void handleSpawningItems() {
+
+        if (!itemsToSpawn.isEmpty()) {
+
+//            Esto funciona igual que un pop en JS. Elimina el último elemento de la lista y me lo retorna.
+            ItemDefinition itemDefinition = itemsToSpawn.poll();
+
+            if (itemDefinition.classType == Mushroom.class)
+                items.add(new Mushroom(this, new Vector2(itemDefinition.position.x, itemDefinition.position.y)));
+        }
     }
 
 
@@ -121,6 +156,8 @@ public class GameScreen extends ScreenAdapter {
 
         handleUserInput();
 
+        handleSpawningItems();
+
         //There are two phases in the constraint solver: a velocity phase and a position phase.
         // In the velocity phase the solver computes the impulses necessary for the bodies to move correctly.
         // In the position phase the solver adjusts the positions of the bodies to reduce overlap and joint detachment.
@@ -129,7 +166,7 @@ public class GameScreen extends ScreenAdapter {
         // You can tune this number to your liking, just keep in mind that this has a trade-off between performance and
         // accuracy. Using fewer iterations increases performance but accuracy suffers. Likewise, using more iterations
         // decreases performance but improves the quality of your simulation.
-        world.step(1/60f, 6, 2);
+        world.step(1 / 60f, 6, 2);
 
 //        Nuestra camara seguirá la posición en X de nuestro personaje
         camera.position.x = mario.getBody().getPosition().x;
@@ -138,7 +175,7 @@ public class GameScreen extends ScreenAdapter {
 
 //        Si tengo varios objetos que tengo que actualizar esta es la única forma.
 //        Nota podría cambiar el forEach por un for, por cuestiones de performance.
-        for (Enemy enemy : tileMapHelper.getGoombas()){
+        for (Enemy enemy : tileMapHelper.getGoombas()) {
 
             enemy.update(deltaTime);
 
@@ -146,6 +183,11 @@ public class GameScreen extends ScreenAdapter {
             if (enemy.getX() < mario.getX() + 2.5f)
                 enemy.body.setActive(true);
         }
+
+
+        for (Item item : items)
+            item.update(deltaTime);
+
 
 
         hud.update(deltaTime);
@@ -175,6 +217,9 @@ public class GameScreen extends ScreenAdapter {
 
         for (Enemy enemy : tileMapHelper.getGoombas())
             enemy.draw(batch);
+
+        for (Item item : items)
+            item.draw(batch);
 
         batch.end();
 
@@ -213,5 +258,7 @@ public class GameScreen extends ScreenAdapter {
         return textureAtlas;
     }
 
-    public AssetManager getAssetManager() { return assetManager; }
+    public AssetManager getAssetManager() {
+        return assetManager;
+    }
 }

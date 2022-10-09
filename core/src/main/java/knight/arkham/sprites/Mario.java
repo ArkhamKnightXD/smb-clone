@@ -24,8 +24,8 @@ public class Mario extends Sprite {
     private float stateTimer;
 
     //    En esta variable almacenaré las animaciones de mario
-    private final Animation<TextureRegion> playerRunning;
-    private final Animation<TextureRegion> playerJumping;
+    private Animation<TextureRegion> playerRunning;
+    private Animation<TextureRegion> playerJumping;
     private boolean isPlayerRunningRight;
     private final Body body;
 
@@ -45,7 +45,25 @@ public class Mario extends Sprite {
 
         isPlayerRunningRight = true;
 
-// Preparando mis animaciones
+        makePlayerAnimations();
+
+        body = BodyHelper.createPlayerBody(new Box2DBody(new Vector2(32, 32), gameScreen.getWorld()));
+
+//Utilizamos getTexture para obtener el texture region que indicamos en el constructor súper y luego indicamos
+// las coordenadas donde está la imagen inicial que deseamos, como es la primera imagen Le indicamos 0 0, aunque aqui
+// tuve que hacer par de ajustes, debido a la existencia de las bolas de fuego El origen del textureRegion empieza en
+// la esquina superior izquierda, el 10 en Y funciona para bajar 10px y asi tomar la imagen inicial de mario.
+// Un texture region es un conjunto de imágenes juntas.
+        playerStand = new TextureRegion(getTexture(), 0, 10, 16, 16);
+
+        //    Funciones heredadas de la clase Sprite
+        setRegion(playerStand);
+        setBounds(0, 0, 16 / PIXELS_PER_METER, 16 / PIXELS_PER_METER);
+    }
+
+    private void makePlayerAnimations() {
+
+        // Preparando mis animaciones
         Array<TextureRegion> animationFrames = new Array<>();
 
 //        La animación de correr se encuentra en los sprite 1 hasta el 3, lo texture region empiezan también en 0
@@ -71,19 +89,6 @@ public class Mario extends Sprite {
         playerJumping = new Animation<>(0.1f, animationFrames);
 
         animationFrames.clear();
-
-        body = BodyHelper.createPlayerBody(new Box2DBody(new Vector2(32, 32), gameScreen.getWorld()));
-
-//Utilizamos getTexture para obtener el texture region que indicamos en el constructor super y luego indicamos
-// las coordenadas donde está la imagen inicial que deseamos, como es la primera imagen Le indicamos 0 0, aunque aqui
-// tuve que hacer par de ajustes, debido a la existencia de las bolas de fuego El origen del textureRegion empieza en
-// la esquina superior izquierda, el 10 en Y funciona para bajar 10px y asi tomar la imagen inicial de mario.
-// Un texture region es un conjunto de imágenes juntas.
-        playerStand = new TextureRegion(getTexture(), 0, 10, 16, 16);
-
-        //    Funciones heredadas de la clase Sprite
-        setRegion(playerStand);
-        setBounds(0, 0, 16 / PIXELS_PER_METER, 16 / PIXELS_PER_METER);
     }
 
     public void update(float deltaTime) {

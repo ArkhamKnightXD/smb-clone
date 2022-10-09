@@ -16,7 +16,7 @@ public class Brick extends InteractiveTileObject{
 
 
     public Brick(GameScreen gameScreen, TiledMap tiledMap, Rectangle bounds) {
-        super(gameScreen.getWorld(), tiledMap, bounds);
+        super(gameScreen, tiledMap, bounds);
 
 //        De esta forma guardo los datos de esta clase, para poder acceder a ella al momento de las colisiones
 //        en la clase GameContactListener.
