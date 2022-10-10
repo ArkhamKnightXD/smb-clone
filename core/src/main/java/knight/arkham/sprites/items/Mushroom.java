@@ -16,6 +16,7 @@ public class Mushroom extends Item {
         velocity = new Vector2(0, 0);
     }
 
+//    Talvez lo que falla esta aqui.
     @Override
     public void defineItemBody() {
 
