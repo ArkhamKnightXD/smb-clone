@@ -51,10 +51,10 @@ public class Coin extends InteractiveTileObject{
 
             localAssetManager.get("audio/sound/coin.wav", Sound.class).play();
 
-//            Todo tengo error aqui
+//            Todo Ya no da error, pero no hace nada
             // Spawn a coin when the block is hit. Deseo que el coin aparezca justo encima de mi block por eso el +16
             gameScreen.spawnItems(new ItemDefinition(new Vector2(body.getPosition().x,
-                    body.getPosition().y +16 / PIXELS_PER_METER), Mushroom.class));
+                    body.getPosition().y +32 / PIXELS_PER_METER), Mushroom.class));
         }
 
 //        Al final actualizo el tile por el tile con él, id de blank coin.

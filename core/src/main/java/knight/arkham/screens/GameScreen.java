@@ -24,9 +24,7 @@ import knight.arkham.scenes.Hud;
 import knight.arkham.sprites.items.Item;
 import knight.arkham.sprites.items.ItemDefinition;
 import knight.arkham.sprites.items.Mushroom;
-
-import java.util.PriorityQueue;
-
+import java.util.concurrent.LinkedBlockingQueue;
 import static knight.arkham.helpers.Constants.*;
 
 public class GameScreen extends ScreenAdapter {
@@ -57,8 +55,9 @@ public class GameScreen extends ScreenAdapter {
     private final Array<Item> items;
 
 
-    //    Investigar más sobre priority y sobre porque no puedo utilizar un array normal en vez de esta opción.
-    private final PriorityQueue<ItemDefinition> itemsToSpawn;
+    //    Investigar más sobre esto y sobre porque no puedo utilizar un array normal en vez de esta opción.
+//    Ahora mismo con esta lista no hay error, pero no pasa nada. Si logro hacer esto funcionar probaré con Array
+    public LinkedBlockingQueue<ItemDefinition> itemsToSpawn;
 
 
     public GameScreen(AssetManager globalAssetManager) {
@@ -75,7 +74,7 @@ public class GameScreen extends ScreenAdapter {
         debugRenderer = new Box2DDebugRenderer();
 
 //        Asi cargamos un textureAtlas, un texture atlas es un conjunto de imágenes convertidas en una sola
-//        Y en el pack se guardan los nombres de las imágenes con sus posiciones X y Y, también su tamaño se guarda.
+//        Y en el pack se guardan los nombres de las imágenes con sus posiciones X e Y, también su tamaño se guarda.
         textureAtlas = new TextureAtlas("images/Mario_and_Enemies.pack");
 
         mario = new Mario(this);
@@ -109,7 +108,7 @@ public class GameScreen extends ScreenAdapter {
 
         items = new Array<>();
 
-        itemsToSpawn = new PriorityQueue<>();
+        itemsToSpawn = new LinkedBlockingQueue<>();
     }
 
     public void spawnItems(ItemDefinition itemDefinition) {
@@ -127,6 +126,7 @@ public class GameScreen extends ScreenAdapter {
 
             if (itemDefinition.classType == Mushroom.class)
                 items.add(new Mushroom(this, new Vector2(itemDefinition.position.x, itemDefinition.position.y)));
+
         }
     }
 

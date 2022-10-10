@@ -5,7 +5,7 @@ import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
 
-public class Mushroom extends Item{
+public class Mushroom extends Item {
 
     public Mushroom(GameScreen gameScreen, Vector2 position) {
 
