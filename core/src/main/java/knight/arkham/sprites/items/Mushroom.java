@@ -32,6 +32,9 @@ public class Mushroom extends Item {
     public void useItem(Mario mario) {
 
         setToDestroy = true;
+
+// todo   Da null
+        mario.growPlayer();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package knight.arkham.sprites;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,7 +17,7 @@ public class Mario extends Sprite {
 
     //    Con estas variables manejaré el estado del jugador, ya sea que este parado o corriendo
 //    Y necesitaré una variable para almacenar el estado actual y el anterior
-    public enum playerState {FALLING, JUMPING, STANDING, RUNNING}
+    public enum playerState {FALLING, JUMPING, STANDING, RUNNING, GROWING}
     public playerState currentState;
     public playerState previousState;
 
@@ -25,18 +26,34 @@ public class Mario extends Sprite {
 
     //    En esta variable almacenaré las animaciones de mario
     private Animation<TextureRegion> playerRunning;
-    private Animation<TextureRegion> playerJumping;
+    private TextureRegion playerJumping;
     private boolean isPlayerRunningRight;
     private final Body body;
 
     private final TextureRegion playerStand;
 
+    private final TextureRegion bigPlayerStand;
+    private TextureRegion bigPlayerJump;
+
+    private Animation<TextureRegion> growPlayer;
+    private Animation<TextureRegion> bigPlayerRunning;
+
+    private boolean marioIsBig;
+    private boolean shouldStartGrowAnimation;
+
+    private final GameScreen gameScreen;
+
     public Mario(GameScreen gameScreen) {
 
+//        Todo remover el super constructor
 //        Debido a que heredamos de la clase sprite podemos implementar el constructor, al que le mandaremos un texture
 //        region, y este texture region lo podremos referenciar más abajo mediante la función getTexture.
 //        Esto nos dara la region que le pertenece a los sprite llamados little_mario
+//        Esto puedo removerlo pues no tiene mucho proposito, ya que utilizo aqui varios getTextureAtlas
         super(gameScreen.getTextureAtlas().findRegion("little_mario"));
+
+        this.gameScreen = gameScreen;
+
 
 //        Standing debe de ser el estado inicial, tanto para el current como el previous state
         currentState = playerState.STANDING;
@@ -55,6 +72,10 @@ public class Mario extends Sprite {
 // la esquina superior izquierda, el 10 en Y funciona para bajar 10px y asi tomar la imagen inicial de mario.
 // Un texture region es un conjunto de imágenes juntas.
         playerStand = new TextureRegion(getTexture(), 0, 10, 16, 16);
+
+//        Tiene el doble de tamaño que little_mario, por lo tanto, su tamaño es de 32 px
+        bigPlayerStand = new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
+                0 , 0 , 16 ,32);
 
         //    Funciones heredadas de la clase Sprite
         setRegion(playerStand);
@@ -82,13 +103,36 @@ public class Mario extends Sprite {
 //        llenar el arreglo con nuevos elementos
         animationFrames.clear();
 
-        for (int i = 4; i < 6; i++)
-            animationFrames.add(new TextureRegion(getTexture(), i * 16, 10, 16, 16));
 
+        // Como el salto es de solo 1 frame tanto para little_mario como para big_mario no hay necesidad de guardar
+        // esto en un tipo de dato animation y hacer el loop. Si no guardar directamente el textureRegion
+        playerJumping = new TextureRegion(getTexture(), 80 , 0 , 16 ,16);
 
-        playerJumping = new Animation<>(0.1f, animationFrames);
+        bigPlayerJump = new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
+                80 , 0 , 16 ,32);
+
+        for (int i = 1; i < 4; i++){
+
+            animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario")
+                    , i * 16, 0, 16, 32));
+        }
+
+        bigPlayerRunning = new Animation<>(0.1f, animationFrames);
 
         animationFrames.clear();
+
+//        Set animation frames for growing mario. Para la animación intercalamos entre un sprite de mario pequeño
+//        y el primer sprite, básicamente el marioStand
+         animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
+                 240 , 0 , 16 ,32));
+        animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
+                0 , 0 , 16 ,32));
+        animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
+                240 , 0 , 16 ,32));
+        animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
+                0 , 0 , 16 ,32));
+
+        growPlayer = new Animation<>(0.2f, animationFrames);
     }
 
     public void update(float deltaTime) {
@@ -109,20 +153,30 @@ public class Mario extends Sprite {
 
         switch (currentState) {
 
+            case GROWING:
+                region = bigPlayerRunning.getKeyFrame(stateTimer);
+
+//                Cuando la animation termine debo indicar la variable como false.
+                if (growPlayer.isAnimationFinished(stateTimer))
+                    shouldStartGrowAnimation = false;
+
+                break;
+
             case JUMPING:
 // El stateTimer será lo que esta función tomara de referencia para decidir si cambiara de un sprite al siguiente.
-                region = playerJumping.getKeyFrame(stateTimer);
+                region = marioIsBig ? bigPlayerJump : playerJumping;
                 break;
             case RUNNING:
 // Como deseamos que esta animación se repita de principio a fin siempre que estemos corriendo, le enviamos
 // un segundo parametro a esta función, donde le indicamos que sea true a looping
-                region = playerRunning.getKeyFrame(stateTimer, true);
+                region = marioIsBig ? bigPlayerRunning.getKeyFrame(stateTimer, true)
+                        : playerRunning.getKeyFrame(stateTimer, true);
                 break;
 
             case FALLING:
             case STANDING:
             default:
-                region = playerStand;
+                region = marioIsBig ? bigPlayerStand : playerStand;
         }
 
         flipPlayerOnXAxis(region);
@@ -152,9 +206,13 @@ public class Mario extends Sprite {
 
     private playerState getPlayerCurrentState() {
 
+//        Esta debe de ser la animation a la que se le dé prioridad sobre las demás.
+        if (shouldStartGrowAnimation)
+            return playerState.GROWING;
+
 //        La segunda condición en el O lógico, se refiere a que si el player había saltado y en ese
 //        salto cayó por un hueco, entonces continua con la animación de jumping
-        if (body.getLinearVelocity().y > 0 || (body.getLinearVelocity().y < 0 && previousState == playerState.JUMPING))
+        else if (body.getLinearVelocity().y > 0 || (body.getLinearVelocity().y < 0 && previousState == playerState.JUMPING))
             return playerState.JUMPING;
 
 //        Deseamos que la animación de falling sea diferente a la de jumping y por esta
@@ -167,6 +225,17 @@ public class Mario extends Sprite {
 
         else
             return playerState.STANDING;
+    }
+
+    public void growPlayer(){
+
+        shouldStartGrowAnimation = true;
+        marioIsBig = true;
+
+        setBounds(getX(), getY(), 16 , getHeight() * 2);
+
+//todo agregar sonido
+//        localAssetManager.get("audio/sound/spawn.wav", Sound.class).play();
     }
 
     public Body getBody() {
