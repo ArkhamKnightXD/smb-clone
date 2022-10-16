@@ -175,7 +175,7 @@ public class BodyHelper {
         fixtureDef.shape = shape;
 
 //        Todo tengo que separar esto, pues no todos los elementos creados por esta función, pueden tener object_bit
-//        Por ejemplo los coin y el ground no deberían de tener un object_bit, evaluare esto para mas adelante.
+//        Por ejemplo los coin y el ground no deberían de tener un object_bit, evaluaré esto para mas adelante.
         fixtureDef.filter.categoryBits = OBJECT_BIT;
 
         Body body = box2DBody.world.createBody(bodyDefinition);

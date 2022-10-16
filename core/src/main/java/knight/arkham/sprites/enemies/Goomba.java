@@ -79,6 +79,9 @@ public class Goomba extends Enemy {
 //        Si mi goomba no ha sido destruido, que continue con su movimiento y sprite iguales.
         else if (!destroyed) {
 
+// Para garantizar que el goomba tenga una caída correcta.
+            velocity.y = body.getLinearVelocity().y;
+
             body.setLinearVelocity(velocity);
 
             setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
