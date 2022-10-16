@@ -51,12 +51,16 @@ public class TileMapHelper {
 // Mis objetos brick y coins deseo tenerlo en clases, para asi poder manejar su comportamiento cuando haya colisión.
             switch (objectsName) {
 
+// Para tener un mayor manejo de mis bricks y coin, voy a enviarle el mapObject, de esta forma podre controlar
+// de una mejor forma que item contendrán mis clases coin.
                 case "Bricks":
-                    new Brick(gameScreen, tiledMap, rectangle);
+                    new Brick(gameScreen, tiledMap, mapObject);
                     break;
+
                 case "Coins":
-                    new Coin(gameScreen, tiledMap, rectangle);
+                    new Coin(gameScreen, tiledMap, mapObject);
                     break;
+
                 case "Goombas":
                     goombas.add(new Goomba(gameScreen, new Vector2(rectangle.x, rectangle.y)));
                     break;

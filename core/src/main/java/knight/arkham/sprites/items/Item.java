@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import knight.arkham.screens.GameScreen;
+import knight.arkham.sprites.Mario;
 
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
@@ -50,11 +51,12 @@ public abstract class Item extends Sprite {
         }
     }
 
-    public void destroyObject(){
-        setToDestroy = true;
+    public void reverseVelocityOnXAxis(){
+
+        velocity.x = -velocity.x;
     }
 
 
     public abstract void defineItemBody();
-    public abstract void useItem();
+    public abstract void useItem(Mario mario);
 }

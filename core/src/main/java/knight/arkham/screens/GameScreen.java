@@ -184,10 +184,8 @@ public class GameScreen extends ScreenAdapter {
                 enemy.body.setActive(true);
         }
 
-
         for (Item item : items)
             item.update(deltaTime);
-
 
 
         hud.update(deltaTime);

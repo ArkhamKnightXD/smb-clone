@@ -85,7 +85,7 @@ public class BodyHelper {
 //        no queremos que mario colisione, pues técnicamente este objeto está destruido.
         // Nuestros enemigos podrán colisionar entre ellos mismos y también con mario, por eso agrego,
         // MARIO_BIT, Cuando en el categoryBit envió a Enemy_bit.
-        fixtureDefinition.filter.maskBits = (short) (GROUND_BIT | COIN_BIT | BRICK_BIT | OBJECT_BIT | ENEMY_BIT | extraBit);
+        fixtureDefinition.filter.maskBits = (short) (GROUND_BIT | ITEM_BIT | COIN_BIT | BRICK_BIT | OBJECT_BIT | ENEMY_BIT | extraBit);
 
         return fixtureDefinition;
     }
@@ -114,7 +114,12 @@ public class BodyHelper {
 
     public static Body createItemBody(Box2DBody box2DBody, Mushroom mushroom){
 
-        Body body = getPreparedBody(box2DBody);
+        BodyDef bodyDefinition = new BodyDef();
+
+        bodyDefinition.type = BodyDef.BodyType.DynamicBody;
+        bodyDefinition.position.set(box2DBody.position.x, box2DBody.position.y);
+
+        Body body = box2DBody.world.createBody(bodyDefinition);
 
         FixtureDef fixtureDefinition = new FixtureDef();
 
@@ -124,7 +129,9 @@ public class BodyHelper {
 
         fixtureDefinition.shape = circleShape;
 
-//        fixtureDefinition.filter.categoryBits = ENEMY_HEAD_BIT;
+        fixtureDefinition.filter.categoryBits = ITEM_BIT;
+
+        fixtureDefinition.filter.maskBits = MARIO_BIT | OBJECT_BIT | GROUND_BIT | COIN_BIT | BRICK_BIT;
 
         body.createFixture(fixtureDefinition).setUserData(mushroom);
 

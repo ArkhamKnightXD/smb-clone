@@ -3,8 +3,8 @@ package knight.arkham.sprites.tileObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Rectangle;
 import knight.arkham.scenes.Hud;
 import knight.arkham.screens.GameScreen;
 import static knight.arkham.helpers.Constants.BRICK_BIT;
@@ -15,8 +15,8 @@ public class Brick extends InteractiveTileObject{
     private final AssetManager localAssetManager;
 
 
-    public Brick(GameScreen gameScreen, TiledMap tiledMap, Rectangle bounds) {
-        super(gameScreen, tiledMap, bounds);
+    public Brick(GameScreen gameScreen, TiledMap tiledMap, RectangleMapObject mapObject) {
+        super(gameScreen, tiledMap, mapObject);
 
 //        De esta forma guardo los datos de esta clase, para poder acceder a ella al momento de las colisiones
 //        en la clase GameContactListener.

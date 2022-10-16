@@ -21,6 +21,7 @@ public class MarioBros extends Game {
 		globalAssetManager.load("audio/sound/coin.wav", Sound.class);
 		globalAssetManager.load("audio/sound/bump.wav", Sound.class);
 		globalAssetManager.load("audio/sound/breakBlock.wav", Sound.class);
+		globalAssetManager.load("audio/sound/spawn.wav", Sound.class);
 
 //		Utilizare mi assetManager de forma síncrona, en pocas palabras cargare todos los asset antes de iniciar
 //		Mi gameScreen

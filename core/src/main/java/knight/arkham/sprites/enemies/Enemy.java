@@ -32,13 +32,9 @@ public abstract class Enemy extends Sprite {
         body.setActive(false);
     }
 
-    public void reverseVelocity(boolean shouldReverseVelocityOnXAxis, boolean shouldReverseVelocityOnYAxis){
+    public void reverseVelocityOnXAxis(){
 
-        if (shouldReverseVelocityOnXAxis)
-            velocity.x = -velocity.x;
-
-        if (shouldReverseVelocityOnYAxis)
-            velocity.y = -velocity.y;
+        velocity.x = -velocity.x;
     }
 
     protected abstract void defineEnemyBody();
