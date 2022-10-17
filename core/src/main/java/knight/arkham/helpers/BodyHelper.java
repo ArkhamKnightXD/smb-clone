@@ -2,6 +2,7 @@ package knight.arkham.helpers;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import knight.arkham.sprites.Mario;
 import knight.arkham.sprites.enemies.Goomba;
 import knight.arkham.sprites.items.Mushroom;
 
@@ -9,14 +10,14 @@ import static knight.arkham.helpers.Constants.*;
 
 public class BodyHelper {
 
-    public static Body createPlayerBody(Box2DBody box2DBody){
+    public static Body createPlayerBody(Box2DBody box2DBody, Mario mario){
 
         Body body = getPreparedBody(box2DBody);
 
         FixtureDef fixtureDefinition = getPreparedFixtureDefinition(MARIO_BIT, ENEMY_HEAD_BIT);
 
 //  A dynamic body should have at least one fixture with a non-zero density. Otherwise, you will get strange behavior.
-        body.createFixture(fixtureDefinition);
+        body.createFixture(fixtureDefinition).setUserData(mario);
 
         //Necesito crear un sensor para detectar collision en la cabeza de mario, el edgeShape es básicamente una línea
         // entre 2 puntos. Podemos imaginarlo como un sombrero muy fino.
@@ -34,7 +35,9 @@ public class BodyHelper {
 //  nos funciona como un sensor para programar sus colisiones.
         fixtureDefinition.isSensor = true;
 
-        body.createFixture(fixtureDefinition).setUserData("head");
+        fixtureDefinition.filter.categoryBits = MARIO_HEAD_BIT;
+
+        body.createFixture(fixtureDefinition).setUserData(mario);
 
         headCollider.dispose();
 

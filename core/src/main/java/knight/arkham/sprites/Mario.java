@@ -40,6 +40,7 @@ public class Mario extends Sprite {
 
     private boolean marioIsBig;
     private boolean shouldStartGrowAnimation;
+    private boolean timeToDefineBigMario;
 
     private final GameScreen gameScreen;
 
@@ -64,7 +65,7 @@ public class Mario extends Sprite {
 
         makePlayerAnimations();
 
-        body = BodyHelper.createPlayerBody(new Box2DBody(new Vector2(32, 32), gameScreen.getWorld()));
+        body = BodyHelper.createPlayerBody(new Box2DBody(new Vector2(32, 32), gameScreen.getWorld()), this);
 
 //Utilizamos getTexture para obtener el texture region que indicamos en el constructor súper y luego indicamos
 // las coordenadas donde está la imagen inicial que deseamos, como es la primera imagen Le indicamos 0 0, aunque aqui
@@ -106,7 +107,7 @@ public class Mario extends Sprite {
 
         // Como el salto es de solo 1 frame tanto para little_mario como para big_mario no hay necesidad de guardar
         // esto en un tipo de dato animation y hacer el loop. Si no guardar directamente el textureRegion
-        playerJumping = new TextureRegion(getTexture(), 80 , 0 , 16 ,16);
+        playerJumping = new TextureRegion(getTexture(), 80 , 10 , 16 ,16);
 
         bigPlayerJump = new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
                 80 , 0 , 16 ,32);
@@ -143,6 +144,18 @@ public class Mario extends Sprite {
 
 //        Actualizamos la region, aqui es que actualizo la animación del personaje
         setRegion(getActualRegion(deltaTime));
+
+        if (timeToDefineBigMario)
+            defineBigMario();
+    }
+
+    private void defineBigMario() {
+
+//        Vector2 playerCurrentPosition = body.getPosition();
+
+//        Vamos a crear un nuevo cuerpo para cuando mario sea grande y, por lo tanto, debemos destruir el body de mario
+//        pequeño.
+        gameScreen.world.destroyBody(body);
     }
 
     private TextureRegion getActualRegion(float deltaTime) {
@@ -231,11 +244,11 @@ public class Mario extends Sprite {
 
         shouldStartGrowAnimation = true;
         marioIsBig = true;
+        timeToDefineBigMario = true;
 
-        setBounds(getX(), getY(), 16 , getHeight() * 2);
+        setBounds(getX(), getY(), getWidth() , getHeight() * 2);
 
-//todo agregar sonido
-//        localAssetManager.get("audio/sound/spawn.wav", Sound.class).play();
+        gameScreen.getAssetManager().get("audio/sound/powerup.wav", Sound.class).play();
     }
 
     public Body getBody() {

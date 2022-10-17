@@ -6,7 +6,6 @@ import knight.arkham.sprites.Mario;
 import knight.arkham.sprites.enemies.Enemy;
 import knight.arkham.sprites.items.Item;
 import knight.arkham.sprites.tileObjects.InteractiveTileObject;
-
 import static knight.arkham.helpers.Constants.*;
 
 public class GameContactListener implements ContactListener {
@@ -17,23 +16,24 @@ public class GameContactListener implements ContactListener {
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
 
+        manageCollision(fixtureA, fixtureB);
 
-        if (fixtureA.getUserData() == "head" || fixtureB.getUserData() == "head") {
+
+//        Forma inicial de colisión dejare esto aqui para tener este código de ejemplo para cualquier otro proyecto.
+//        if (fixtureA.getUserData() == "head" || fixtureB.getUserData() == "head") {
 
 //            Aqui realizo evaluación sobre cuál objeto será la cabeza de mario y otro el objeto.
-            Fixture head = fixtureA.getUserData() == "head" ? fixtureA : fixtureB;
-            Fixture object = head == fixtureA ? fixtureB : fixtureA;
+//            Fixture head = fixtureA.getUserData() == "head" ? fixtureA : fixtureB;
+//            Fixture object = head == fixtureA ? fixtureB : fixtureA;
 
-            // La segunda condición nos retornará true si el objeto extiende de interactiveTileObject
-            if (object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())) {
+        // La segunda condición nos retornará true si el objeto extiende de interactiveTileObject
+//            if (object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())) {
 
 //                De esta forma ejecuto la función onHeadHit.
-                ((InteractiveTileObject) object.getUserData()).onHeadHit();
-            }
-        }
-
-        manageCollision(fixtureA, fixtureB);
+//                ((InteractiveTileObject) object.getUserData()).onHeadHit();
+//            }
     }
+
 
     private static void manageCollision(Fixture fixtureA, Fixture fixtureB) {
 
@@ -42,6 +42,17 @@ public class GameContactListener implements ContactListener {
         int collisionDefinition = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
 
         switch (collisionDefinition) {
+
+//            Case válido para mis objetos coin y brick, Hice esto con if al principio, pero esta forma es más elegante.
+            case MARIO_HEAD_BIT | BRICK_BIT:
+            case MARIO_HEAD_BIT | COIN_BIT:
+                if (fixtureA.getFilterData().categoryBits == MARIO_HEAD_BIT)
+                    ((InteractiveTileObject) fixtureB.getUserData()).onHeadHit();
+
+                else
+                    ((InteractiveTileObject) fixtureA.getUserData()).onHeadHit();
+
+                break;
 
             case ENEMY_HEAD_BIT | MARIO_BIT:
                 if (fixtureA.getFilterData().categoryBits == ENEMY_HEAD_BIT)

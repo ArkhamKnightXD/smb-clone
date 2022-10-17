@@ -33,7 +33,6 @@ public class Mushroom extends Item {
 
         setToDestroy = true;
 
-// todo   Da null
         mario.growPlayer();
     }
 
