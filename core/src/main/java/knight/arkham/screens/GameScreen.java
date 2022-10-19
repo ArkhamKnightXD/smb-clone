@@ -106,9 +106,9 @@ public class GameScreen extends ScreenAdapter {
         music.setVolume(0.1f);
 //        music.play();
 
-        items = new Array<>();
+        items = new Array<Item>();
 
-        itemsToSpawn = new LinkedBlockingQueue<>();
+        itemsToSpawn = new LinkedBlockingQueue<ItemDefinition>();
     }
 
     public void spawnItems(ItemDefinition itemDefinition) {

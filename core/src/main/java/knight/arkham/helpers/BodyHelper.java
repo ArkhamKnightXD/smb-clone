@@ -2,22 +2,18 @@ package knight.arkham.helpers;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import knight.arkham.sprites.Mario;
-import knight.arkham.sprites.enemies.Goomba;
-import knight.arkham.sprites.items.Mushroom;
-
 import static knight.arkham.helpers.Constants.*;
 
 public class BodyHelper {
 
-    public static Body createPlayerBody(Box2DBody box2DBody, Mario mario){
+    public static Body createPlayerBody(Box2DBody box2DBody){
 
         Body body = getPreparedBody(box2DBody);
 
         FixtureDef fixtureDefinition = getPreparedFixtureDefinition(MARIO_BIT, ENEMY_HEAD_BIT);
 
 //  A dynamic body should have at least one fixture with a non-zero density. Otherwise, you will get strange behavior.
-        body.createFixture(fixtureDefinition).setUserData(mario);
+        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
 
         //Necesito crear un sensor para detectar collision en la cabeza de mario, el edgeShape es básicamente una línea
         // entre 2 puntos. Podemos imaginarlo como un sombrero muy fino.
@@ -37,7 +33,7 @@ public class BodyHelper {
 
         fixtureDefinition.filter.categoryBits = MARIO_HEAD_BIT;
 
-        body.createFixture(fixtureDefinition).setUserData(mario);
+        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
 
         headCollider.dispose();
 
@@ -94,13 +90,13 @@ public class BodyHelper {
     }
 
 
-    public static Body createEnemyBody(Box2DBody box2DBody, Goomba goomba){
+    public static Body createEnemyBody(Box2DBody box2DBody){
 
         Body body = getPreparedBody(box2DBody);
 
         FixtureDef fixtureDefinition = getPreparedFixtureDefinition(ENEMY_BIT, MARIO_BIT);
 
-        body.createFixture(fixtureDefinition).setUserData(goomba);
+        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
 
         fixtureDefinition.shape = getCustomEnemyHeadShape();
 
@@ -109,18 +105,18 @@ public class BodyHelper {
         fixtureDefinition.filter.categoryBits = ENEMY_HEAD_BIT;
 
 //        Deseamos poder acceder a los datos de mi clase goomba, a la hora de la colisión.
-        body.createFixture(fixtureDefinition).setUserData(goomba);
+        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
 
         return body;
     }
 
 
-    public static Body createItemBody(Box2DBody box2DBody, Mushroom mushroom){
+    public static Body createItemBody(Box2DBody box2DBody){
 
         BodyDef bodyDefinition = new BodyDef();
 
         bodyDefinition.type = BodyDef.BodyType.DynamicBody;
-        bodyDefinition.position.set(box2DBody.position.x, box2DBody.position.y);
+        bodyDefinition.position.set(box2DBody.position);
 
         Body body = box2DBody.world.createBody(bodyDefinition);
 
@@ -136,7 +132,7 @@ public class BodyHelper {
 
         fixtureDefinition.filter.maskBits = MARIO_BIT | OBJECT_BIT | GROUND_BIT | COIN_BIT | BRICK_BIT;
 
-        body.createFixture(fixtureDefinition).setUserData(mushroom);
+        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
 
         circleShape.dispose();
 

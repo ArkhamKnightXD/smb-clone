@@ -17,21 +17,6 @@ public class GameContactListener implements ContactListener {
         Fixture fixtureB = contact.getFixtureB();
 
         manageCollision(fixtureA, fixtureB);
-
-
-//        Forma inicial de colisión dejare esto aqui para tener este código de ejemplo para cualquier otro proyecto.
-//        if (fixtureA.getUserData() == "head" || fixtureB.getUserData() == "head") {
-
-//            Aqui realizo evaluación sobre cuál objeto será la cabeza de mario y otro el objeto.
-//            Fixture head = fixtureA.getUserData() == "head" ? fixtureA : fixtureB;
-//            Fixture object = head == fixtureA ? fixtureB : fixtureA;
-
-        // La segunda condición nos retornará true si el objeto extiende de interactiveTileObject
-//            if (object.getUserData() != null && InteractiveTileObject.class.isAssignableFrom(object.getUserData().getClass())) {
-
-//                De esta forma ejecuto la función onHeadHit.
-//                ((InteractiveTileObject) object.getUserData()).onHeadHit();
-//            }
     }
 
 

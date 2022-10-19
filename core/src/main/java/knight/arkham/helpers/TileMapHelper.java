@@ -1,5 +1,6 @@
 package knight.arkham.helpers;
 
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -23,7 +24,7 @@ public class TileMapHelper {
 
         this.gameScreen = gameScreen;
 
-        goombas = new Array<>();
+        goombas = new Array<Goomba>();
     }
 
     public OrthogonalTiledMapRenderer setupMap() {
@@ -44,9 +45,9 @@ public class TileMapHelper {
 
         MapObjects mapObjects = tiledMap.getLayers().get(objectsName).getObjects();
 
-        for (RectangleMapObject mapObject : mapObjects.getByType(RectangleMapObject.class)) {
+        for (MapObject mapObject : mapObjects) {
 
-            Rectangle rectangle = mapObject.getRectangle();
+            Rectangle rectangle =  ((RectangleMapObject) mapObject).getRectangle();
 
 // Mis objetos brick y coins deseo tenerlo en clases, para asi poder manejar su comportamiento cuando haya colisión.
             switch (objectsName) {
@@ -75,6 +76,7 @@ public class TileMapHelper {
                                     rectangle.height, gameScreen.getWorld()
                             )
                     );
+
                     break;
             }
         }

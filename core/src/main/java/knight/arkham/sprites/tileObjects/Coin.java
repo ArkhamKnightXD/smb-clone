@@ -3,7 +3,7 @@ package knight.arkham.sprites.tileObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
@@ -20,7 +20,7 @@ public class Coin extends InteractiveTileObject{
 
     private final AssetManager localAssetManager;
 
-    public Coin(GameScreen gameScreen, TiledMap tiledMap, RectangleMapObject mapObject) {
+    public Coin(GameScreen gameScreen, TiledMap tiledMap, MapObject mapObject) {
         super(gameScreen, tiledMap, mapObject);
 
 //        Buscamos nuestro tileSet completo

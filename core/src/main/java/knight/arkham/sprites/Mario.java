@@ -65,7 +65,10 @@ public class Mario extends Sprite {
 
         makePlayerAnimations();
 
-        body = BodyHelper.createPlayerBody(new Box2DBody(new Vector2(32, 32), gameScreen.getWorld()), this);
+        body = BodyHelper.createPlayerBody(
+
+                new Box2DBody(new Vector2(32, 32), gameScreen.getWorld(), this)
+        );
 
 //Utilizamos getTexture para obtener el texture region que indicamos en el constructor súper y luego indicamos
 // las coordenadas donde está la imagen inicial que deseamos, como es la primera imagen Le indicamos 0 0, aunque aqui
@@ -86,7 +89,7 @@ public class Mario extends Sprite {
     private void makePlayerAnimations() {
 
         // Preparando mis animaciones
-        Array<TextureRegion> animationFrames = new Array<>();
+        Array<TextureRegion> animationFrames = new Array<TextureRegion>();
 
 //        La animación de correr se encuentra en los sprite 1 hasta el 3, lo texture region empiezan también en 0
         for (int i = 1; i < 4; i++) {
@@ -98,7 +101,7 @@ public class Mario extends Sprite {
 
 // De esta forma defino una animación, el primer parametro es la duración de cada frame
 //        y el segundo el arreglo de textureRegion
-        playerRunning = new Animation<>(0.1f, animationFrames);
+        playerRunning = new Animation<TextureRegion>(0.1f, animationFrames);
 
 //        Luego limpiamos el arreglo pues ya no necesitamos los elementos dentro de este y necesitamos
 //        llenar el arreglo con nuevos elementos
@@ -118,7 +121,7 @@ public class Mario extends Sprite {
                     , i * 16, 0, 16, 32));
         }
 
-        bigPlayerRunning = new Animation<>(0.1f, animationFrames);
+        bigPlayerRunning = new Animation<TextureRegion>(0.1f, animationFrames);
 
         animationFrames.clear();
 
@@ -133,7 +136,7 @@ public class Mario extends Sprite {
         animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
                 0 , 0 , 16 ,32));
 
-        growPlayer = new Animation<>(0.2f, animationFrames);
+        growPlayer = new Animation<TextureRegion>(0.2f, animationFrames);
     }
 
     public void update(float deltaTime) {
@@ -155,7 +158,7 @@ public class Mario extends Sprite {
 
 //        Vamos a crear un nuevo cuerpo para cuando mario sea grande y, por lo tanto, debemos destruir el body de mario
 //        pequeño.
-        gameScreen.world.destroyBody(body);
+//        gameScreen.world.destroyBody(body);
     }
 
     private TextureRegion getActualRegion(float deltaTime) {

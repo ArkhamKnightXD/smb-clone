@@ -1,5 +1,6 @@
 package knight.arkham.sprites.tileObjects;
 
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -21,16 +22,16 @@ public abstract class InteractiveTileObject {
     protected Body body;
     protected Fixture fixture;
 
-    protected RectangleMapObject mapObject;
+    protected MapObject mapObject;
 
     //    Todas las clases que hereden de esta implementaran este constructor
-    public InteractiveTileObject(GameScreen gameScreen, TiledMap tiledMap, RectangleMapObject mapObject) {
+    public InteractiveTileObject(GameScreen gameScreen, TiledMap tiledMap, MapObject mapObject) {
 
         this.mapObject = mapObject;
         this.gameScreen = gameScreen;
         world = gameScreen.getWorld();
         this.tiledMap = tiledMap;
-        bounds = mapObject.getRectangle();
+        bounds = ((RectangleMapObject) mapObject).getRectangle();
 
         fixture = BodyHelper.createStaticBody(
 

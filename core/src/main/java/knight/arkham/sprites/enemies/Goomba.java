@@ -37,7 +37,7 @@ public class Goomba extends Enemy {
 
         final Animation<TextureRegion> walkAnimation;
 
-        Array<TextureRegion> animationFrames = new Array<>();
+        Array<TextureRegion> animationFrames = new Array<TextureRegion>();
 
         for (int i = 0; i < 2; i++) {
 
@@ -46,7 +46,7 @@ public class Goomba extends Enemy {
         }
 
 
-        walkAnimation = new Animation<>(0.4f, animationFrames);
+        walkAnimation = new Animation<TextureRegion>(0.4f, animationFrames);
 
         animationFrames.clear();
 
@@ -102,7 +102,7 @@ public class Goomba extends Enemy {
 
         body = BodyHelper.createEnemyBody(
 
-                new Box2DBody(new Vector2(getX(), getY()), gameScreen.getWorld()), this
+                new Box2DBody(new Vector2(getX(), getY()), gameScreen.getWorld(), this)
         );
     }
 

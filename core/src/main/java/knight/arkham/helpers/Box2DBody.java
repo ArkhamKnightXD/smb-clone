@@ -11,6 +11,11 @@ public class Box2DBody {
     public float height;
     public World world;
 
+//    Agregando objeto generic donde guardaré la mi userData. Indico esto de una forma generica, pues el userData
+//    Varía y, por lo tanto, es una clase distinta para cada objeto.
+    public Object userData;
+
+
     public Box2DBody(Vector2 position, float width, float height, World world) {
 
         this.position = position;
@@ -19,9 +24,10 @@ public class Box2DBody {
         this.world = world;
     }
 
-    public Box2DBody(Vector2 position, World world) {
+    public Box2DBody(Vector2 position, World world, Object userData) {
 
         this.position = position;
         this.world = world;
+        this.userData = userData;
     }
 }
