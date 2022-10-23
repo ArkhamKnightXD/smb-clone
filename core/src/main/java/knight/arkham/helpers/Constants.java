@@ -7,7 +7,6 @@ public class Constants {
     public static final float VIRTUAL_HEIGHT = 208;
 
 //    Con esta constante sera que manejare mi conversion de pixeles en el world de box2d
-//    Todo debo repasar la matemática detrás del ppm pues no lo entiendo completamente.
     public static final float PIXELS_PER_METER = 100;
 
     //	Aqui definiremos las categorías de los fixture

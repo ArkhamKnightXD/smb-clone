@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+//import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -45,7 +45,9 @@ public class GameScreen extends ScreenAdapter {
 
     private final World world;
 
-    private final Box2DDebugRenderer debugRenderer;
+
+//Ahora mismo no tiene proposito el debugRenderer
+//    private final Box2DDebugRenderer debugRenderer;
 
     private final Mario mario;
 
@@ -78,7 +80,7 @@ public class GameScreen extends ScreenAdapter {
 
         world.setContactListener(new GameContactListener());
 
-        debugRenderer = new Box2DDebugRenderer();
+//        debugRenderer = new Box2DDebugRenderer();
 
 //        Asi cargamos un textureAtlas, un texture atlas es un conjunto de imágenes convertidas en una sola
 //        Y en el pack se guardan los nombres de las imágenes con sus posiciones X e Y, también su tamaño se guarda.
@@ -249,7 +251,7 @@ public class GameScreen extends ScreenAdapter {
             dispose();
         }
 
-        debugRenderer.render(world, camera.combined);
+//        debugRenderer.render(world, camera.combined);
     }
 
     public boolean isGameOver() {

@@ -11,6 +11,7 @@ public class MarioBros extends Game {
 	private AssetManager globalAssetManager;
 
 //	A diferencia de los screens la function Create es completamente necesaria, para poder inicializar mi juego.
+//	Pues sin esta me da error a la hora de iniciar el game.
 	@Override
 	public void create() {
 

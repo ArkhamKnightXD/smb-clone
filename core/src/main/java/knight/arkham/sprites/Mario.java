@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.Array;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
-
 import static knight.arkham.helpers.Constants.NOTHING_BIT;
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
