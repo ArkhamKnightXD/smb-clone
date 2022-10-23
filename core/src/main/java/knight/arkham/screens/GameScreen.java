@@ -40,7 +40,7 @@ public class GameScreen extends ScreenAdapter {
 
     private final OrthogonalTiledMapRenderer mapRenderer;
 
-    public World world;
+    private final World world;
 
     private final Box2DDebugRenderer debugRenderer;
 

@@ -1,5 +1,6 @@
 package knight.arkham.sprites.enemies;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,6 +22,7 @@ public class Goomba extends Enemy {
 
 
     public Goomba(GameScreen gameScreen, Vector2 position) {
+
         super(gameScreen, position);
 
         walkAnimation = getTextureRegionAnimation(gameScreen);
@@ -102,7 +104,7 @@ public class Goomba extends Enemy {
 
         body = BodyHelper.createEnemyBody(
 
-                new Box2DBody(new Vector2(getX(), getY()), gameScreen.getWorld(), this)
+                new Box2DBody(new Vector2(getX(), getY()), true, gameScreen.getWorld(), this)
         );
     }
 
@@ -111,5 +113,7 @@ public class Goomba extends Enemy {
 
 //        Si golpeamos este objeto indicaremos que este objeto debe de ser destruido.
         setToDestroy = true;
+
+        gameScreen.getAssetManager().get("audio/sound/stomp.wav", Sound.class).play();
     }
 }

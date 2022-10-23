@@ -108,10 +108,19 @@ public class BodyHelper {
 //  la colisión con los bloques fallara. Esta opción es util para personajes controlables.
         bodyDefinition.fixedRotation = true;
 
-        bodyDefinition.position.set(box2DBody.position.x / PIXELS_PER_METER, box2DBody.position.y / PIXELS_PER_METER);
+//        Si la posición que se envía es normal es decir no ha sido dividida por mi constante PIXELS_PER_METER, entonces
+//        realiza la division por PIXELS_PER_METER a la hora de indicar la posición de mi body
+        if (box2DBody.hasNormalPosition)
+            bodyDefinition.position.set(box2DBody.position.x /PIXELS_PER_METER, box2DBody.position.y /PIXELS_PER_METER);
+
+//        De lo contrario solo indicar la posición mediante mi vector position sin ninguna operación extra.
+        else
+            bodyDefinition.position.set(box2DBody.position);
+
 
         return box2DBody.world.createBody(bodyDefinition);
     }
+
 
     //    En esta función preparo los valores iniciales que va a tener mi fixture.
     private static FixtureDef getPreparedFixtureDefinition(short categoryBit, short extraBit) {

@@ -15,6 +15,8 @@ import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 //La clase sprite nos hereda un conjunto de funcionalidades encargadas de manejar sprites.
 public class Mario extends Sprite {
 
+    private boolean timeToRedefineMario;
+
     //    Con estas variables manejaré el estado del jugador, ya sea que este parado o corriendo
 //    Y necesitaré una variable para almacenar el estado actual y el anterior
     public enum playerState {FALLING, JUMPING, STANDING, RUNNING, GROWING}
@@ -38,7 +40,7 @@ public class Mario extends Sprite {
     private Animation<TextureRegion> growPlayer;
     private Animation<TextureRegion> bigPlayerRunning;
 
-    private boolean IsMarioBig;
+    private boolean marioIsBig;
     private boolean shouldStartGrowAnimation;
     private boolean timeToDefineBigMario;
 
@@ -67,7 +69,7 @@ public class Mario extends Sprite {
 
         body = BodyHelper.createPlayerBody(
 
-                new Box2DBody(new Vector2(32, 32), gameScreen.getWorld(), this)
+                new Box2DBody(new Vector2(32, 32), true, gameScreen.getWorld(), this)
         );
 
 //Utilizamos getTexture para obtener el texture region que indicamos en el constructor súper y luego indicamos
@@ -142,7 +144,7 @@ public class Mario extends Sprite {
     public void update(float deltaTime) {
 
 //        Cuando mario es grande tenemos que restar varios pixeles en Y para que se ajuste a su nuevo body
-        if(IsMarioBig)
+        if(marioIsBig)
             setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2 - 6 / PIXELS_PER_METER);
 
 
@@ -156,6 +158,44 @@ public class Mario extends Sprite {
 
         if (timeToDefineBigMario)
             createBigMarioBody();
+
+        if (timeToRedefineMario)
+            redefineMarioBody();
+    }
+
+    public void getHit() {
+
+//        Si golpean a mario cuando este este grande, debemos de volver a mario pequeño de nuevo
+        if (marioIsBig){
+
+            marioIsBig = false;
+
+            timeToRedefineMario = true;
+
+//            Reduciremos a la mitad nuestro height pues queremos que este tenga el height de little mario.
+            setBounds(getX(), getY(), getWidth(), getHeight() / 2);
+
+            gameScreen.getAssetManager().get("audio/sound/powerdown.wav", Sound.class).play();
+        }
+
+        else
+            gameScreen.getAssetManager().get("audio/sound/mariodie.wav", Sound.class).play();
+    }
+
+//    Esta función hace básicamente lo mismo que cuando mario crece, la diferencia es que aqui será para destruir
+//    el cuerpo de big mario, para volver a crear el cuerpo de little mario
+    private void redefineMarioBody (){
+
+        Vector2 playerCurrentPosition = body.getPosition();
+
+        gameScreen.getWorld().destroyBody(body);
+
+        body = BodyHelper.createPlayerBody(
+
+                new Box2DBody(playerCurrentPosition, false, gameScreen.getWorld(), this)
+        );
+
+        timeToRedefineMario = false;
     }
 
     private void createBigMarioBody() {
@@ -164,10 +204,10 @@ public class Mario extends Sprite {
 
 //        Vamos a crear un nuevo cuerpo para cuando mario sea grande y, por lo tanto, debemos destruir el body de mario
 //        pequeño.
-        gameScreen.world.destroyBody(body);
+        gameScreen.getWorld().destroyBody(body);
 
         body = BodyHelper.createBigPlayerBody(new Box2DBody(
-                new Vector2(playerCurrentPosition), gameScreen.getWorld(), this
+                new Vector2(playerCurrentPosition), false, gameScreen.getWorld(), this
         ));
 
 
@@ -193,19 +233,19 @@ public class Mario extends Sprite {
 
             case JUMPING:
 // El stateTimer será lo que esta función tomara de referencia para decidir si cambiara de un sprite al siguiente.
-                region = IsMarioBig ? bigPlayerJump : playerJumping;
+                region = marioIsBig ? bigPlayerJump : playerJumping;
                 break;
             case RUNNING:
 // Como deseamos que esta animación se repita de principio a fin siempre que estemos corriendo, le enviamos
 // un segundo parametro a esta función, donde le indicamos que sea true a looping
-                region = IsMarioBig ? bigPlayerRunning.getKeyFrame(stateTimer, true)
+                region = marioIsBig ? bigPlayerRunning.getKeyFrame(stateTimer, true)
                         : playerRunning.getKeyFrame(stateTimer, true);
                 break;
 
             case FALLING:
             case STANDING:
             default:
-                region = IsMarioBig ? bigPlayerStand : playerStand;
+                region = marioIsBig ? bigPlayerStand : playerStand;
         }
 
         flipPlayerOnXAxis(region);
@@ -259,7 +299,7 @@ public class Mario extends Sprite {
     public void growPlayer(){
 
         shouldStartGrowAnimation = true;
-        IsMarioBig = true;
+        marioIsBig = true;
         timeToDefineBigMario = true;
 
         setBounds(getX(), getY(), getWidth() , getHeight() * 2);
@@ -271,7 +311,7 @@ public class Mario extends Sprite {
         return body;
     }
 
-    public boolean isMarioBig() {
-        return IsMarioBig;
+    public boolean isMarioIsBig() {
+        return marioIsBig;
     }
 }

@@ -81,6 +81,12 @@ public class GameContactListener implements ContactListener {
                 break;
 
             case MARIO_BIT | ENEMY_BIT:
+                if (fixtureA.getFilterData().categoryBits == MARIO_BIT)
+                    ((Mario) fixtureA.getUserData()).getHit();
+
+                else
+                    ((Mario) fixtureB.getUserData()).getHit();
+
                 Gdx.app.log("Mario", "Died");
                 break;
         }
