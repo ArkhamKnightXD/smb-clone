@@ -1,15 +1,20 @@
 package knight.arkham.sprites;
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
+
+import static knight.arkham.helpers.Constants.NOTHING_BIT;
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 //La clase sprite nos hereda un conjunto de funcionalidades encargadas de manejar sprites.
@@ -19,7 +24,7 @@ public class Mario extends Sprite {
 
     //    Con estas variables manejaré el estado del jugador, ya sea que este parado o corriendo
 //    Y necesitaré una variable para almacenar el estado actual y el anterior
-    public enum playerState {FALLING, JUMPING, STANDING, RUNNING, GROWING}
+    public enum playerState {FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD}
     public playerState currentState;
     public playerState previousState;
 
@@ -36,11 +41,13 @@ public class Mario extends Sprite {
 
     private final TextureRegion bigPlayerStand;
     private TextureRegion bigPlayerJump;
+    private TextureRegion dyingPlayer;
 
     private Animation<TextureRegion> growPlayer;
     private Animation<TextureRegion> bigPlayerRunning;
 
     private boolean marioIsBig;
+    private boolean marioIsDead;
     private boolean shouldStartGrowAnimation;
     private boolean timeToDefineBigMario;
 
@@ -113,6 +120,8 @@ public class Mario extends Sprite {
         // Como el salto es de solo 1 frame tanto para little_mario como para big_mario no hay necesidad de guardar
         // esto en un tipo de dato animation y hacer el loop. Si no guardar directamente el textureRegion
         playerJumping = new TextureRegion(getTexture(), 80 , 10 , 16 ,16);
+        dyingPlayer = new TextureRegion(getTexture(), 96 , 0 , 16 ,32);
+
 
         bigPlayerJump = new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
                 80 , 0 , 16 ,32);
@@ -178,8 +187,28 @@ public class Mario extends Sprite {
             gameScreen.getAssetManager().get("audio/sound/powerdown.wav", Sound.class).play();
         }
 
-        else
+        else{
+
+            gameScreen.getAssetManager().get("audio/music/mario_music.ogg", Music.class).stop();
             gameScreen.getAssetManager().get("audio/sound/mariodie.wav", Sound.class).play();
+
+            marioIsDead = true;
+
+//            Cuando mario muera nosotros deseamos que no pueda tener colisión con nada para que pueda
+//            caer con su animación de muerte.
+            Filter filter = new Filter();
+
+            filter.maskBits = NOTHING_BIT;
+
+//            Debido a que mario consiste varios fixture, debemos recorrer todas estas fixture e indicarle
+//            cual sera su nuevo filtro
+            for (Fixture fixture: body.getFixtureList())
+                fixture.setFilterData(filter);
+
+//            Al final le aplicamos un impulso en Y a mario para asi realizar el movimiento de muerte.
+//            Pues cuando él muere el sprite se eleva hacia arriba y luego cae
+            body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
+        }
     }
 
 //    Esta función hace básicamente lo mismo que cuando mario crece, la diferencia es que aqui será para destruir
@@ -221,6 +250,10 @@ public class Mario extends Sprite {
         TextureRegion region;
 
         switch (currentState) {
+
+            case DEAD:
+                region =  dyingPlayer;
+                break;
 
             case GROWING:
                 region = bigPlayerRunning.getKeyFrame(stateTimer);
@@ -275,8 +308,13 @@ public class Mario extends Sprite {
 
     private playerState getPlayerCurrentState() {
 
-//        Esta debe de ser la animation a la que se le dé prioridad sobre las demás.
-        if (shouldStartGrowAnimation)
+        //        Esta debe de ser la animation a la que se le dé prioridad sobre las demás. Pues si mario
+        //        murió lo demás es irrelevante
+
+        if (marioIsDead)
+            return playerState.DEAD;
+
+        else if (shouldStartGrowAnimation)
             return playerState.GROWING;
 
 //        La segunda condición en el O lógico, se refiere a que si el player había saltado y en ese

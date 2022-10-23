@@ -104,7 +104,7 @@ public class GameScreen extends ScreenAdapter {
 
         music.setLooping(true);
         music.setVolume(0.1f);
-//        music.play();
+        music.play();
 
         items = new Array<Item>();
 
@@ -133,16 +133,21 @@ public class GameScreen extends ScreenAdapter {
 
     private void handleUserInput() {
 
-// Todo salta varias veces
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
-            mario.getBody().applyLinearImpulse(new Vector2(0, 4f), mario.getBody().getWorldCenter(), true);
+//        Si mario esta muerto no se podra mover
+        if (mario.currentState != Mario.playerState.DEAD){
+
+            // Todo salta varias veces
+            if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
+                mario.getBody().applyLinearImpulse(new Vector2(0, 4f), mario.getBody().getWorldCenter(), true);
 
 //        Si quiero reducir o aumentar la maxima velocidad de mario debo jugar con los valores al final del if
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && mario.getBody().getLinearVelocity().x <= 1.3)
-            mario.getBody().applyLinearImpulse(new Vector2(1, 0), mario.getBody().getWorldCenter(), true);
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && mario.getBody().getLinearVelocity().x <= 1.3)
+                mario.getBody().applyLinearImpulse(new Vector2(1, 0), mario.getBody().getWorldCenter(), true);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && mario.getBody().getLinearVelocity().x >= -1.3)
-            mario.getBody().applyLinearImpulse(new Vector2(-1, 0), mario.getBody().getWorldCenter(), true);
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && mario.getBody().getLinearVelocity().x >= -1.3)
+                mario.getBody().applyLinearImpulse(new Vector2(-1, 0), mario.getBody().getWorldCenter(), true);
+
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 
@@ -168,8 +173,10 @@ public class GameScreen extends ScreenAdapter {
         // decreases performance but improves the quality of your simulation.
         world.step(1 / 60f, 6, 2);
 
-//        Nuestra camara seguirá la posición en X de nuestro personaje
-        camera.position.x = mario.getBody().getPosition().x;
+//        Nuestra camara seguirá la posición en X de nuestro personaje. Esto se hará siempre y cuando nuestro
+//        player no este muerto. Cuando mario muera la camara se quedara trabada en su última posición
+        if (mario.currentState != Mario.playerState.DEAD)
+            camera.position.x = mario.getBody().getPosition().x;
 
         mario.update(deltaTime);
 

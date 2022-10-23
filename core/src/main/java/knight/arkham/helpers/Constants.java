@@ -11,6 +11,7 @@ public class Constants {
     public static final float PIXELS_PER_METER = 100;
 
     //	Aqui definiremos las categorías de los fixture
+    public static final short NOTHING_BIT = 0;
     public static final short GROUND_BIT = 1;
     public static final short MARIO_BIT = 2;
     public static final short BRICK_BIT = 4;
