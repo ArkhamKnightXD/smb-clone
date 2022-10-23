@@ -352,4 +352,8 @@ public class Mario extends Sprite {
     public boolean isMarioIsBig() {
         return marioIsBig;
     }
+    
+    public float getStateTimer() {
+        return stateTimer;
+    }
 }

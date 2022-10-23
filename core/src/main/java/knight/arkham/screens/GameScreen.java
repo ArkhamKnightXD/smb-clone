@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import knight.arkham.MarioBros;
 import knight.arkham.helpers.GameContactListener;
 import knight.arkham.helpers.TileMapHelper;
 import knight.arkham.sprites.enemies.Enemy;
@@ -24,7 +25,9 @@ import knight.arkham.scenes.Hud;
 import knight.arkham.sprites.items.Item;
 import knight.arkham.sprites.items.ItemDefinition;
 import knight.arkham.sprites.items.Mushroom;
+
 import java.util.concurrent.LinkedBlockingQueue;
+
 import static knight.arkham.helpers.Constants.*;
 
 public class GameScreen extends ScreenAdapter {
@@ -54,15 +57,19 @@ public class GameScreen extends ScreenAdapter {
 
     private final Array<Item> items;
 
+    private final MarioBros game;
+
 
     //    Investigar más sobre esto y sobre porque no puedo utilizar un array normal en vez de esta opción.
 //    Ahora mismo con esta lista no hay error, pero no pasa nada. Si logro hacer esto funcionar probaré con Array
     public LinkedBlockingQueue<ItemDefinition> itemsToSpawn;
 
 
-    public GameScreen(AssetManager globalAssetManager) {
+    public GameScreen(MarioBros game) {
 
-        assetManager = globalAssetManager;
+        this.game = game;
+
+        assetManager = game.getGlobalAssetManager();
 
 //       Debemos de Inicializar world al principio para evitar errores a la hora de crear body2D con doSleep en true
 //       mejoro el rendimiento debido a que en mi world no se calcularan las físicas de mis objetos static
@@ -134,7 +141,7 @@ public class GameScreen extends ScreenAdapter {
     private void handleUserInput() {
 
 //        Si mario esta muerto no se podra mover
-        if (mario.currentState != Mario.playerState.DEAD){
+        if (mario.currentState != Mario.playerState.DEAD) {
 
             // Todo salta varias veces
             if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
@@ -234,7 +241,21 @@ public class GameScreen extends ScreenAdapter {
 //		De esta forma dibujamos en pantalla nuestro hud, mediante nuestro campo stage que tiene una función draw.
         hud.stage.draw();
 
+        if (isGameOver()) {
+
+            game.setScreen(new GameOverScreen(game, batch));
+
+//            Cuando cambie de pantalla es el momento correcto para llamar al metodo dispose
+            dispose();
+        }
+
         debugRenderer.render(world, camera.combined);
+    }
+
+    public boolean isGameOver() {
+
+//    Si mario tiene estado DEAD y lleva más de 3 segundos en este estado esto me retornara true de lo contrario false
+        return mario.currentState == Mario.playerState.DEAD && mario.getStateTimer() > 3;
     }
 
     @Override
@@ -247,12 +268,15 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void dispose() {
 
-        batch.dispose();
-        world.dispose();
-        debugRenderer.dispose();
+//        Todo buscarle solución a los dispose
+//        No puedo hacer dispose de ninguno de estos a la hora de cambiar de pantalla, pues me da error.
+//        batch.dispose();
+//        world.dispose();
+//        debugRenderer.dispose();
+        //assetManager.dispose();
+
         mapRenderer.dispose();
         hud.dispose();
-        assetManager.dispose();
     }
 
     public World getWorld() {

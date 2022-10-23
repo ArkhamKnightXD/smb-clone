@@ -31,7 +31,7 @@ public class MarioBros extends Game {
 //		Mi gameScreen
 		globalAssetManager.finishLoading();
 
-		setScreen(new GameScreen(globalAssetManager));
+		setScreen(new GameScreen(this));
 	}
 
 	@Override
@@ -40,5 +40,9 @@ public class MarioBros extends Game {
 		super.dispose();
 
 		globalAssetManager.dispose();
+	}
+
+	public AssetManager getGlobalAssetManager() {
+		return globalAssetManager;
 	}
 }
