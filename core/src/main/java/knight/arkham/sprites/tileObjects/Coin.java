@@ -1,6 +1,5 @@
 package knight.arkham.sprites.tileObjects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
@@ -9,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
 import knight.arkham.scenes.Hud;
 import knight.arkham.screens.GameScreen;
+import knight.arkham.sprites.Mario;
 import knight.arkham.sprites.items.ItemDefinition;
 import knight.arkham.sprites.items.Mushroom;
 import static knight.arkham.helpers.Constants.COIN_BIT;
@@ -34,7 +34,7 @@ public class Coin extends InteractiveTileObject{
     }
 
     @Override
-    public void onHeadHit() {
+    public void onHeadHit(Mario mario) {
 
         //Cuando tenemos el tileset y hacemos clic sobre uno de estos elementos, podemos ver que este elemento tiene
         // un ID, este, id del elemento que necesitamos en este caso es 27 en tiledMap, debido a que en tiledMap
@@ -67,7 +67,5 @@ public class Coin extends InteractiveTileObject{
         getCell().setTile(tileSet.getTile(BLANK_COIN));
 
         Hud.addScore(100);
-
-        Gdx.app.log("Coin", "Collision");
     }
 }

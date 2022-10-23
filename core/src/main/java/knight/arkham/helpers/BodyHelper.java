@@ -15,6 +15,16 @@ public class BodyHelper {
 //  A dynamic body should have at least one fixture with a non-zero density. Otherwise, you will get strange behavior.
         body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
 
+        EdgeShape headCollider = makePlayerHeadCollider(fixtureDefinition);
+
+        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
+
+        headCollider.dispose();
+
+        return body;
+    }
+
+    private static EdgeShape makePlayerHeadCollider(FixtureDef fixtureDefinition) {
         //Necesito crear un sensor para detectar collision en la cabeza de mario, el edgeShape es básicamente una línea
         // entre 2 puntos. Podemos imaginarlo como un sombrero muy fino.
         EdgeShape headCollider = new EdgeShape();
@@ -32,6 +42,53 @@ public class BodyHelper {
         fixtureDefinition.isSensor = true;
 
         fixtureDefinition.filter.categoryBits = MARIO_HEAD_BIT;
+        return headCollider;
+    }
+
+
+    public static Body createBigPlayerBody(Box2DBody box2DBody){
+
+        BodyDef bodyDefinition = new BodyDef();
+
+        bodyDefinition.type = BodyDef.BodyType.DynamicBody;
+
+        bodyDefinition.fixedRotation = true;
+
+//        A nuestro nuevo body le otorgaremos la misma posición que el mario pequeño, pero le agregaremos 10 en Y Para
+//        Que mario no traspase el piso
+        bodyDefinition.position.set(box2DBody.position.add(0, 10/PIXELS_PER_METER));
+
+        Body body = box2DBody.world.createBody(bodyDefinition);
+
+        FixtureDef fixtureDefinition = new FixtureDef();
+
+        CircleShape circleShape = new CircleShape();
+
+        circleShape.setRadius(6 / PIXELS_PER_METER);
+
+        fixtureDefinition.shape = circleShape;
+
+//        Debido a que mi big mario tendrá 2 fixture, por lo tanto, va a pesar el doble. Asi que reduciré
+//        la densidad del primer fixture a 50 que es la mitad del fixture de little mario
+        fixtureDefinition.density = 50;
+        fixtureDefinition.friction = 0.1f;
+
+        fixtureDefinition.filter.categoryBits = MARIO_BIT;
+
+        fixtureDefinition.filter.maskBits = (short) (GROUND_BIT | ITEM_BIT | COIN_BIT | BRICK_BIT | OBJECT_BIT | ENEMY_BIT | ENEMY_HEAD_BIT);
+
+        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
+
+//        Lo que haremos aqui será crear otra forma para que este más debajo de la forma inicial
+        circleShape.setPosition(new Vector2(0, -14 / PIXELS_PER_METER));
+
+//        Debemos de crear nuestro fixture de nuevo ya que lo que deseamos es crear un segundo fixture que se adapte
+//        a la parte de abajo de mario. Asi que el mario grande tendrá dos fixture
+        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
+
+        circleShape.dispose();
+
+        EdgeShape headCollider = makePlayerHeadCollider(fixtureDefinition);
 
         body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
 
@@ -39,6 +96,7 @@ public class BodyHelper {
 
         return body;
     }
+
 
     private static Body getPreparedBody(Box2DBody box2DBody) {
 

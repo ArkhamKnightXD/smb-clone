@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
+import knight.arkham.sprites.Mario;
 
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
@@ -65,5 +66,5 @@ public abstract class InteractiveTileObject {
                 (int) (body.getPosition().y * PIXELS_PER_METER / 16));
     }
 
-    public abstract void onHeadHit();
+    public abstract void onHeadHit(Mario mario);
 }
