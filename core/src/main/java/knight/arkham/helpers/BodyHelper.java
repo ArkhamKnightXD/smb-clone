@@ -167,11 +167,11 @@ public class BodyHelper {
 
         fixtureDefinition.shape = getCustomEnemyHeadShape();
 
-//        Agregar rebote, para cuando mario le salte encima al goomba
+//        Agregar rebote, para cuando mario le salte encima al enemigo
         fixtureDefinition.restitution = 0.5f;
         fixtureDefinition.filter.categoryBits = ENEMY_HEAD_BIT;
 
-//        Deseamos poder acceder a los datos de mi clase goomba, a la hora de la colisión.
+//        Deseamos poder acceder a los datos de mi clase goomba o turtle, a la hora de la colisión.
         body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
 
         return body;
