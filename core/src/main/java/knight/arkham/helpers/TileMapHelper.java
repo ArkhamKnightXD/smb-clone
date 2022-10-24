@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import knight.arkham.sprites.enemies.Turtle;
 import knight.arkham.sprites.tileObjects.Brick;
 import knight.arkham.sprites.tileObjects.Coin;
 import knight.arkham.sprites.enemies.Goomba;
@@ -19,12 +20,14 @@ public class TileMapHelper {
 
     private final GameScreen gameScreen;
     private final Array<Goomba> goombas;
+    private final Array<Turtle> turtles;
 
     public TileMapHelper(GameScreen gameScreen) {
 
         this.gameScreen = gameScreen;
 
         goombas = new Array<Goomba>();
+        turtles = new Array<Turtle>();
     }
 
     public OrthogonalTiledMapRenderer setupMap() {
@@ -36,6 +39,7 @@ public class TileMapHelper {
         parseMapObjectsToStaticBodies(tiledMap, "Coins");
         parseMapObjectsToStaticBodies(tiledMap, "Bricks");
         parseMapObjectsToStaticBodies(tiledMap, "Goombas");
+        parseMapObjectsToStaticBodies(tiledMap, "Turtles");
 
 //        En el segundo elemento de la función indico la escala que va a tener el mapa
         return new OrthogonalTiledMapRenderer(tiledMap, 1 / PIXELS_PER_METER);
@@ -66,6 +70,10 @@ public class TileMapHelper {
                     goombas.add(new Goomba(gameScreen, new Vector2(rectangle.x, rectangle.y)));
                     break;
 
+                case "Turtles":
+                    turtles.add(new Turtle(gameScreen, new Vector2(rectangle.x, rectangle.y)));
+                    break;
+
 //            Los demás objetos los crearé libremente.
                 default:
 
@@ -83,4 +91,6 @@ public class TileMapHelper {
     }
 
     public Array<Goomba> getGoombas() {return goombas;}
+
+    public Array<Turtle> getTurtles() {return turtles;}
 }

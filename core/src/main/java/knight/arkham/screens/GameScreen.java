@@ -200,6 +200,16 @@ public class GameScreen extends ScreenAdapter {
                 enemy.body.setActive(true);
         }
 
+
+        for (Enemy enemy : tileMapHelper.getTurtles()) {
+
+            enemy.update(deltaTime);
+
+            if (enemy.getX() < mario.getX() + 2.5f)
+                enemy.body.setActive(true);
+        }
+
+
         for (Item item : items)
             item.update(deltaTime);
 
@@ -230,6 +240,9 @@ public class GameScreen extends ScreenAdapter {
         mario.draw(batch);
 
         for (Enemy enemy : tileMapHelper.getGoombas())
+            enemy.draw(batch);
+
+        for (Enemy enemy : tileMapHelper.getTurtles())
             enemy.draw(batch);
 
         for (Item item : items)

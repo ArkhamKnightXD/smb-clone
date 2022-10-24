@@ -19,11 +19,11 @@ public class GameOverScreen extends ScreenAdapter {
 
     private final Stage stage;
 
-    private final MarioBros game;
+    private final MarioBros localGame;
 
     public GameOverScreen(MarioBros game, SpriteBatch batch) {
 
-        this.game = game;
+        localGame = game;
 
         Viewport viewport = new FitViewport(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, new OrthographicCamera());
 
@@ -46,21 +46,20 @@ public class GameOverScreen extends ScreenAdapter {
         table.add(playAgainLabel).expandX().padTop(10f);
 
         stage.addActor(table);
-
     }
 
 
     @Override
     public void render(float delta) {
 
+        ScreenUtils.clear(0, 0, 0, 0);
+
         if (Gdx.input.justTouched()){
 
-            game.setScreen(new GameScreen(game));
+            localGame.setScreen(new GameScreen(localGame));
 
             dispose();
         }
-
-        ScreenUtils.clear(0, 0, 0, 0);
 
         stage.draw();
     }

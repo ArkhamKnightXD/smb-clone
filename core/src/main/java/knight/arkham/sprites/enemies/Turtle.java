@@ -26,7 +26,7 @@ public class Turtle extends Enemy{
 
         super(gameScreen, position);
 
-        createWalkAnimation(gameScreen);
+        createWalkingAnimation(gameScreen);
 
         stateTimer = 0;
 
@@ -36,7 +36,8 @@ public class Turtle extends Enemy{
         destroyed = false;
     }
 
-    private void createWalkAnimation(GameScreen gameScreen) {
+
+    private void createWalkingAnimation(GameScreen gameScreen) {
 
         Array<TextureRegion> animationFrames = new Array<TextureRegion>();
 
@@ -51,11 +52,9 @@ public class Turtle extends Enemy{
 
     private void destroyEnemy() {
 
-        // Destruyo el body
         world.destroyBody(body);
         destroyed = true;
 
-//            Cambio el sprite de mi goomba por el sprite de goomba aplastado.
         setRegion(new TextureRegion(gameScreen.getTextureAtlas()
                 .findRegion("turtle"), 64, 0, 16, 16));
 

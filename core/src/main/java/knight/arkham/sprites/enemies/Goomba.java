@@ -25,7 +25,7 @@ public class Goomba extends Enemy {
 
         super(gameScreen, position);
 
-        createWalkAnimation(gameScreen);
+        createWalkingAnimation(gameScreen);
 
         stateTimer = 0;
 
@@ -35,8 +35,8 @@ public class Goomba extends Enemy {
         destroyed = false;
     }
 
-//
-    private void createWalkAnimation(GameScreen gameScreen) {
+
+    private void createWalkingAnimation(GameScreen gameScreen) {
 
         Array<TextureRegion> animationFrames = new Array<TextureRegion>();
 
