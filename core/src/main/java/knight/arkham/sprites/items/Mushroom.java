@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
-import knight.arkham.sprites.Mario;
+import knight.arkham.sprites.player.Mario;
 
 public class Mushroom extends Item {
 

@@ -6,7 +6,8 @@ public class Constants {
     public static final float VIRTUAL_WIDTH = 400;
     public static final float VIRTUAL_HEIGHT = 208;
 
-//    Con esta constante sera que manejare mi conversion de pixeles en el world de box2d
+//    Con esta constante será que manejaré mi conversion de píxeles en el world de box2d. Todos los elementos que
+//    yo vaya a agregar a mi world, su posición y dimensiones deben de ser divididos por esta constante.
     public static final float PIXELS_PER_METER = 100;
 
     //	Aqui definiremos las categorías de los fixture

@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import knight.arkham.screens.GameScreen;
-import knight.arkham.sprites.Mario;
+import knight.arkham.sprites.player.Mario;
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public abstract class Item extends Sprite {

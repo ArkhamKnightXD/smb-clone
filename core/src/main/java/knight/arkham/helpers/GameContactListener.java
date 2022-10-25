@@ -2,7 +2,7 @@ package knight.arkham.helpers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
-import knight.arkham.sprites.Mario;
+import knight.arkham.sprites.player.Mario;
 import knight.arkham.sprites.enemies.Enemy;
 import knight.arkham.sprites.items.Item;
 import knight.arkham.sprites.tileObjects.InteractiveTileObject;

@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
-import knight.arkham.sprites.Mario;
+import knight.arkham.sprites.player.Mario;
 
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 

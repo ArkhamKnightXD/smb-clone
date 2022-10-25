@@ -1,4 +1,4 @@
-package knight.arkham.sprites;
+package knight.arkham.sprites.player;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -23,9 +23,8 @@ public class Mario extends Sprite {
 
     //    Con estas variables manejaré el estado del jugador, ya sea que este parado o corriendo
 //    Y necesitaré una variable para almacenar el estado actual y el anterior
-    public enum playerState {FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD}
-    public playerState currentState;
-    public playerState previousState;
+    public PlayerAnimationState currentState;
+    public PlayerAnimationState previousState;
 
     //    Aqui almacenaremos el tiempo que hay en cada estado en específico, para llevar un record.
     private float stateTimer;
@@ -65,8 +64,8 @@ public class Mario extends Sprite {
 
 
 //        Standing debe de ser el estado inicial, tanto para el current como el previous state
-        currentState = playerState.STANDING;
-        previousState = playerState.STANDING;
+        currentState = PlayerAnimationState.STANDING;
+        previousState = PlayerAnimationState.STANDING;
         stateTimer = 0;
 
         isPlayerRunningRight = true;
@@ -214,13 +213,17 @@ public class Mario extends Sprite {
 //    el cuerpo de big mario, para volver a crear el cuerpo de little mario
     private void redefineMarioBody (){
 
-        Vector2 playerCurrentPosition = body.getPosition();
+//        Debido a que cuando obtengo las posiciones en X e Y del vector position del body,
+//        tengo que multiplicar estas coordenadas por mi pixels_per_meter, debido a que si las obtengo del body quiere
+//        decir que ya se le ha aplicado esta división
+        Vector2 playerCurrentPosition = new Vector2(body.getPosition().x * PIXELS_PER_METER,
+                body.getPosition().y * PIXELS_PER_METER);
 
         gameScreen.getWorld().destroyBody(body);
 
         body = BodyHelper.createPlayerBody(
 
-                new Box2DBody(playerCurrentPosition, false, gameScreen.getWorld(), this)
+                new Box2DBody(playerCurrentPosition, true, gameScreen.getWorld(), this)
         );
 
         timeToRedefineMario = false;
@@ -305,32 +308,31 @@ public class Mario extends Sprite {
         }
     }
 
-    private playerState getPlayerCurrentState() {
+    private PlayerAnimationState getPlayerCurrentState() {
 
         //        Esta debe de ser la animation a la que se le dé prioridad sobre las demás. Pues si mario
         //        murió lo demás es irrelevante
-
         if (marioIsDead)
-            return playerState.DEAD;
+            return PlayerAnimationState.DEAD;
 
         else if (shouldStartGrowAnimation)
-            return playerState.GROWING;
+            return PlayerAnimationState.GROWING;
 
 //        La segunda condición en el O lógico, se refiere a que si el player había saltado y en ese
 //        salto cayó por un hueco, entonces continua con la animación de jumping
-        else if (body.getLinearVelocity().y > 0 || (body.getLinearVelocity().y < 0 && previousState == playerState.JUMPING))
-            return playerState.JUMPING;
+        else if (body.getLinearVelocity().y > 0 || (body.getLinearVelocity().y < 0 && previousState == PlayerAnimationState.JUMPING))
+            return PlayerAnimationState.JUMPING;
 
 //        Deseamos que la animación de falling sea diferente a la de jumping y por esta
 //        razón establecimos este estado y esta condición
         else if (body.getLinearVelocity().y < 0)
-            return playerState.FALLING;
+            return PlayerAnimationState.FALLING;
 
         else if (body.getLinearVelocity().x != 0)
-            return playerState.RUNNING;
+            return PlayerAnimationState.RUNNING;
 
         else
-            return playerState.STANDING;
+            return PlayerAnimationState.STANDING;
     }
 
     public void growPlayer(){

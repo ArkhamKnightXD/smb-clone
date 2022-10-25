@@ -9,10 +9,13 @@ import com.badlogic.gdx.utils.Array;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
-
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public class Turtle extends Enemy{
+
+//    public TurtleAnimationState previousState;
+//    public TurtleAnimationState currentState;
+//    private TextureRegion shell;
 
     private float stateTimer;
 
@@ -28,12 +31,12 @@ public class Turtle extends Enemy{
 
         createWalkingAnimation(gameScreen);
 
-        stateTimer = 0;
-
-        setBounds(getX(), getY(), 16/ PIXELS_PER_METER, 16/ PIXELS_PER_METER);
+        setBounds(getX(), getY(), 16/ PIXELS_PER_METER, 24/ PIXELS_PER_METER);
 
         setToDestroy = false;
         destroyed = false;
+
+        stateTimer = 0;
     }
 
 
@@ -44,10 +47,10 @@ public class Turtle extends Enemy{
         for (int i = 0; i < 2; i++) {
 
             animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas()
-                    .findRegion("turtle"), i * 16, 0, 16, 16));
+                    .findRegion("turtle"), i * 16, 0, 16, 24));
         }
 
-        walkAnimation = new Animation<TextureRegion>(0.4f, animationFrames);
+        walkAnimation = new Animation<TextureRegion>(0.2f, animationFrames);
     }
 
     private void destroyEnemy() {
@@ -56,7 +59,7 @@ public class Turtle extends Enemy{
         destroyed = true;
 
         setRegion(new TextureRegion(gameScreen.getTextureAtlas()
-                .findRegion("turtle"), 64, 0, 16, 16));
+                .findRegion("turtle"), 64, 0, 16, 24));
 
         stateTimer = 0;
     }
@@ -94,6 +97,7 @@ public class Turtle extends Enemy{
             body.setLinearVelocity(velocity);
 
             setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
+
             setRegion(walkAnimation.getKeyFrame(stateTimer, true));
         }
     }

@@ -8,7 +8,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
 import knight.arkham.scenes.Hud;
 import knight.arkham.screens.GameScreen;
-import knight.arkham.sprites.Mario;
+import knight.arkham.sprites.player.Mario;
 import knight.arkham.sprites.items.ItemDefinition;
 import knight.arkham.sprites.items.Mushroom;
 import static knight.arkham.helpers.Constants.COIN_BIT;

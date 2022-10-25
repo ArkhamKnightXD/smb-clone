@@ -6,7 +6,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import knight.arkham.scenes.Hud;
 import knight.arkham.screens.GameScreen;
-import knight.arkham.sprites.Mario;
+import knight.arkham.sprites.player.Mario;
 
 import static knight.arkham.helpers.Constants.BRICK_BIT;
 import static knight.arkham.helpers.Constants.DESTROYED_BIT;

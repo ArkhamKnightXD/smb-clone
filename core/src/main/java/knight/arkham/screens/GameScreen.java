@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-//import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -20,11 +19,12 @@ import knight.arkham.MarioBros;
 import knight.arkham.helpers.GameContactListener;
 import knight.arkham.helpers.TileMapHelper;
 import knight.arkham.sprites.enemies.Enemy;
-import knight.arkham.sprites.Mario;
+import knight.arkham.sprites.player.Mario;
 import knight.arkham.scenes.Hud;
 import knight.arkham.sprites.items.Item;
 import knight.arkham.sprites.items.ItemDefinition;
 import knight.arkham.sprites.items.Mushroom;
+import knight.arkham.sprites.player.PlayerAnimationState;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -142,8 +142,8 @@ public class GameScreen extends ScreenAdapter {
 
     private void handleUserInput() {
 
-//        Si mario esta muerto no se podra mover
-        if (mario.currentState != Mario.playerState.DEAD) {
+//        Si mario esta muerto no se podrá mover
+        if (mario.currentState != PlayerAnimationState.DEAD) {
 
             // Todo salta varias veces
             if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
@@ -184,7 +184,7 @@ public class GameScreen extends ScreenAdapter {
 
 //        Nuestra camara seguirá la posición en X de nuestro personaje. Esto se hará siempre y cuando nuestro
 //        player no este muerto. Cuando mario muera la camara se quedara trabada en su última posición
-        if (mario.currentState != Mario.playerState.DEAD)
+        if (mario.currentState != PlayerAnimationState.DEAD)
             camera.position.x = mario.getBody().getPosition().x;
 
         mario.update(deltaTime);
@@ -270,7 +270,7 @@ public class GameScreen extends ScreenAdapter {
     public boolean isGameOver() {
 
 //    Si mario tiene estado DEAD y lleva más de 3 segundos en este estado esto me retornara true de lo contrario false
-        return mario.currentState == Mario.playerState.DEAD && mario.getStateTimer() > 3;
+        return mario.currentState == PlayerAnimationState.DEAD && mario.getStateTimer() > 3;
     }
 
     @Override
