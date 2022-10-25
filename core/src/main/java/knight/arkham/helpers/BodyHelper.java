@@ -222,11 +222,12 @@ public class BodyHelper {
         BodyDef bodyDefinition = new BodyDef();
 
         bodyDefinition.type = BodyDef.BodyType.StaticBody;
-        bodyDefinition.position.set(box2DBody.position.x / PIXELS_PER_METER, box2DBody.position.y / PIXELS_PER_METER);
+        bodyDefinition.position.set(box2DBody.rectangle.x / PIXELS_PER_METER, box2DBody.rectangle.y / PIXELS_PER_METER);
 
         PolygonShape shape = new PolygonShape();
 
-        shape.setAsBox(box2DBody.width / 2 /PIXELS_PER_METER , box2DBody.height / 2 / PIXELS_PER_METER);
+        shape.setAsBox(box2DBody.rectangle.width / 2 /PIXELS_PER_METER,
+                box2DBody.rectangle.height / 2 / PIXELS_PER_METER);
 
         FixtureDef fixtureDef = new FixtureDef();
 

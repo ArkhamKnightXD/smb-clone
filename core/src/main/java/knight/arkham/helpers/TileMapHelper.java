@@ -7,13 +7,13 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import knight.arkham.sprites.enemies.Turtle;
 import knight.arkham.sprites.tileObjects.Brick;
 import knight.arkham.sprites.tileObjects.Coin;
 import knight.arkham.sprites.enemies.Goomba;
 import knight.arkham.screens.GameScreen;
+
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public class TileMapHelper {
@@ -51,7 +51,7 @@ public class TileMapHelper {
 
         for (MapObject mapObject : mapObjects) {
 
-            Rectangle rectangle =  ((RectangleMapObject) mapObject).getRectangle();
+            Rectangle rectangle = ((RectangleMapObject) mapObject).getRectangle();
 
 // Mis objetos brick y coins deseo tenerlo en clases, para asi poder manejar su comportamiento cuando haya colisión.
             switch (objectsName) {
@@ -67,11 +67,11 @@ public class TileMapHelper {
                     break;
 
                 case "Goombas":
-                    goombas.add(new Goomba(gameScreen, new Vector2(rectangle.x, rectangle.y)));
+                    goombas.add(new Goomba(gameScreen, rectangle.x, rectangle.y));
                     break;
 
                 case "Turtles":
-                    turtles.add(new Turtle(gameScreen, new Vector2(rectangle.x, rectangle.y)));
+                    turtles.add(new Turtle(gameScreen, rectangle.x, rectangle.y));
                     break;
 
 //            Los demás objetos los crearé libremente.
@@ -79,9 +79,11 @@ public class TileMapHelper {
 
                     BodyHelper.createStaticBody(
 
-                            new Box2DBody(new Vector2(rectangle.x + rectangle.width / 2,
-                                    rectangle.y + rectangle.height / 2), rectangle.width,
-                                    rectangle.height, gameScreen.getWorld()
+                            new Box2DBody(
+
+                                    new Rectangle(rectangle.x + rectangle.width / 2,
+                                            rectangle.y + rectangle.height / 2, rectangle.width,
+                                            rectangle.height), gameScreen.getWorld()
                             )
                     );
 

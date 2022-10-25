@@ -21,9 +21,9 @@ public class Goomba extends Enemy {
     private boolean destroyed;
 
 
-    public Goomba(GameScreen gameScreen, Vector2 position) {
+    public Goomba(GameScreen gameScreen, float positionX, float positionY) {
 
-        super(gameScreen, position);
+        super(gameScreen, positionX, positionY);
 
         createWalkingAnimation(gameScreen);
 

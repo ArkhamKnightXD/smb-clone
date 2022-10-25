@@ -5,13 +5,11 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
 import knight.arkham.sprites.player.Mario;
-
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public abstract class InteractiveTileObject {
@@ -36,8 +34,8 @@ public abstract class InteractiveTileObject {
 
         fixture = BodyHelper.createStaticBody(
 
-                new Box2DBody(new Vector2(bounds.x + bounds.width / 2,
-                        bounds.y + bounds.height / 2), bounds.width, bounds.height, world
+                new Box2DBody(new Rectangle(bounds.x + bounds.width / 2,
+                        bounds.y + bounds.height / 2, bounds.width, bounds.height), world
                 )
         );
 

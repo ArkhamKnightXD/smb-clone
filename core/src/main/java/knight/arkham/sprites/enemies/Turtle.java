@@ -25,9 +25,9 @@ public class Turtle extends Enemy{
     private boolean destroyed;
 
 
-    public Turtle(GameScreen gameScreen, Vector2 position) {
+    public Turtle(GameScreen gameScreen, float positionX, float positionY) {
 
-        super(gameScreen, position);
+        super(gameScreen, positionX, positionY);
 
         createWalkingAnimation(gameScreen);
 

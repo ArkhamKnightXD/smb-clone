@@ -15,13 +15,13 @@ public abstract class Enemy extends Sprite {
 
     protected Vector2 velocity;
 
-    public Enemy(GameScreen gameScreen, Vector2 position) {
+    public Enemy(GameScreen gameScreen, float positionX, float positionY) {
 
         this.gameScreen = gameScreen;
         world = gameScreen.getWorld();
 
 //        Como indico la posición mediante esta función, puedo utilizar las funciones getX and GetY en otros lugares.
-        setPosition(position.x, position.y);
+        setPosition(positionX, positionY);
 
         defineEnemyBody();
 
