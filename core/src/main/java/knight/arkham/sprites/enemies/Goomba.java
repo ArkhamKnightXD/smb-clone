@@ -99,7 +99,7 @@ public class Goomba extends Enemy {
 
         body = BodyHelper.createEnemyBody(
 
-                new Box2DBody(new Vector2(getX(), getY()), true, gameScreen.getWorld(), this)
+                new Box2DBody(new Vector2(getX(), getY()), gameScreen.getWorld(), this)
         );
     }
 

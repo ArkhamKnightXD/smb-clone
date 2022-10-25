@@ -8,10 +8,6 @@ public class Box2DBody {
 //    Utilizaré un vector para guardar la posición en X e Y, para tener menos variables, y es recomendado esta forma
     public Vector2 position;
 
-//    Mediante este boolean determino si al vector posición que se envía se le debe de aplicar la división con la
-//    constante Pixels_Per_Meters. Si es true debe de aplicarse la división de lo contrario no.
-    public boolean hasNormalPosition;
-
     public float width;
     public float height;
     public World world;
@@ -29,9 +25,8 @@ public class Box2DBody {
         this.world = world;
     }
 
-    public Box2DBody(Vector2 position, boolean hasNormalPosition, World world, Object userData) {
+    public Box2DBody(Vector2 position, World world, Object userData) {
 
-        this.hasNormalPosition = hasNormalPosition;
         this.position = position;
         this.world = world;
         this.userData = userData;

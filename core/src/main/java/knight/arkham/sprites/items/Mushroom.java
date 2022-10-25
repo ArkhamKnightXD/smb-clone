@@ -23,7 +23,7 @@ public class Mushroom extends Item {
 
         body = BodyHelper.createItemBody(
 
-                new Box2DBody(new Vector2(getX(), getY()), true, gameScreen.getWorld(), this)
+                new Box2DBody(new Vector2(getX(), getY()), gameScreen.getWorld(), this)
         );
 
     }

@@ -13,9 +13,9 @@ import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public class Turtle extends Enemy{
 
-//    public TurtleAnimationState previousState;
-//    public TurtleAnimationState currentState;
-//    private TextureRegion shell;
+    public TurtleAnimationState previousState;
+    public TurtleAnimationState currentState;
+    private final TextureRegion shell;
 
     private float stateTimer;
 
@@ -30,6 +30,12 @@ public class Turtle extends Enemy{
         super(gameScreen, position);
 
         createWalkingAnimation(gameScreen);
+
+        previousState = TurtleAnimationState.WALKING;
+        currentState = TurtleAnimationState.WALKING;
+
+//        Sprite de la tortuga escondida en el caparazón.
+        shell = new TextureRegion(gameScreen.getTextureAtlas().findRegion("turtle"), 64, 0, 16, 24);
 
         setBounds(getX(), getY(), 16/ PIXELS_PER_METER, 24/ PIXELS_PER_METER);
 
@@ -58,8 +64,7 @@ public class Turtle extends Enemy{
         world.destroyBody(body);
         destroyed = true;
 
-        setRegion(new TextureRegion(gameScreen.getTextureAtlas()
-                .findRegion("turtle"), 64, 0, 16, 24));
+        setRegion(new TextureRegion(gameScreen.getTextureAtlas().findRegion("turtle"), 64, 0, 16, 24));
 
         stateTimer = 0;
     }
@@ -70,7 +75,7 @@ public class Turtle extends Enemy{
 
         body = BodyHelper.createEnemyBody(
 
-                new Box2DBody(new Vector2(getX(), getY()), true, gameScreen.getWorld(), this)
+                new Box2DBody(new Vector2(getX(), getY()), gameScreen.getWorld(), this)
         );
     }
 

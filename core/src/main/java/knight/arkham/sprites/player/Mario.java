@@ -74,7 +74,7 @@ public class Mario extends Sprite {
 
         body = BodyHelper.createPlayerBody(
 
-                new Box2DBody(new Vector2(32, 32), true, gameScreen.getWorld(), this)
+                new Box2DBody(new Vector2(32, 32), gameScreen.getWorld(), this)
         );
 
 //Utilizamos getTexture para obtener el texture region que indicamos en el constructor súper y luego indicamos
@@ -223,7 +223,7 @@ public class Mario extends Sprite {
 
         body = BodyHelper.createPlayerBody(
 
-                new Box2DBody(playerCurrentPosition, true, gameScreen.getWorld(), this)
+                new Box2DBody(playerCurrentPosition, gameScreen.getWorld(), this)
         );
 
         timeToRedefineMario = false;
@@ -238,7 +238,8 @@ public class Mario extends Sprite {
         gameScreen.getWorld().destroyBody(body);
 
         body = BodyHelper.createBigPlayerBody(new Box2DBody(
-                new Vector2(playerCurrentPosition), false, gameScreen.getWorld(), this
+
+                new Vector2(playerCurrentPosition), gameScreen.getWorld(), this
         ));
 
 
