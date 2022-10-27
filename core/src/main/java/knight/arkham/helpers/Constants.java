@@ -2,7 +2,10 @@ package knight.arkham.helpers;
 
 public class Constants {
 
-//    Estas son las dimensiones que le dare a mi viewport
+//    Estas son las dimensiones que le dare a mi viewport. Estos valores son independientes de la resolución
+//    especificada del juego. Esto quiere decir que esta será la resolución a la que mi juego se jugará
+//    Si tengo 1280x720 de resolution. Mi ventana estará a esa resolution, pero mi juego solo ocupará lo especificado
+//    en mis VIRTUAL_WIDTH y VIRTUAL_HEIGHT
     public static final float VIRTUAL_WIDTH = 400;
     public static final float VIRTUAL_HEIGHT = 208;
 
