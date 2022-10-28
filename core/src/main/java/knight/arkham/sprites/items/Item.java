@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
 import knight.arkham.screens.GameScreen;
 import knight.arkham.sprites.player.Mario;
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
@@ -12,7 +11,6 @@ import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 public abstract class Item extends Sprite {
 
     protected GameScreen gameScreen;
-    protected World world;
     protected Vector2 velocity;
     protected boolean setToDestroy;
     protected boolean destroyed;
@@ -21,7 +19,6 @@ public abstract class Item extends Sprite {
     public Item(GameScreen gameScreen, Vector2 position) {
 
         this.gameScreen = gameScreen;
-        world = gameScreen.getWorld();
 
         setPosition(position.x, position.y);
 
@@ -46,7 +43,7 @@ public abstract class Item extends Sprite {
 
         if (setToDestroy && !destroyed) {
 
-            world.destroyBody(body);
+            gameScreen.getWorld().destroyBody(body);
             destroyed = true;
         }
     }
@@ -57,6 +54,6 @@ public abstract class Item extends Sprite {
     }
 
 
-    public abstract void defineItemBody();
+    protected abstract void defineItemBody();
     public abstract void useItem(Mario mario);
 }

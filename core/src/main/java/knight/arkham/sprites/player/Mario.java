@@ -24,7 +24,7 @@ public class Mario extends Sprite {
     //    Con estas variables manejaré el estado del jugador, ya sea que este parado o corriendo
 //    Y necesitaré una variable para almacenar el estado actual y el anterior
     public PlayerAnimationState currentState;
-    public PlayerAnimationState previousState;
+    private PlayerAnimationState previousState;
 
     //    Aqui almacenaremos el tiempo que hay en cada estado en específico, para llevar un record.
     private float stateTimer;

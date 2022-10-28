@@ -15,9 +15,7 @@ import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 public abstract class InteractiveTileObject {
 
     protected GameScreen gameScreen;
-    protected final World world;
     protected final TiledMap tiledMap;
-    protected final Rectangle bounds;
     protected Body body;
     protected Fixture fixture;
 
@@ -28,14 +26,14 @@ public abstract class InteractiveTileObject {
 
         this.mapObject = mapObject;
         this.gameScreen = gameScreen;
-        world = gameScreen.getWorld();
         this.tiledMap = tiledMap;
-        bounds = ((RectangleMapObject) mapObject).getRectangle();
+
+        Rectangle bounds = ((RectangleMapObject) mapObject).getRectangle();
 
         fixture = BodyHelper.createStaticBody(
 
-                new Box2DBody(new Rectangle(bounds.x + bounds.width / 2,
-                        bounds.y + bounds.height / 2, bounds.width, bounds.height), world
+                new Box2DBody(new Rectangle(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2,
+                        bounds.width, bounds.height), gameScreen.getWorld()
                 )
         );
 

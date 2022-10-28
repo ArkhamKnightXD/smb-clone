@@ -21,9 +21,9 @@ public class Goomba extends Enemy {
     private boolean destroyed;
 
 
-    public Goomba(GameScreen gameScreen, float positionX, float positionY) {
+    public Goomba(GameScreen gameScreen, Vector2 position) {
 
-        super(gameScreen, positionX, positionY);
+        super(gameScreen, position);
 
         createWalkingAnimation(gameScreen);
 
@@ -54,7 +54,7 @@ public class Goomba extends Enemy {
     private void destroyEnemy() {
 
         // Destruyo el body
-        world.destroyBody(body);
+        gameScreen.getWorld().destroyBody(body);
         destroyed = true;
 
 //            Cambio el sprite de mi goomba por el sprite de goomba aplastado.

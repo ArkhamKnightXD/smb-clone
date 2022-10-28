@@ -25,9 +25,9 @@ public class Turtle extends Enemy{
     private boolean destroyed;
 
 
-    public Turtle(GameScreen gameScreen, float positionX, float positionY) {
+    public Turtle(GameScreen gameScreen, Vector2 position) {
 
-        super(gameScreen, positionX, positionY);
+        super(gameScreen, position);
 
         createWalkingAnimation(gameScreen);
 
@@ -61,7 +61,7 @@ public class Turtle extends Enemy{
 
     private void destroyEnemy() {
 
-        world.destroyBody(body);
+        gameScreen.getWorld().destroyBody(body);
         destroyed = true;
 
         setRegion(new TextureRegion(gameScreen.getTextureAtlas().findRegion("turtle"), 64, 0, 16, 24));

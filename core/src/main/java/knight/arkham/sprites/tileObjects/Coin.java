@@ -23,14 +23,14 @@ public class Coin extends InteractiveTileObject{
     public Coin(GameScreen gameScreen, TiledMap tiledMap, MapObject mapObject) {
         super(gameScreen, tiledMap, mapObject);
 
+        localAssetManager = gameScreen.getAssetManager();
+
 //        Buscamos nuestro tileSet completo
         tileSet = tiledMap.getTileSets().getTileSet("tileset_gutter");
 
         fixture.setUserData(this);
 
         setCategoryFilter(COIN_BIT);
-
-        localAssetManager = gameScreen.getAssetManager();
     }
 
     @Override

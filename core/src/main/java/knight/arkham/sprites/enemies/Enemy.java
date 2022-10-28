@@ -3,25 +3,22 @@ package knight.arkham.sprites.enemies;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
 import knight.arkham.screens.GameScreen;
 
 public abstract class Enemy extends Sprite {
 
     protected GameScreen gameScreen;
-    protected World world;
 
     public Body body;
 
     protected Vector2 velocity;
 
-    public Enemy(GameScreen gameScreen, float positionX, float positionY) {
+    public Enemy(GameScreen gameScreen, Vector2 position) {
 
         this.gameScreen = gameScreen;
-        world = gameScreen.getWorld();
 
 //        Como indico la posición mediante esta función, puedo utilizar las funciones getX and GetY en otros lugares.
-        setPosition(positionX, positionY);
+        setPosition(position.x, position.y);
 
         defineEnemyBody();
 

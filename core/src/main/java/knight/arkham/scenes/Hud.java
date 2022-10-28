@@ -23,13 +23,9 @@ public class Hud implements Disposable {
     private static Integer score;
 
     //    Scene2d elements
-    Label countDownLabel;
+    private Label countDownLabel;
     //    Como voy a utilizar esta variable en una función static, debo de definirla static
-    static Label scoreLabel;
-    Label timeLabel;
-    Label levelLabel;
-    Label worldLabel;
-    Label marioLabel;
+    private static Label scoreLabel;
 
 
     public Hud(SpriteBatch batch) {
@@ -63,10 +59,10 @@ public class Hud implements Disposable {
 // de mi label, el color será blanco.
         countDownLabel =new Label(String.format("%03d", worldTimer),new Label.LabelStyle(new BitmapFont(),Color.WHITE));
         scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        levelLabel = new Label("1-1", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        worldLabel = new Label("World", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        marioLabel = new Label("MARIO", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label timeLabel = new Label("TIME", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label levelLabel = new Label("1-1", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label worldLabel = new Label("World", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        Label marioLabel = new Label("MARIO", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
 //        Adding elements to the table: Agregaremos el label de mario de primero y haremos que se expanda en x,
 //        con esto, si hay 3 elementos en pantalla, cada uno tendrá un tercio de pantalla y finalmente agrego
