@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import knight.arkham.helpers.BodyHelper;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
+
 import static knight.arkham.helpers.Constants.NOTHING_BIT;
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
@@ -86,7 +87,7 @@ public class Mario extends Sprite {
 
 //        Tiene el doble de tamaño que little_mario, por lo tanto, su tamaño es de 32 px
         bigPlayerStand = new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
-                0 , 0 , 16 ,32);
+                0, 0, 16, 32);
 
         //    Funciones heredadas de la clase Sprite
         setRegion(playerStand);
@@ -117,14 +118,14 @@ public class Mario extends Sprite {
 
         // Como el salto es de solo 1 frame tanto para little_mario como para big_mario no hay necesidad de guardar
         // esto en un tipo de dato animation y hacer el loop. Si no guardar directamente el textureRegion
-        playerJumping = new TextureRegion(getTexture(), 80 , 10 , 16 ,16);
-        dyingPlayer = new TextureRegion(getTexture(), 96 , 0 , 16 ,32);
+        playerJumping = new TextureRegion(getTexture(), 80, 10, 16, 16);
+        dyingPlayer = new TextureRegion(getTexture(), 96, 0, 16, 32);
 
 
         bigPlayerJump = new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
-                80 , 0 , 16 ,32);
+                80, 0, 16, 32);
 
-        for (int i = 1; i < 4; i++){
+        for (int i = 1; i < 4; i++) {
 
             animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario")
                     , i * 16, 0, 16, 32));
@@ -136,14 +137,14 @@ public class Mario extends Sprite {
 
 //        Set animation frames for growing mario. Para la animación intercalamos entre un sprite de mario pequeño
 //        y el primer sprite, básicamente el marioStand
-         animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
-                 240 , 0 , 16 ,32));
         animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
-                0 , 0 , 16 ,32));
+                240, 0, 16, 32));
         animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
-                240 , 0 , 16 ,32));
+                0, 0, 16, 32));
         animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
-                0 , 0 , 16 ,32));
+                240, 0, 16, 32));
+        animationFrames.add(new TextureRegion(gameScreen.getTextureAtlas().findRegion("big_mario"),
+                0, 0, 16, 32));
 
         growPlayer = new Animation<TextureRegion>(0.2f, animationFrames);
     }
@@ -151,9 +152,8 @@ public class Mario extends Sprite {
     public void update(float deltaTime) {
 
 //        Cuando mario es grande tenemos que restar varios pixeles en Y para que se ajuste a su nuevo body
-        if(marioIsBig)
+        if (marioIsBig)
             setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2 - 6 / PIXELS_PER_METER);
-
 
 //        Aqui actualizamos la posición, los cálculos extras son necesarios para que nuestro
 //        body se quede junto a nuestro sprite
@@ -173,7 +173,7 @@ public class Mario extends Sprite {
     public void getHit() {
 
 //        Si golpean a mario cuando este este grande, debemos de volver a mario pequeño de nuevo
-        if (marioIsBig){
+        if (marioIsBig) {
 
             marioIsBig = false;
 
@@ -183,9 +183,7 @@ public class Mario extends Sprite {
             setBounds(getX(), getY(), getWidth(), getHeight() / 2);
 
             gameScreen.getAssetManager().get("audio/sound/powerdown.wav", Sound.class).play();
-        }
-
-        else{
+        } else {
 
             gameScreen.getAssetManager().get("audio/music/mario_music.ogg", Music.class).stop();
             gameScreen.getAssetManager().get("audio/sound/mariodie.wav", Sound.class).play();
@@ -200,7 +198,7 @@ public class Mario extends Sprite {
 
 //            Debido a que mario consiste varios fixture, debemos recorrer todas estas fixture e indicarle
 //            cual sera su nuevo filtro
-            for (Fixture fixture: body.getFixtureList())
+            for (Fixture fixture : body.getFixtureList())
                 fixture.setFilterData(filter);
 
 //            Al final le aplicamos un impulso en Y a mario para asi realizar el movimiento de muerte.
@@ -209,9 +207,9 @@ public class Mario extends Sprite {
         }
     }
 
-//    Esta función hace básicamente lo mismo que cuando mario crece, la diferencia es que aqui será para destruir
+    //    Esta función hace básicamente lo mismo que cuando mario crece, la diferencia es que aqui será para destruir
 //    el cuerpo de big mario, para volver a crear el cuerpo de little mario
-    private void redefineMarioBody (){
+    private void redefineMarioBody() {
 
 //        Debido a que cuando obtengo las posiciones en X e Y del vector position del body,
 //        tengo que multiplicar estas coordenadas por mi pixels_per_meter, debido a que si las obtengo del body quiere
@@ -255,7 +253,7 @@ public class Mario extends Sprite {
         switch (currentState) {
 
             case DEAD:
-                region =  dyingPlayer;
+                region = dyingPlayer;
                 break;
 
             case GROWING:
@@ -336,13 +334,13 @@ public class Mario extends Sprite {
             return PlayerAnimationState.STANDING;
     }
 
-    public void growPlayer(){
+    public void growPlayer() {
 
         shouldStartGrowAnimation = true;
         marioIsBig = true;
         timeToDefineBigMario = true;
 
-        setBounds(getX(), getY(), getWidth() , getHeight() * 2);
+        setBounds(getX(), getY(), getWidth(), getHeight() * 2);
 
         gameScreen.getAssetManager().get("audio/sound/powerup.wav", Sound.class).play();
     }

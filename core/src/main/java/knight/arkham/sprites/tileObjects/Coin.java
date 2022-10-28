@@ -16,7 +16,7 @@ import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public class Coin extends InteractiveTileObject{
 
-    private static TiledMapTileSet tileSet;
+    private final TiledMapTileSet tileSet;
 
     private final AssetManager localAssetManager;
 

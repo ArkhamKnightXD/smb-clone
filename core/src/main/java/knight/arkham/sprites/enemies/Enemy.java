@@ -7,7 +7,7 @@ import knight.arkham.screens.GameScreen;
 
 public abstract class Enemy extends Sprite {
 
-    protected GameScreen gameScreen;
+    protected final GameScreen gameScreen;
 
     public Body body;
 

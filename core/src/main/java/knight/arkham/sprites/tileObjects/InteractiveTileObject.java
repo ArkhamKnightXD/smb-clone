@@ -14,12 +14,11 @@ import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public abstract class InteractiveTileObject {
 
-    protected GameScreen gameScreen;
+    protected final GameScreen gameScreen;
     protected final TiledMap tiledMap;
-    protected Body body;
-    protected Fixture fixture;
-
-    protected MapObject mapObject;
+    protected final Body body;
+    protected final Fixture fixture;
+    protected final MapObject mapObject;
 
     //    Todas las clases que hereden de esta implementaran este constructor
     public InteractiveTileObject(GameScreen gameScreen, TiledMap tiledMap, MapObject mapObject) {
