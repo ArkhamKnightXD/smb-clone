@@ -9,21 +9,21 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import knight.arkham.sprites.enemies.Enemy;
 import knight.arkham.sprites.enemies.Turtle;
 import knight.arkham.sprites.tileObjects.Brick;
 import knight.arkham.sprites.tileObjects.Coin;
 import knight.arkham.sprites.enemies.Goomba;
 import knight.arkham.screens.GameScreen;
-
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
-public class TileMapHelper {
+public class TileMapCreator {
 
     private final GameScreen gameScreen;
     private final Array<Goomba> goombas;
     private final Array<Turtle> turtles;
 
-    public TileMapHelper(GameScreen gameScreen) {
+    public TileMapCreator(GameScreen gameScreen) {
 
         this.gameScreen = gameScreen;
 
@@ -79,7 +79,7 @@ public class TileMapHelper {
 //            Los demás objetos los crearé libremente.
                 default:
 
-                    BodyHelper.createStaticBody(
+                    Box2DBodyCreator.createStaticBody(
 
                             new Box2DBody(
 
@@ -94,11 +94,13 @@ public class TileMapHelper {
         }
     }
 
-    public Array<Goomba> getGoombas() {
-        return goombas;
-    }
+    public Array<Enemy> getEnemies() {
 
-    public Array<Turtle> getTurtles() {
-        return turtles;
+        Array<Enemy> enemies = new Array<Enemy>();
+
+        enemies.addAll(goombas);
+        enemies.addAll(turtles);
+
+        return enemies;
     }
 }

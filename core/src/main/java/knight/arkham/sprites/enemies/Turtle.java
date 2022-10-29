@@ -6,23 +6,22 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import knight.arkham.helpers.BodyHelper;
+import knight.arkham.helpers.Box2DBodyCreator;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
-public class Turtle extends Enemy{
+public class Turtle extends Enemy {
 
-    public TurtleAnimationState previousState;
-    public TurtleAnimationState currentState;
+    private TurtleAnimationState previousState;
+    private TurtleAnimationState currentState;
     private final TextureRegion shell;
 
     private float stateTimer;
 
     private Animation<TextureRegion> walkAnimation;
 
-    private boolean setToDestroy;
-    private boolean destroyed;
+    private final boolean destroyed;
 
 
     public Turtle(GameScreen gameScreen, Vector2 position) {
@@ -37,9 +36,8 @@ public class Turtle extends Enemy{
 //        Sprite de la tortuga escondida en el caparazón.
         shell = new TextureRegion(gameScreen.getTextureAtlas().findRegion("turtle"), 64, 0, 16, 24);
 
-        setBounds(getX(), getY(), 16/ PIXELS_PER_METER, 24/ PIXELS_PER_METER);
+        setBounds(getX(), getY(), 16 / PIXELS_PER_METER, 24 / PIXELS_PER_METER);
 
-        setToDestroy = false;
         destroyed = false;
 
         stateTimer = 0;
@@ -59,21 +57,11 @@ public class Turtle extends Enemy{
         walkAnimation = new Animation<TextureRegion>(0.2f, animationFrames);
     }
 
-    private void destroyEnemy() {
-
-        gameScreen.getWorld().destroyBody(body);
-        destroyed = true;
-
-        setRegion(new TextureRegion(gameScreen.getTextureAtlas().findRegion("turtle"), 64, 0, 16, 24));
-
-        stateTimer = 0;
-    }
-
 
     @Override
     protected void defineEnemyBody() {
 
-        body = BodyHelper.createEnemyBody(
+        body = Box2DBodyCreator.createEnemyBody(
 
                 new Box2DBody(new Vector2(getX(), getY()), gameScreen.getWorld(), this)
         );
@@ -82,7 +70,11 @@ public class Turtle extends Enemy{
     @Override
     public void hitOnHead() {
 
-        setToDestroy = true;
+        if (currentState != TurtleAnimationState.SHELL) {
+
+            currentState = TurtleAnimationState.SHELL;
+            velocity.x = 0;
+        }
 
         gameScreen.getAssetManager().get("audio/sound/stomp.wav", Sound.class).play();
     }
@@ -90,22 +82,57 @@ public class Turtle extends Enemy{
     @Override
     public void update(float deltaTime) {
 
-        stateTimer += deltaTime;
+        setRegion(getActualRegion(deltaTime));
 
-        if (setToDestroy && !destroyed)
-            destroyEnemy();
+        if (currentState == TurtleAnimationState.SHELL && stateTimer > 5) {
 
-        else if (!destroyed) {
+            currentState = TurtleAnimationState.WALKING;
 
-            velocity.y = body.getLinearVelocity().y;
-
-            body.setLinearVelocity(velocity);
-
-            setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
-
-            setRegion(walkAnimation.getKeyFrame(stateTimer, true));
+            velocity.x = 1;
         }
+
+        setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - 8 / PIXELS_PER_METER);
+
+        velocity.y = body.getLinearVelocity().y;
+
+        body.setLinearVelocity(velocity);
     }
+
+    private TextureRegion getActualRegion(float deltaTime) {
+
+        TextureRegion actualRegion;
+
+        switch (currentState) {
+
+            case SHELL:
+                actualRegion = shell;
+
+                break;
+
+            case WALKING:
+            default:
+                actualRegion = walkAnimation.getKeyFrame(stateTimer, true);
+                break;
+        }
+
+        flipOnXAxis(actualRegion);
+
+        stateTimer = currentState == previousState ? stateTimer + deltaTime : 0;
+        previousState = currentState;
+
+        return actualRegion;
+    }
+
+    private void flipOnXAxis(TextureRegion region) {
+
+        if (velocity.x > 0 && !region.isFlipX())
+            region.flip(true, false);
+
+        else if (velocity.x < 0 && region.isFlipX())
+            region.flip(true, false);
+
+    }
+
 
     @Override
     public void draw(Batch batch) {

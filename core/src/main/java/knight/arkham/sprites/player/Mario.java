@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
-import knight.arkham.helpers.BodyHelper;
+import knight.arkham.helpers.Box2DBodyCreator;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
 
@@ -73,7 +73,7 @@ public class Mario extends Sprite {
 
         makePlayerAnimations();
 
-        body = BodyHelper.createPlayerBody(
+        body = Box2DBodyCreator.createPlayerBody(
 
                 new Box2DBody(new Vector2(32, 32), gameScreen.getWorld(), this)
         );
@@ -219,7 +219,7 @@ public class Mario extends Sprite {
 
         gameScreen.getWorld().destroyBody(body);
 
-        body = BodyHelper.createPlayerBody(
+        body = Box2DBodyCreator.createPlayerBody(
 
                 new Box2DBody(playerCurrentPosition, gameScreen.getWorld(), this)
         );
@@ -235,7 +235,7 @@ public class Mario extends Sprite {
 //        pequeño.
         gameScreen.getWorld().destroyBody(body);
 
-        body = BodyHelper.createBigPlayerBody(new Box2DBody(
+        body = Box2DBodyCreator.createBigPlayerBody(new Box2DBody(
 
                 new Vector2(playerCurrentPosition), gameScreen.getWorld(), this
         ));

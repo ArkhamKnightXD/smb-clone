@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import static knight.arkham.helpers.Constants.*;
 
-public class BodyHelper {
+public class Box2DBodyCreator {
 
     public static Body createPlayerBody(Box2DBody box2DBody){
 

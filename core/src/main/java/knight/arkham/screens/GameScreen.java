@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import knight.arkham.MarioBros;
 import knight.arkham.helpers.GameContactListener;
-import knight.arkham.helpers.TileMapHelper;
+import knight.arkham.helpers.TileMapCreator;
 import knight.arkham.sprites.enemies.Enemy;
 import knight.arkham.sprites.player.Mario;
 import knight.arkham.scenes.Hud;
@@ -54,7 +54,7 @@ public class GameScreen extends ScreenAdapter {
 
     private final AssetManager assetManager;
 
-    private final TileMapHelper tileMapHelper;
+    private final TileMapCreator mapCreator;
 
     private final Array<Item> items;
 
@@ -104,9 +104,9 @@ public class GameScreen extends ScreenAdapter {
 //		A la hora de preparar la posición inicial de la camara debemos de hacerlo con el world width y el height.
         camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
-        tileMapHelper = new TileMapHelper(this);
+        mapCreator = new TileMapCreator(this);
 
-        mapRenderer = tileMapHelper.setupMap();
+        mapRenderer = mapCreator.setupMap();
 
         Music music = assetManager.get("audio/music/mario_music.ogg", Music.class);
 
@@ -190,7 +190,7 @@ public class GameScreen extends ScreenAdapter {
 
 //        Si tengo varios objetos que tengo que actualizar esta es la única forma.
 //        Nota podría cambiar el forEach por un for, por cuestiones de performance.
-        for (Enemy enemy : tileMapHelper.getGoombas()) {
+        for (Enemy enemy : mapCreator.getEnemies()) {
 
             enemy.update(deltaTime);
 
@@ -199,19 +199,8 @@ public class GameScreen extends ScreenAdapter {
                 enemy.body.setActive(true);
         }
 
-
-        for (Enemy enemy : tileMapHelper.getTurtles()) {
-
-            enemy.update(deltaTime);
-
-            if (enemy.getX() < mario.getX() + 2.5f)
-                enemy.body.setActive(true);
-        }
-
-
         for (Item item : items)
             item.update(deltaTime);
-
 
         hud.update(deltaTime);
 
@@ -238,10 +227,7 @@ public class GameScreen extends ScreenAdapter {
 //        La función draw es heredado de la clase sprite, implementada mi clase Mario.
         mario.draw(batch);
 
-        for (Enemy enemy : tileMapHelper.getGoombas())
-            enemy.draw(batch);
-
-        for (Enemy enemy : tileMapHelper.getTurtles())
+        for (Enemy enemy : mapCreator.getEnemies())
             enemy.draw(batch);
 
         for (Item item : items)

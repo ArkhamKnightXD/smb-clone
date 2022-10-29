@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import knight.arkham.helpers.BodyHelper;
+import knight.arkham.helpers.Box2DBodyCreator;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
@@ -97,7 +97,7 @@ public class Goomba extends Enemy {
     @Override
     protected void defineEnemyBody() {
 
-        body = BodyHelper.createEnemyBody(
+        body = Box2DBodyCreator.createEnemyBody(
 
                 new Box2DBody(new Vector2(getX(), getY()), gameScreen.getWorld(), this)
         );

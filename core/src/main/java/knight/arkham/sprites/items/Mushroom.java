@@ -1,7 +1,7 @@
 package knight.arkham.sprites.items;
 
 import com.badlogic.gdx.math.Vector2;
-import knight.arkham.helpers.BodyHelper;
+import knight.arkham.helpers.Box2DBodyCreator;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
 import knight.arkham.sprites.player.Mario;
@@ -21,7 +21,7 @@ public class Mushroom extends Item {
     @Override
     public void defineItemBody() {
 
-        body = BodyHelper.createItemBody(
+        body = Box2DBodyCreator.createItemBody(
 
                 new Box2DBody(new Vector2(getX(), getY()), gameScreen.getWorld(), this)
         );

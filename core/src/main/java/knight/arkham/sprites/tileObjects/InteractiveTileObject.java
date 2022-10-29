@@ -6,7 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
-import knight.arkham.helpers.BodyHelper;
+import knight.arkham.helpers.Box2DBodyCreator;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
 import knight.arkham.sprites.player.Mario;
@@ -29,7 +29,7 @@ public abstract class InteractiveTileObject {
 
         Rectangle bounds = ((RectangleMapObject) mapObject).getRectangle();
 
-        fixture = BodyHelper.createStaticBody(
+        fixture = Box2DBodyCreator.createStaticBody(
 
                 new Box2DBody(new Rectangle(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2,
                         bounds.width, bounds.height), gameScreen.getWorld()
