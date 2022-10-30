@@ -61,7 +61,6 @@ public class Mario extends Sprite {
 
     public Mario(GameScreen gameScreen) {
 
-//        Todo remover el super constructor
 //        Debido a que heredamos de la clase sprite podemos implementar el constructor, al que le mandaremos un texture
 //        region, y este texture region lo podremos referenciar más abajo mediante la función getTexture.
 //        Esto nos dara la region que le pertenece a los sprite llamados little_mario
