@@ -43,10 +43,10 @@ public class Brick extends InteractiveTileObject{
 
             Hud.addScore(200);
 
-            localAssetManager.get("audio/sound/breakBlock.wav", Sound.class).play();
+            localAssetManager.get("sound/breakBlock.wav", Sound.class).play();
         }
 
         else
-            localAssetManager.get("audio/sound/bump.wav", Sound.class).play();
+            localAssetManager.get("sound/bump.wav", Sound.class).play();
     }
 }

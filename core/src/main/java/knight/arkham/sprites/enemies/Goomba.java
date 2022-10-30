@@ -109,6 +109,6 @@ public class Goomba extends Enemy {
 //        Si golpeamos este objeto indicaremos que este objeto debe de ser destruido.
         setToDestroy = true;
 
-        gameScreen.getAssetManager().get("audio/sound/stomp.wav", Sound.class).play();
+        gameScreen.getAssetManager().get("sound/stomp.wav", Sound.class).play();
     }
 }

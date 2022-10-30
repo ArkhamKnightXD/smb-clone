@@ -112,7 +112,7 @@ public class GameScreen extends ScreenAdapter {
 
         mapRenderer = mapCreator.setupMap();
 
-        gameMusic = assetManager.get("audio/music/mario_music.ogg", Music.class);
+        gameMusic = assetManager.get("music/mario_music.ogg", Music.class);
 
         gameMusic.setLooping(true);
         gameMusic.setVolume(0.1f);
@@ -175,7 +175,6 @@ public class GameScreen extends ScreenAdapter {
         camera.update();
 
         mapRenderer.setView(camera);
-
 
         mario.update(deltaTime);
 
@@ -262,9 +261,7 @@ public class GameScreen extends ScreenAdapter {
 //        Todo buscarle solución a los dispose
 //        No puedo hacer dispose de ninguno de estos a la hora de cambiar de pantalla, pues me da error.
 //        batch.dispose();
-//        assetManager.dispose();
-        //        world.dispose();
-
+//        world.dispose();
 //        debugRenderer.dispose();
 
         mapRenderer.dispose();

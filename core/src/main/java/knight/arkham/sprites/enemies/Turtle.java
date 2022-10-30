@@ -76,7 +76,7 @@ public class Turtle extends Enemy {
             velocity.x = 0;
         }
 
-        gameScreen.getAssetManager().get("audio/sound/stomp.wav", Sound.class).play();
+        gameScreen.getAssetManager().get("sound/stomp.wav", Sound.class).play();
     }
 
     @Override

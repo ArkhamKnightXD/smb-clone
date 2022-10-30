@@ -333,11 +333,11 @@ public class Mario extends Sprite {
 //            Reduciremos a la mitad nuestro height pues queremos que este tenga el height de little mario.
             setBounds(getX(), getY(), getWidth(), getHeight() / 2);
 
-            gameScreen.getAssetManager().get("audio/sound/powerdown.wav", Sound.class).play();
+            gameScreen.getAssetManager().get("sound/powerdown.wav", Sound.class).play();
         } else {
 
-            gameScreen.getAssetManager().get("audio/music/mario_music.ogg", Music.class).stop();
-            gameScreen.getAssetManager().get("audio/sound/mariodie.wav", Sound.class).play();
+            gameScreen.getAssetManager().get("music/mario_music.ogg", Music.class).stop();
+            gameScreen.getAssetManager().get("sound/mariodie.wav", Sound.class).play();
 
             marioIsDead = true;
 
@@ -366,7 +366,7 @@ public class Mario extends Sprite {
 
         setBounds(getX(), getY(), getWidth(), getHeight() * 2);
 
-        gameScreen.getAssetManager().get("audio/sound/powerup.wav", Sound.class).play();
+        gameScreen.getAssetManager().get("sound/powerup.wav", Sound.class).play();
     }
 
 

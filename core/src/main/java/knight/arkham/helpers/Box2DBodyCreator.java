@@ -224,6 +224,8 @@ public class Box2DBodyCreator {
         bodyDefinition.type = BodyDef.BodyType.StaticBody;
         bodyDefinition.position.set(box2DBody.rectangle.x / PIXELS_PER_METER, box2DBody.rectangle.y / PIXELS_PER_METER);
 
+        Body body = box2DBody.world.createBody(bodyDefinition);
+
         PolygonShape shape = new PolygonShape();
 
         shape.setAsBox(box2DBody.rectangle.width / 2 /PIXELS_PER_METER,
@@ -236,8 +238,6 @@ public class Box2DBodyCreator {
 //        Todo tengo que separar esto, pues no todos los elementos creados por esta función, pueden tener object_bit
 //        Por ejemplo los coin y el ground no deberían de tener un object_bit, evaluaré esto para mas adelante.
         fixtureDef.filter.categoryBits = OBJECT_BIT;
-
-        Body body = box2DBody.world.createBody(bodyDefinition);
 
     //A static body has zero mass by definition, so the density is not used in this case. The default density is zero.
         Fixture fixture = body.createFixture(fixtureDef);

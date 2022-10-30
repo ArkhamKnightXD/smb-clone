@@ -1,6 +1,5 @@
 package knight.arkham.helpers;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import knight.arkham.sprites.player.Mario;
 import knight.arkham.sprites.enemies.Enemy;
@@ -86,8 +85,6 @@ public class GameContactListener implements ContactListener {
 
                 else
                     ((Mario) fixtureB.getUserData()).getHit();
-
-                Gdx.app.log("Mario", "Died");
                 break;
         }
     }

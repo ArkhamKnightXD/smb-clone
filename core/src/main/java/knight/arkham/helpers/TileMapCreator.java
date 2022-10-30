@@ -19,13 +19,13 @@ import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public class TileMapCreator {
 
-    private final GameScreen gameScreen;
+    private final GameScreen localGameScreen;
     private final Array<Goomba> goombas;
     private final Array<Turtle> turtles;
 
     public TileMapCreator(GameScreen gameScreen) {
 
-        this.gameScreen = gameScreen;
+        localGameScreen = gameScreen;
 
         goombas = new Array<Goomba>();
         turtles = new Array<Turtle>();
@@ -61,19 +61,19 @@ public class TileMapCreator {
 // Para tener un mayor manejo de mis bricks y coin, voy a enviarle el mapObject, de esta forma podre controlar
 // de una mejor forma que item contendrán mis clases coin.
                 case "Bricks":
-                    new Brick(gameScreen, tiledMap, mapObject);
+                    new Brick(localGameScreen, tiledMap, mapObject);
                     break;
 
                 case "Coins":
-                    new Coin(gameScreen, tiledMap, mapObject);
+                    new Coin(localGameScreen, tiledMap, mapObject);
                     break;
 
                 case "Goombas":
-                    goombas.add(new Goomba(gameScreen, new Vector2(rectangle.x, rectangle.y)));
+                    goombas.add(new Goomba(localGameScreen, new Vector2(rectangle.x, rectangle.y)));
                     break;
 
                 case "Turtles":
-                    turtles.add(new Turtle(gameScreen, new Vector2(rectangle.x, rectangle.y)));
+                    turtles.add(new Turtle(localGameScreen, new Vector2(rectangle.x, rectangle.y)));
                     break;
 
 //            Los demás objetos los crearé libremente.
@@ -85,7 +85,7 @@ public class TileMapCreator {
 
                                     new Rectangle(rectangle.x + rectangle.width / 2,
                                             rectangle.y + rectangle.height / 2, rectangle.width,
-                                            rectangle.height), gameScreen.getWorld()
+                                            rectangle.height), localGameScreen.getWorld()
                             )
                     );
 

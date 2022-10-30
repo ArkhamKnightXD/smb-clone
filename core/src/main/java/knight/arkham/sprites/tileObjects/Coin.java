@@ -44,7 +44,7 @@ public class Coin extends InteractiveTileObject{
 //        Hay 2 sonidos que podemos tocar, uno cuando hay un coin disponible y otro cuando el bloque esta vació.
 //        Comparo él, id actual del tile si es igual a un Blank_coin significa que el tile esta vació.
         if(getCell().getTile().getId() == BLANK_COIN)
-            localAssetManager.get("audio/sound/bump.wav", Sound.class).play();
+            localAssetManager.get("sound/bump.wav", Sound.class).play();
 
         else{
 //            Con getProperties obtengo las propiedades personalizadas del mapObject utilizado para crear esta clase.
@@ -55,11 +55,11 @@ public class Coin extends InteractiveTileObject{
                 gameScreen.spawnItems(new ItemDefinition(new Vector2(body.getPosition().x,
                         body.getPosition().y +16 / PIXELS_PER_METER), Mushroom.class));
 
-                localAssetManager.get("audio/sound/spawn.wav", Sound.class).play();
+                localAssetManager.get("sound/spawn.wav", Sound.class).play();
             }
 
             else
-                localAssetManager.get("audio/sound/coin.wav", Sound.class).play();
+                localAssetManager.get("sound/coin.wav", Sound.class).play();
 
         }
 
