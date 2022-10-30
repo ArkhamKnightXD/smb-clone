@@ -15,9 +15,14 @@ import com.badlogic.gdx.utils.Array;
 import knight.arkham.helpers.Box2DBodyCreator;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
+import knight.arkham.sprites.enemies.Enemy;
+import knight.arkham.sprites.enemies.Turtle;
+import knight.arkham.sprites.enemies.TurtleAnimationState;
 
 import static knight.arkham.helpers.Constants.NOTHING_BIT;
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
+import static knight.arkham.sprites.enemies.Turtle.KICK_LEFT_SPEED;
+import static knight.arkham.sprites.enemies.Turtle.KICK_RIGHT_SPEED;
 
 //La clase sprite nos hereda un conjunto de funcionalidades encargadas de manejar sprites.
 public class Mario extends Sprite {
@@ -321,40 +326,52 @@ public class Mario extends Sprite {
     }
 
 
-    public void getHit() {
+    public void getHit(Enemy enemy) {
 
-//        Si golpean a mario cuando este este grande, debemos de volver a mario pequeño de nuevo
-        if (marioIsBig) {
+//        Si la tortuga está en standing shell no queremos que mario sufra daño. Y que la tortuga también sea pateada.
+        if (enemy instanceof Turtle && ((Turtle) enemy).getCurrentState() == TurtleAnimationState.STANDING_SHELL){
 
-            marioIsBig = false;
+            int kickSpeed = getX() <= enemy.getX() ? KICK_RIGHT_SPEED : KICK_LEFT_SPEED;
 
-            timeToRedefineMario = true;
+            ((Turtle) enemy).kick(kickSpeed);
+        }
+
+        else{
+
+            //        Si golpean a mario cuando este este grande, debemos de volver a mario pequeño de nuevo
+            if (marioIsBig) {
+
+                marioIsBig = false;
+
+                timeToRedefineMario = true;
 
 //            Reduciremos a la mitad nuestro height pues queremos que este tenga el height de little mario.
-            setBounds(getX(), getY(), getWidth(), getHeight() / 2);
+                setBounds(getX(), getY(), getWidth(), getHeight() / 2);
 
-            gameScreen.getAssetManager().get("sound/powerdown.wav", Sound.class).play();
-        } else {
+                gameScreen.getAssetManager().get("sound/powerdown.wav", Sound.class).play();
+            } else {
 
-            gameScreen.getAssetManager().get("music/mario_music.ogg", Music.class).stop();
-            gameScreen.getAssetManager().get("sound/mariodie.wav", Sound.class).play();
+                gameScreen.getAssetManager().get("music/mario_music.ogg", Music.class).stop();
+                gameScreen.getAssetManager().get("sound/mariodie.wav", Sound.class).play();
 
-            marioIsDead = true;
+                marioIsDead = true;
 
 //            Cuando mario muera nosotros deseamos que no pueda tener colisión con nada para que pueda
 //            caer con su animación de muerte.
-            Filter filter = new Filter();
+                Filter filter = new Filter();
 
-            filter.maskBits = NOTHING_BIT;
+                filter.maskBits = NOTHING_BIT;
 
 //            Debido a que mario consiste varios fixture, debemos recorrer todas estas fixture e indicarle
 //            cual sera su nuevo filtro
-            for (Fixture fixture : body.getFixtureList())
-                fixture.setFilterData(filter);
+                for (Fixture fixture : body.getFixtureList())
+                    fixture.setFilterData(filter);
 
 //            Al final le aplicamos un impulso en Y a mario para asi realizar el movimiento de muerte.
 //            Pues cuando él muere el sprite se eleva hacia arriba y luego cae
-            body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
+                body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
+            }
+
         }
     }
 

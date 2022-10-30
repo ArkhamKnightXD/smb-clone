@@ -9,10 +9,15 @@ import com.badlogic.gdx.utils.Array;
 import knight.arkham.helpers.Box2DBodyCreator;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
+import knight.arkham.sprites.player.Mario;
+
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public class Turtle extends Enemy {
 
+//    Variables static para manejar la velocidad para donde será pateada la tortuga
+    public static final int KICK_LEFT_SPEED = -2;
+    public static final int KICK_RIGHT_SPEED = 2;
     private TurtleAnimationState previousState;
     private TurtleAnimationState currentState;
     private final TextureRegion shell;
@@ -68,12 +73,20 @@ public class Turtle extends Enemy {
     }
 
     @Override
-    public void hitOnHead() {
+    public void hitOnHead(Mario mario) {
 
-        if (currentState != TurtleAnimationState.SHELL) {
+        if (currentState != TurtleAnimationState.STANDING_SHELL) {
 
-            currentState = TurtleAnimationState.SHELL;
+            currentState = TurtleAnimationState.STANDING_SHELL;
             velocity.x = 0;
+        }
+        else {
+
+//Si la posición de mario en X es menor que la de la tortuga a la hora de que mario golpee la cabeza de la tortuga,
+// entonces la tortuga será pateada a la derecha, de lo contrario a la izquierda.
+            int kickSpeed = mario.getX() <= getX() ? KICK_RIGHT_SPEED : KICK_LEFT_SPEED;
+
+            kick(kickSpeed);
         }
 
         gameScreen.getAssetManager().get("sound/stomp.wav", Sound.class).play();
@@ -84,7 +97,7 @@ public class Turtle extends Enemy {
 
         setRegion(getActualRegion(deltaTime));
 
-        if (currentState == TurtleAnimationState.SHELL && stateTimer > 5) {
+        if (currentState == TurtleAnimationState.STANDING_SHELL && stateTimer > 5) {
 
             currentState = TurtleAnimationState.WALKING;
 
@@ -104,7 +117,12 @@ public class Turtle extends Enemy {
 
         switch (currentState) {
 
-            case SHELL:
+            case MOVING_SHELL:
+                actualRegion = shell;
+
+                break;
+
+            case STANDING_SHELL:
                 actualRegion = shell;
 
                 break;
@@ -133,11 +151,21 @@ public class Turtle extends Enemy {
 
     }
 
+    public void kick (int speed){
+
+        velocity.x = speed;
+        currentState = TurtleAnimationState.MOVING_SHELL;
+    }
+
 
     @Override
     public void draw(Batch batch) {
 
         if (!destroyed || stateTimer < 1)
             super.draw(batch);
+    }
+
+    public TurtleAnimationState getCurrentState() {
+        return currentState;
     }
 }

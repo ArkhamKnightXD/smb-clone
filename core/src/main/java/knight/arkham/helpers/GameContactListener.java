@@ -38,12 +38,13 @@ public class GameContactListener implements ContactListener {
 
                 break;
 
+// Cuando un enemigo es golpeado en la cabeza por mario necesitamos que el enemigo tenga acceso a la clase Mario
             case ENEMY_HEAD_BIT | MARIO_BIT:
                 if (fixtureA.getFilterData().categoryBits == ENEMY_HEAD_BIT)
-                    ((Enemy) fixtureA.getUserData()).hitOnHead();
+                    ((Enemy) fixtureA.getUserData()).hitOnHead((Mario) fixtureB.getUserData());
 
                 else
-                    ((Enemy) fixtureB.getUserData()).hitOnHead();
+                    ((Enemy) fixtureB.getUserData()).hitOnHead((Mario) fixtureA.getUserData());
                 break;
 
             // Las colisiones se leen de esta forma. Si el enemy colisiona con un objeto.
@@ -79,12 +80,13 @@ public class GameContactListener implements ContactListener {
                     ((Item) fixtureB.getUserData()).useItem((Mario) fixtureA.getUserData());
                 break;
 
+            // Cuando un mario es golpeado por un enemigo necesitamos que mario tenga acceso a la clase del enemigo
             case MARIO_BIT | ENEMY_BIT:
                 if (fixtureA.getFilterData().categoryBits == MARIO_BIT)
-                    ((Mario) fixtureA.getUserData()).getHit();
+                    ((Mario) fixtureA.getUserData()).getHit((Enemy) fixtureB.getUserData());
 
                 else
-                    ((Mario) fixtureB.getUserData()).getHit();
+                    ((Mario) fixtureB.getUserData()).getHit((Enemy) fixtureA.getUserData());
                 break;
         }
     }

@@ -9,6 +9,8 @@ import com.badlogic.gdx.utils.Array;
 import knight.arkham.helpers.Box2DBodyCreator;
 import knight.arkham.helpers.Box2DBody;
 import knight.arkham.screens.GameScreen;
+import knight.arkham.sprites.player.Mario;
+
 import static knight.arkham.helpers.Constants.PIXELS_PER_METER;
 
 public class Goomba extends Enemy {
@@ -104,7 +106,7 @@ public class Goomba extends Enemy {
     }
 
     @Override
-    public void hitOnHead() {
+    public void hitOnHead(Mario mario) {
 
 //        Si golpeamos este objeto indicaremos que este objeto debe de ser destruido.
         setToDestroy = true;

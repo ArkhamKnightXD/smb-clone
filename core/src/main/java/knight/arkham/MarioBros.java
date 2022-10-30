@@ -26,14 +26,6 @@ public class MarioBros extends Game {
 		setScreen(new GameScreen(this));
 	}
 
-	@Override
-	public void dispose() {
-
-		super.dispose();
-
-		globalAssetManager.dispose();
-	}
-
 	public AssetManager getGlobalAssetManager() {
 		return globalAssetManager;
 	}
