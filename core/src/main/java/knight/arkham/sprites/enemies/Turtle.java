@@ -92,6 +92,12 @@ public class Turtle extends Enemy {
         gameScreen.getAssetManager().get("sound/stomp.wav", Sound.class).play();
     }
 
+    public void kick (int speed){
+
+        velocity.x = speed;
+        currentState = TurtleAnimationState.MOVING_SHELL;
+    }
+
     @Override
     public void update(float deltaTime) {
 
@@ -150,13 +156,6 @@ public class Turtle extends Enemy {
             region.flip(true, false);
 
     }
-
-    public void kick (int speed){
-
-        velocity.x = speed;
-        currentState = TurtleAnimationState.MOVING_SHELL;
-    }
-
 
     @Override
     public void draw(Batch batch) {
