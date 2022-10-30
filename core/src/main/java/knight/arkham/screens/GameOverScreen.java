@@ -54,14 +54,16 @@ public class GameOverScreen extends ScreenAdapter {
 
         ScreenUtils.clear(0, 0, 0, 0);
 
-        if (Gdx.input.justTouched()){
 
+        if (Gdx.input.justTouched())
             localGame.setScreen(new GameScreen(localGame));
 
-            dispose();
-        }
-
         stage.draw();
+    }
+
+    @Override
+    public void hide() {
+        dispose();
     }
 
 

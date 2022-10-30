@@ -1,5 +1,7 @@
 package knight.arkham.sprites.player;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -24,7 +26,7 @@ public class Mario extends Sprite {
 
     //    Con estas variables manejaré el estado del jugador, ya sea que este parado o corriendo
 //    Y necesitaré una variable para almacenar el estado actual y el anterior
-    public PlayerAnimationState currentState;
+    private PlayerAnimationState currentState;
     private PlayerAnimationState previousState;
 
     //    Aqui almacenaremos el tiempo que hay en cada estado en específico, para llevar un record.
@@ -71,8 +73,6 @@ public class Mario extends Sprite {
 
         isPlayerRunningRight = true;
 
-        makePlayerAnimations();
-
         body = Box2DBodyCreator.createPlayerBody(
 
                 new Box2DBody(new Vector2(32, 32), gameScreen.getWorld(), this)
@@ -92,6 +92,8 @@ public class Mario extends Sprite {
         //    Funciones heredadas de la clase Sprite
         setRegion(playerStand);
         setBounds(0, 0, 16 / PIXELS_PER_METER, 16 / PIXELS_PER_METER);
+
+        makePlayerAnimations();
     }
 
     private void makePlayerAnimations() {
@@ -149,64 +151,6 @@ public class Mario extends Sprite {
         growPlayer = new Animation<TextureRegion>(0.2f, animationFrames);
     }
 
-    public void update(float deltaTime) {
-
-//        Cuando mario es grande tenemos que restar varios pixeles en Y para que se ajuste a su nuevo body
-        if (marioIsBig)
-            setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2 - 6 / PIXELS_PER_METER);
-
-//        Aqui actualizamos la posición, los cálculos extras son necesarios para que nuestro
-//        body se quede junto a nuestro sprite
-        else
-            setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
-
-//        Actualizamos la region, aqui es que actualizo la animación del personaje
-        setRegion(getActualRegion(deltaTime));
-
-        if (timeToDefineBigMario)
-            createBigMarioBody();
-
-        if (timeToRedefineMario)
-            redefineMarioBody();
-    }
-
-    public void getHit() {
-
-//        Si golpean a mario cuando este este grande, debemos de volver a mario pequeño de nuevo
-        if (marioIsBig) {
-
-            marioIsBig = false;
-
-            timeToRedefineMario = true;
-
-//            Reduciremos a la mitad nuestro height pues queremos que este tenga el height de little mario.
-            setBounds(getX(), getY(), getWidth(), getHeight() / 2);
-
-            gameScreen.getAssetManager().get("audio/sound/powerdown.wav", Sound.class).play();
-        } else {
-
-            gameScreen.getAssetManager().get("audio/music/mario_music.ogg", Music.class).stop();
-            gameScreen.getAssetManager().get("audio/sound/mariodie.wav", Sound.class).play();
-
-            marioIsDead = true;
-
-//            Cuando mario muera nosotros deseamos que no pueda tener colisión con nada para que pueda
-//            caer con su animación de muerte.
-            Filter filter = new Filter();
-
-            filter.maskBits = NOTHING_BIT;
-
-//            Debido a que mario consiste varios fixture, debemos recorrer todas estas fixture e indicarle
-//            cual sera su nuevo filtro
-            for (Fixture fixture : body.getFixtureList())
-                fixture.setFilterData(filter);
-
-//            Al final le aplicamos un impulso en Y a mario para asi realizar el movimiento de muerte.
-//            Pues cuando él muere el sprite se eleva hacia arriba y luego cae
-            body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
-        }
-    }
-
     //    Esta función hace básicamente lo mismo que cuando mario crece, la diferencia es que aqui será para destruir
 //    el cuerpo de big mario, para volver a crear el cuerpo de little mario
     private void redefineMarioBody() {
@@ -242,6 +186,48 @@ public class Mario extends Sprite {
 
 
         timeToDefineBigMario = false;
+    }
+
+    public void update(float deltaTime) {
+
+//        Cuando mario es grande tenemos que restar varios pixeles en Y para que se ajuste a su nuevo body
+        if (marioIsBig)
+            setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2 - 6 / PIXELS_PER_METER);
+
+//        Aqui actualizamos la posición, los cálculos extras son necesarios para que nuestro
+//        body se quede junto a nuestro sprite
+        else
+            setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
+
+//        Actualizamos la region, aqui es que actualizo la animación del personaje
+        setRegion(getActualRegion(deltaTime));
+
+        if (timeToDefineBigMario)
+            createBigMarioBody();
+
+        if (timeToRedefineMario)
+            redefineMarioBody();
+
+        playerMovement();
+    }
+
+    private void playerMovement() {
+
+        //        Si mario esta muerto no se podrá mover
+        if (currentState != PlayerAnimationState.DEAD) {
+
+            // Todo salta varias veces
+            if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
+                body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
+
+//        Si quiero reducir o aumentar la maxima velocidad de mario debo jugar con los valores al final del if
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && body.getLinearVelocity().x <= 1.3)
+                body.applyLinearImpulse(new Vector2(1, 0), body.getWorldCenter(), true);
+
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && body.getLinearVelocity().x >= -1.3)
+                body.applyLinearImpulse(new Vector2(-1, 0), body.getWorldCenter(), true);
+
+        }
     }
 
     private TextureRegion getActualRegion(float deltaTime) {
@@ -334,6 +320,44 @@ public class Mario extends Sprite {
             return PlayerAnimationState.STANDING;
     }
 
+
+    public void getHit() {
+
+//        Si golpean a mario cuando este este grande, debemos de volver a mario pequeño de nuevo
+        if (marioIsBig) {
+
+            marioIsBig = false;
+
+            timeToRedefineMario = true;
+
+//            Reduciremos a la mitad nuestro height pues queremos que este tenga el height de little mario.
+            setBounds(getX(), getY(), getWidth(), getHeight() / 2);
+
+            gameScreen.getAssetManager().get("audio/sound/powerdown.wav", Sound.class).play();
+        } else {
+
+            gameScreen.getAssetManager().get("audio/music/mario_music.ogg", Music.class).stop();
+            gameScreen.getAssetManager().get("audio/sound/mariodie.wav", Sound.class).play();
+
+            marioIsDead = true;
+
+//            Cuando mario muera nosotros deseamos que no pueda tener colisión con nada para que pueda
+//            caer con su animación de muerte.
+            Filter filter = new Filter();
+
+            filter.maskBits = NOTHING_BIT;
+
+//            Debido a que mario consiste varios fixture, debemos recorrer todas estas fixture e indicarle
+//            cual sera su nuevo filtro
+            for (Fixture fixture : body.getFixtureList())
+                fixture.setFilterData(filter);
+
+//            Al final le aplicamos un impulso en Y a mario para asi realizar el movimiento de muerte.
+//            Pues cuando él muere el sprite se eleva hacia arriba y luego cae
+            body.applyLinearImpulse(new Vector2(0, 4f), body.getWorldCenter(), true);
+        }
+    }
+
     public void growPlayer() {
 
         shouldStartGrowAnimation = true;
@@ -344,6 +368,7 @@ public class Mario extends Sprite {
 
         gameScreen.getAssetManager().get("audio/sound/powerup.wav", Sound.class).play();
     }
+
 
     public Body getBody() {
         return body;
@@ -356,4 +381,6 @@ public class Mario extends Sprite {
     public float getStateTimer() {
         return stateTimer;
     }
+
+    public PlayerAnimationState getCurrentState() {return currentState;}
 }

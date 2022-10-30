@@ -26,7 +26,9 @@ import knight.arkham.sprites.items.Item;
 import knight.arkham.sprites.items.ItemDefinition;
 import knight.arkham.sprites.items.Mushroom;
 import knight.arkham.sprites.player.PlayerAnimationState;
+
 import java.util.concurrent.LinkedBlockingQueue;
+
 import static knight.arkham.helpers.Constants.*;
 
 public class GameScreen extends ScreenAdapter {
@@ -45,7 +47,7 @@ public class GameScreen extends ScreenAdapter {
     private final World world;
 
 
-//Ahora mismo no tiene proposito el debugRenderer
+    //Ahora mismo no tiene proposito el debugRenderer
     private final Box2DDebugRenderer debugRenderer;
 
     private final Mario mario;
@@ -60,10 +62,12 @@ public class GameScreen extends ScreenAdapter {
 
     private final MarioBros game;
 
+    private final Music gameMusic;
+
 
     //    Investigar más sobre esto y sobre porque no puedo utilizar un array normal en vez de esta opción.
 //    Ahora mismo con esta lista no hay error, pero no pasa nada. Si logro hacer esto funcionar probaré con Array
-    public LinkedBlockingQueue<ItemDefinition> itemsToSpawn;
+    private final LinkedBlockingQueue<ItemDefinition> itemsToSpawn;
 
 
     public GameScreen(MarioBros game) {
@@ -81,15 +85,15 @@ public class GameScreen extends ScreenAdapter {
 
         debugRenderer = new Box2DDebugRenderer();
 
+        batch = new SpriteBatch();
+
+        hud = new Hud(batch);
+
 //        Asi cargamos un textureAtlas, un texture atlas es un conjunto de imágenes convertidas en una sola
 //        Y en el pack se guardan los nombres de las imágenes con sus posiciones X e Y, también su tamaño se guarda.
         textureAtlas = new TextureAtlas("images/Mario_and_Enemies.pack");
 
         mario = new Mario(this);
-
-        batch = new SpriteBatch();
-
-        hud = new Hud(batch);
 
         camera = new OrthographicCamera();
 
@@ -108,11 +112,11 @@ public class GameScreen extends ScreenAdapter {
 
         mapRenderer = mapCreator.setupMap();
 
-        Music music = assetManager.get("audio/music/mario_music.ogg", Music.class);
+        gameMusic = assetManager.get("audio/music/mario_music.ogg", Music.class);
 
-        music.setLooping(true);
-        music.setVolume(0.1f);
-        music.play();
+        gameMusic.setLooping(true);
+        gameMusic.setVolume(0.1f);
+        gameMusic.play();
 
         items = new Array<Item>();
 
@@ -125,7 +129,16 @@ public class GameScreen extends ScreenAdapter {
     }
 
 
-    public void handleSpawningItems() {
+    private void closeGame() {
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+
+            Gdx.app.exit();
+            dispose();
+        }
+    }
+
+    private void handleSpawningItems() {
 
         if (!itemsToSpawn.isEmpty()) {
 
@@ -138,36 +151,9 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-
-    private void handleUserInput() {
-
-//        Si mario esta muerto no se podrá mover
-        if (mario.currentState != PlayerAnimationState.DEAD) {
-
-            // Todo salta varias veces
-            if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
-                mario.getBody().applyLinearImpulse(new Vector2(0, 4f), mario.getBody().getWorldCenter(), true);
-
-//        Si quiero reducir o aumentar la maxima velocidad de mario debo jugar con los valores al final del if
-            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && mario.getBody().getLinearVelocity().x <= 1.3)
-                mario.getBody().applyLinearImpulse(new Vector2(1, 0), mario.getBody().getWorldCenter(), true);
-
-            if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && mario.getBody().getLinearVelocity().x >= -1.3)
-                mario.getBody().applyLinearImpulse(new Vector2(-1, 0), mario.getBody().getWorldCenter(), true);
-
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-
-            Gdx.app.exit();
-            dispose();
-        }
-    }
-
-
     private void update(float deltaTime) {
 
-        handleUserInput();
+        closeGame();
 
         handleSpawningItems();
 
@@ -183,8 +169,13 @@ public class GameScreen extends ScreenAdapter {
 
 //        Nuestra camara seguirá la posición en X de nuestro personaje. Esto se hará siempre y cuando nuestro
 //        player no este muerto. Cuando mario muera la camara se quedara trabada en su última posición
-        if (mario.currentState != PlayerAnimationState.DEAD)
+        if (mario.getCurrentState() != PlayerAnimationState.DEAD)
             camera.position.x = mario.getBody().getPosition().x;
+
+        camera.update();
+
+        mapRenderer.setView(camera);
+
 
         mario.update(deltaTime);
 
@@ -203,24 +194,21 @@ public class GameScreen extends ScreenAdapter {
             item.update(deltaTime);
 
         hud.update(deltaTime);
-
-        camera.update();
-
-        mapRenderer.setView(camera);
     }
 
     @Override
     public void render(float delta) {
 
-        update(delta);
-
         ScreenUtils.clear(0, 0, 0, 0);
 
-        mapRenderer.render();
+        update(delta);
 
         //Con esto le indicamos a nuestro gameBatch donde está nuestra camara y que solo
 //		renderice lo que nuestra camara puede ver.
         batch.setProjectionMatrix(camera.combined);
+
+        // El map render tiene que ser declarado antes del spriteBatch, si no mario ni sus enemigos serán visualizados.
+        mapRenderer.render();
 
         batch.begin();
 
@@ -241,21 +229,16 @@ public class GameScreen extends ScreenAdapter {
 //		De esta forma dibujamos en pantalla nuestro hud, mediante nuestro campo stage que tiene una función draw.
         hud.stage.draw();
 
-        if (isGameOver()) {
-
-            game.setScreen(new GameOverScreen(game, batch));
-
-//            Cuando cambie de pantalla es el momento correcto para llamar al metodo dispose
-            dispose();
-        }
+        setGameOverScreen();
 
         debugRenderer.render(world, camera.combined);
     }
 
-    public boolean isGameOver() {
+    public void setGameOverScreen() {
 
-//    Si mario tiene estado DEAD y lleva más de 3 segundos en este estado esto me retornara true de lo contrario false
-        return mario.currentState == PlayerAnimationState.DEAD && mario.getStateTimer() > 3;
+        //Si mario tiene estado DEAD y lleva más de 3 segundos en este estado esto retornara true de lo contrario false
+        if (mario.getCurrentState() == PlayerAnimationState.DEAD && mario.getStateTimer() > 3)
+            game.setScreen(new GameOverScreen(game, batch));
     }
 
     @Override
@@ -265,18 +248,28 @@ public class GameScreen extends ScreenAdapter {
         viewport.update(width, height);
     }
 
+    //    Este metodo se ejecuta cuando cambie de pantalla. Por lo tanto, es ideal llamar el metodo dispose aqui.
+//    Y de esta forma no tenemos que preocuparnos con llamarlo en algún otro lugar.
+    @Override
+    public void hide() {
+
+        dispose();
+    }
+
     @Override
     public void dispose() {
 
 //        Todo buscarle solución a los dispose
 //        No puedo hacer dispose de ninguno de estos a la hora de cambiar de pantalla, pues me da error.
 //        batch.dispose();
-//        world.dispose();
+//        assetManager.dispose();
+        //        world.dispose();
+
 //        debugRenderer.dispose();
-        //assetManager.dispose();
 
         mapRenderer.dispose();
         hud.dispose();
+        gameMusic.dispose();
     }
 
     public World getWorld() {
