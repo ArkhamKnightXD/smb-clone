@@ -8,16 +8,20 @@ public class Box2DBodyCreator {
 
     public static Body createPlayerBody(Box2DBody box2DBody){
 
-        Body body = getPreparedBody(box2DBody);
+        Body body = getPreparedBody(box2DBody, true);
 
-        FixtureDef fixtureDefinition = getPreparedFixtureDefinition(MARIO_BIT, ENEMY_HEAD_BIT);
+        CircleShape circleShape = new CircleShape();
+
+        FixtureDef fixtureDef = getPreparedFixtureDefinition(circleShape, MARIO_BIT, ENEMY_HEAD_BIT, false);
+
+        circleShape.dispose();
 
 //  A dynamic body should have at least one fixture with a non-zero density. Otherwise, you will get strange behavior.
-        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
+        body.createFixture(fixtureDef).setUserData(box2DBody.userData);
 
-        EdgeShape headCollider = makePlayerHeadCollider(fixtureDefinition);
+        EdgeShape headCollider = makePlayerHeadCollider(fixtureDef);
 
-        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
+        body.createFixture(fixtureDef).setUserData(box2DBody.userData);
 
         headCollider.dispose();
 
@@ -60,37 +64,24 @@ public class Box2DBodyCreator {
 
         Body body = box2DBody.world.createBody(bodyDefinition);
 
-        FixtureDef fixtureDefinition = new FixtureDef();
-
         CircleShape circleShape = new CircleShape();
 
-        circleShape.setRadius(6 / PIXELS_PER_METER);
+        FixtureDef fixtureDef = getPreparedFixtureDefinition(circleShape, MARIO_BIT, ENEMY_HEAD_BIT, true);
 
-        fixtureDefinition.shape = circleShape;
-
-//        Debido a que mi big mario tendrá 2 fixture, por lo tanto, va a pesar el doble. Asi que reduciré
-//        la densidad del primer fixture a 50 que es la mitad del fixture de little mario
-        fixtureDefinition.density = 50;
-        fixtureDefinition.friction = 0.1f;
-
-        fixtureDefinition.filter.categoryBits = MARIO_BIT;
-
-        fixtureDefinition.filter.maskBits = (short) (GROUND_BIT | ITEM_BIT | COIN_BIT | BRICK_BIT | OBJECT_BIT | ENEMY_BIT | ENEMY_HEAD_BIT);
-
-        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
+        body.createFixture(fixtureDef).setUserData(box2DBody.userData);
 
 //        Lo que haremos aqui será crear otra forma para que este más debajo de la forma inicial
         circleShape.setPosition(new Vector2(0, -14 / PIXELS_PER_METER));
 
 //        Debemos de crear nuestro fixture de nuevo ya que lo que deseamos es crear un segundo fixture que se adapte
 //        a la parte de abajo de mario. Asi que el mario grande tendrá dos fixture
-        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
+        body.createFixture(fixtureDef).setUserData(box2DBody.userData);
 
         circleShape.dispose();
 
-        EdgeShape headCollider = makePlayerHeadCollider(fixtureDefinition);
+        EdgeShape headCollider = makePlayerHeadCollider(fixtureDef);
 
-        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
+        body.createFixture(fixtureDef).setUserData(box2DBody.userData);
 
         headCollider.dispose();
 
@@ -98,15 +89,16 @@ public class Box2DBodyCreator {
     }
 
 
-    private static Body getPreparedBody(Box2DBody box2DBody) {
+    private static Body getPreparedBody(Box2DBody box2DBody, boolean hasDynamicBody) {
 
         BodyDef bodyDefinition = new BodyDef();
 
-        bodyDefinition.type = BodyDef.BodyType.DynamicBody;
+        bodyDefinition.type = hasDynamicBody ? BodyDef.BodyType.DynamicBody : BodyDef.BodyType.StaticBody;
 
 //  Mi body rotaba por defecto lo cual hacía que mi headCollider no se quedara en un solo lugar, y esto hacía que
 //  la colisión con los bloques fallara. Esta opción es util para personajes controlables.
-        bodyDefinition.fixedRotation = true;
+        if (hasDynamicBody)
+            bodyDefinition.fixedRotation = true;
 
         bodyDefinition.position.set(box2DBody.position.x /PIXELS_PER_METER, box2DBody.position.y /PIXELS_PER_METER);
 
@@ -115,56 +107,58 @@ public class Box2DBodyCreator {
 
 
     //    En esta función preparo los valores iniciales que va a tener mi fixture.
-    private static FixtureDef getPreparedFixtureDefinition(short categoryBit, short extraBit) {
+    private static FixtureDef getPreparedFixtureDefinition(CircleShape circleShape, short categoryBit, short extraBit, boolean isBigMario) {
 
-        FixtureDef fixtureDefinition = new FixtureDef();
-
-        CircleShape circleShape = new CircleShape();
+        FixtureDef fixtureDef = new FixtureDef();
 
         circleShape.setRadius(6 / PIXELS_PER_METER);
 
-        fixtureDefinition.shape = circleShape;
-
-        circleShape.dispose();
+        fixtureDef.shape = circleShape;
 
 //  100 es una densidad recomendable, si la densidad es muy alta nuestro personaje no va a poder saltar
-        fixtureDefinition.density = 100;
-        fixtureDefinition.friction = 0.1f;
+        //  Debido a que mi big mario tendrá 2 fixture, por lo tanto, va a pesar el doble. Asi que reduciré
+//  la densidad del primer fixture a 50 que es la mitad del fixture de little mario
+        fixtureDef.density = isBigMario ? 50 : 100;
+        fixtureDef.friction = 0.1f;
 
         //  Cada fixture en box2D tiene un filtro, el filtro tiene una categoría y una mask, la categoría es para
         //  indicar que este fixture, es mario, brick o un coin y el mask representa con cuáles fixture este fixture
         //  puede colisionar, los filtros se indican con bits, en este caso utilizaremos variables, short Y sus valores
         //  serán potencias de 2 para diferenciar los filtros. Finalmente, indico mi categoría y le indico
         //  a este fixture que será mario.
-        fixtureDefinition.filter.categoryBits = categoryBit;
+        fixtureDef.filter.categoryBits = categoryBit;
 
 //        Aqui defino con que mi fixture de mario podrá colisionar, lo hare con O lógicos simples Indicamos que mario
 //        pueda colisionar con todos los bits exceptuando el Destroyed_bit, pues cuando un fixture tenga este bit
 //        no queremos que mario colisione, pues técnicamente este objeto está destruido.
         // Nuestros enemigos podrán colisionar entre ellos mismos y también con mario, por eso agrego,
         // MARIO_BIT, Cuando en el categoryBit envió a Enemy_bit.
-        fixtureDefinition.filter.maskBits = (short) (GROUND_BIT | ITEM_BIT | COIN_BIT | BRICK_BIT | OBJECT_BIT | ENEMY_BIT | extraBit);
+        fixtureDef.filter.maskBits = (short) (GROUND_BIT | ITEM_BIT | COIN_BIT | BRICK_BIT | OBJECT_BIT | ENEMY_BIT | extraBit);
 
-        return fixtureDefinition;
+        return fixtureDef;
     }
 
 
     public static Body createEnemyBody(Box2DBody box2DBody){
 
-        Body body = getPreparedBody(box2DBody);
+        Body body = getPreparedBody(box2DBody, true);
 
-        FixtureDef fixtureDefinition = getPreparedFixtureDefinition(ENEMY_BIT, MARIO_BIT);
+        CircleShape circleShape = new CircleShape();
 
-        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
+        FixtureDef fixtureDef = getPreparedFixtureDefinition(circleShape, ENEMY_BIT, MARIO_BIT, false);
 
-        fixtureDefinition.shape = getCustomEnemyHeadShape();
+        circleShape.dispose();
+
+        body.createFixture(fixtureDef).setUserData(box2DBody.userData);
+
+        fixtureDef.shape = getCustomEnemyHeadShape();
 
 //        Agregar rebote, para cuando mario le salte encima al enemigo
-        fixtureDefinition.restitution = 1;
-        fixtureDefinition.filter.categoryBits = ENEMY_HEAD_BIT;
+        fixtureDef.restitution = 1;
+        fixtureDef.filter.categoryBits = ENEMY_HEAD_BIT;
 
 //        Deseamos poder acceder a los datos de mi clase goomba o turtle, a la hora de la colisión.
-        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
+        body.createFixture(fixtureDef).setUserData(box2DBody.userData);
 
         return body;
     }
@@ -172,26 +166,21 @@ public class Box2DBodyCreator {
 
     public static Body createItemBody(Box2DBody box2DBody){
 
-        BodyDef bodyDefinition = new BodyDef();
+        Body body = getPreparedBody(box2DBody, true);
 
-        bodyDefinition.type = BodyDef.BodyType.DynamicBody;
-        bodyDefinition.position.set(box2DBody.position);
-
-        Body body = box2DBody.world.createBody(bodyDefinition);
-
-        FixtureDef fixtureDefinition = new FixtureDef();
+        FixtureDef fixtureDef = new FixtureDef();
 
         CircleShape circleShape = new CircleShape();
 
         circleShape.setRadius(6 / PIXELS_PER_METER);
 
-        fixtureDefinition.shape = circleShape;
+        fixtureDef.shape = circleShape;
 
-        fixtureDefinition.filter.categoryBits = ITEM_BIT;
+        fixtureDef.filter.categoryBits = ITEM_BIT;
 
-        fixtureDefinition.filter.maskBits = MARIO_BIT | OBJECT_BIT | GROUND_BIT | COIN_BIT | BRICK_BIT;
+        fixtureDef.filter.maskBits = MARIO_BIT | OBJECT_BIT | GROUND_BIT | COIN_BIT | BRICK_BIT;
 
-        body.createFixture(fixtureDefinition).setUserData(box2DBody.userData);
+        body.createFixture(fixtureDef).setUserData(box2DBody.userData);
 
         circleShape.dispose();
 
@@ -219,17 +208,11 @@ public class Box2DBodyCreator {
 
     public static Fixture createStaticBody(Box2DBody box2DBody){
 
-        BodyDef bodyDefinition = new BodyDef();
-
-        bodyDefinition.type = BodyDef.BodyType.StaticBody;
-        bodyDefinition.position.set(box2DBody.rectangle.x / PIXELS_PER_METER, box2DBody.rectangle.y / PIXELS_PER_METER);
-
-        Body body = box2DBody.world.createBody(bodyDefinition);
+        Body body = getPreparedBody(box2DBody, false);
 
         PolygonShape shape = new PolygonShape();
 
-        shape.setAsBox(box2DBody.rectangle.width / 2 /PIXELS_PER_METER,
-                box2DBody.rectangle.height / 2 / PIXELS_PER_METER);
+        shape.setAsBox(box2DBody.width / 2 /PIXELS_PER_METER, box2DBody.height / 2 / PIXELS_PER_METER);
 
         FixtureDef fixtureDef = new FixtureDef();
 
@@ -246,5 +229,12 @@ public class Box2DBodyCreator {
 
 //  Como desde mi fixture puedo obtener también el body, solo debo de retornar el fixture
         return fixture;
+    }
+
+    public static Vector2 getSimplifiedCurrentPosition(Body body) {
+        //   Debido a que cuando obtengo las posiciones en X e Y del vector position del body,
+//        tengo que multiplicar estas coordenadas por mi pixels_per_meter, debido a que si las obtengo del body quiere
+//        decir que ya se le ha aplicado esta división
+        return new Vector2(body.getPosition().x * PIXELS_PER_METER, body.getPosition().y * PIXELS_PER_METER);
     }
 }

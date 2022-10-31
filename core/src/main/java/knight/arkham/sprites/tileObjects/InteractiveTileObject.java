@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import knight.arkham.helpers.Box2DBodyCreator;
 import knight.arkham.helpers.Box2DBody;
@@ -31,8 +32,8 @@ public abstract class InteractiveTileObject {
 
         fixture = Box2DBodyCreator.createStaticBody(
 
-                new Box2DBody(new Rectangle(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2,
-                        bounds.width, bounds.height), gameScreen.getWorld()
+                new Box2DBody(new Vector2(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2),
+                        bounds.width, bounds.height, gameScreen.getWorld()
                 )
         );
 

@@ -32,7 +32,7 @@ public class Brick extends InteractiveTileObject{
 
 //        Mario solo puede romper los bloques cuando es grande,
 //        de lo contrario solo podrá golpearlos y sonara el sonido bump
-        if (mario.isMarioIsBig()){
+        if (mario.isMarioBig()){
 
             //Cuando mario golpee el ladrillo preparamos el objeto con el DESTROYED_BIT, de esta forma ya mario no podrá
 //        colisionar más con este objeto

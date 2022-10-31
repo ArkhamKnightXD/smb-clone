@@ -83,9 +83,9 @@ public class TileMapCreator {
 
                             new Box2DBody(
 
-                                    new Rectangle(rectangle.x + rectangle.width / 2,
-                                            rectangle.y + rectangle.height / 2, rectangle.width,
-                                            rectangle.height), localGameScreen.getWorld()
+                                    new Vector2(rectangle.x + rectangle.width / 2,
+                                            rectangle.y + rectangle.height / 2), rectangle.width,
+                                            rectangle.height, localGameScreen.getWorld()
                             )
                     );
 

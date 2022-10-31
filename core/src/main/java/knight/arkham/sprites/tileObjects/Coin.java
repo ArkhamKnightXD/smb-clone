@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
+import knight.arkham.helpers.Box2DBodyCreator;
 import knight.arkham.scenes.Hud;
 import knight.arkham.screens.GameScreen;
 import knight.arkham.sprites.player.Mario;
@@ -51,9 +52,12 @@ public class Coin extends InteractiveTileObject{
 //            Si este mapObject contiene en sus propiedades un key llamado mushroom entonces agregaré un mushroom.
             if (mapObject.getProperties().containsKey("mushroom")){
 
+                Vector2 objectCurrentPosition = Box2DBodyCreator.getSimplifiedCurrentPosition(body);
+
+
                 // Spawn a coin when the block is hit. Deseo que el coin aparezca justo encima de mi block por eso el +16
-                gameScreen.spawnItems(new ItemDefinition(new Vector2(body.getPosition().x,
-                        body.getPosition().y +16 / PIXELS_PER_METER), Mushroom.class));
+                gameScreen.spawnItems(new ItemDefinition(new Vector2(objectCurrentPosition.x,
+                        objectCurrentPosition.y +16 / PIXELS_PER_METER), Mushroom.class));
 
                 localAssetManager.get("sound/spawn.wav", Sound.class).play();
             }
