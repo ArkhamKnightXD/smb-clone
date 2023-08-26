@@ -1,5 +1,6 @@
 package knight.arkham.helpers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import knight.arkham.sprites.player.Mario;
 import knight.arkham.sprites.enemies.Enemy;
@@ -24,6 +25,9 @@ public class GameContactListener implements ContactListener {
         //  Aqui estoy juntando los 2 categoryBits de los objetos que colisionen. Esto básicamente, sumará los valores
 //        Y como los categoryBits están definidos como short, será una suma binaria.
         int collisionDefinition = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
+
+        Gdx.app.log("fixtureA", String.valueOf(fixtureA.getFilterData().categoryBits));
+        Gdx.app.log("fixtureB", String.valueOf(fixtureB.getFilterData().categoryBits));
 
         switch (collisionDefinition) {
 

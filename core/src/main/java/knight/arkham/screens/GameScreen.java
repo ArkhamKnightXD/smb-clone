@@ -69,12 +69,17 @@ public class GameScreen extends ScreenAdapter {
 //    Ahora mismo con esta lista no hay error, pero no pasa nada. Si logro hacer esto funcionar probaré con Array
     private final LinkedBlockingQueue<ItemDefinition> itemsToSpawn;
 
+    private float accumulator;
+    private final float TIME_STEP;
+
 
     public GameScreen(MarioBros game) {
 
         this.game = game;
 
         assetManager = game.getGlobalAssetManager();
+
+        TIME_STEP = 1/240f;
 
 //       Debemos de Inicializar world al principio para evitar errores a la hora de crear body2D con doSleep en true
 //       mejoro el rendimiento debido a que en mi world no se calcularan las físicas de mis objetos static
@@ -112,15 +117,15 @@ public class GameScreen extends ScreenAdapter {
 
         mapRenderer = mapCreator.setupMap();
 
-        gameMusic = assetManager.get("music/mario_music.ogg", Music.class);
+        gameMusic = assetManager.get("music/mario_music.ogg");
 
         gameMusic.setLooping(true);
         gameMusic.setVolume(0.1f);
         gameMusic.play();
 
-        items = new Array<Item>();
+        items = new Array<>();
 
-        itemsToSpawn = new LinkedBlockingQueue<ItemDefinition>();
+        itemsToSpawn = new LinkedBlockingQueue<>();
     }
 
     public void spawnItems(ItemDefinition itemDefinition) {
@@ -165,7 +170,14 @@ public class GameScreen extends ScreenAdapter {
         // You can tune this number to your liking, just keep in mind that this has a trade-off between performance and
         // accuracy. Using fewer iterations increases performance but accuracy suffers. Likewise, using more iterations
         // decreases performance but improves the quality of your simulation.
-        world.step(1 / 60f, 6, 2);
+        float frameTime = Math.min(deltaTime, 0.25f);
+
+        accumulator += frameTime;
+
+        while(accumulator >= TIME_STEP){
+            world.step(TIME_STEP, 6,2); // Recomended by libgdx (8,3)
+            accumulator -= TIME_STEP;
+        }
 
 //        Nuestra camara seguirá la posición en X de nuestro personaje. Esto se hará siempre y cuando nuestro
 //        player no este muerto. Cuando mario muera la camara se quedara trabada en su última posición
